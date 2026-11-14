@@ -1,0 +1,13 @@
+go 1.25.0
+
+use (
+ ./packages/config
+ ./packages/messaging
+ ./packages/platform
+ ./services/survey-service
+ ./services/assessment-service
+ ./services/ai-service
+ ./contracts
+ ./services/auth-service
+ ./services/api-gateway
+)

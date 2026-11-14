@@ -1,0 +1,54 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/network/api.dart';
+
+final apiProvider = Provider<Api>((ref) {
+  final api = Api();
+  ref.onDispose(api.close);
+  return api;
+});
+final sessionProvider =
+    NotifierProvider<Session, AsyncValue<Map<String, dynamic>?>>(Session.new);
+
+class Session extends Notifier<AsyncValue<Map<String, dynamic>?>> {
+  @override
+  AsyncValue<Map<String, dynamic>?> build() => const AsyncData(null);
+  Future<void> restore() async {
+    if (state.isLoading) return;
+    state = const AsyncLoading();
+    try {
+      await ref.read(apiProvider).refresh();
+      final profile = await ref.read(apiProvider).request('/users/me');
+      if (ref.mounted) state = AsyncData(profile);
+    } catch (_) {
+      if (ref.mounted) state = const AsyncData(null);
+    }
+  }
+
+  Future<void> authenticate(
+    String action,
+    String email,
+    String password,
+  ) async {
+    state = const AsyncLoading();
+    final next = await AsyncValue.guard(() async {
+      final api = ref.read(apiProvider);
+      await api.authenticate(action, email, password);
+      return api.request('/users/me');
+    });
+    if (ref.mounted) state = next;
+  }
+
+  Future<void> logout() async {
+    state = const AsyncLoading();
+    final next = await AsyncValue.guard(() async {
+      await ref.read(apiProvider).logout();
+      return null;
+    });
+    if (ref.mounted) state = next;
+  }
+
+  void clearLocal() {
+    ref.read(apiProvider).access = null;
+    state = const AsyncData(null);
+  }
+}

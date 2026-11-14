@@ -1,0 +1,13 @@
+syntax="proto3";
+package saya.workflow.v1;
+option go_package="saya/contracts/workflow/v1;workflowv1";
+service Survey {rpc Current(Empty)returns(Questionnaire);rpc Submit(Submission)returns(Operation);rpc Input(OwnedID)returns(Submission);}
+service Assessment {rpc Get(OwnedID)returns(Result);rpc Input(OwnedID)returns(Submission);rpc Complete(Completion)returns(Empty);}
+message Empty{}
+message Questionnaire{string id=1;int32 version=2;repeated Question questions=3;string disclaimer=4;}
+message Question{string id=1;string label=2;}
+message Submission{string user_id=1;string questionnaire_id=2;int32 version=3;map<string,bool> answers=4;bool consent=5;bool external_llm_consent=6;string idempotency_key=7;}
+message OwnedID{string id=1;string user_id=2;}
+message Operation{string id=1;string status=2;}
+message Result{string id=1;string status=2;bool immediate_threat_reported=3;repeated string recommendations=4;string disclaimer=5;string provider=6;}
+message Completion{string id=1;string user_id=2;repeated string recommendations=3;string provider=4;bool failed=5;}

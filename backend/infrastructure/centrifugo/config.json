@@ -1,0 +1,29 @@
+{
+  "client": {
+    "allowed_origins": [
+      "http://localhost:3000"
+    ]
+  },
+  "engine": {
+    "type": "redis",
+    "redis": {
+      "address": "redis://redis:6379"
+    }
+  },
+  "channel": {
+    "namespaces": [
+      {
+        "name": "user",
+        "history_size": 10,
+        "history_ttl": "300s",
+        "force_recovery": true
+      }
+    ]
+  },
+  "prometheus": {
+    "enabled": true
+  },
+  "health": {
+    "enabled": true
+  }
+}

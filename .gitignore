@@ -1,0 +1,9 @@
+.env
+.idea/
+.dart_tool/
+build/
+*.pem
+.local/
+
+__pycache__/
+*.pyc

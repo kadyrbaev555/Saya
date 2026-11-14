@@ -1,0 +1,11 @@
+.git
+.idea
+frontend
+.agents
+docs
+**/.env
+**/*.pem
+**/.dart_tool
+**/build
+
+.local

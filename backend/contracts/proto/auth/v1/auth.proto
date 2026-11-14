@@ -1,0 +1,20 @@
+syntax = "proto3";
+package saya.auth.v1;
+option go_package = "saya/contracts/auth/v1;authv1";
+service Auth {
+ rpc Realtime(RealtimeRequest) returns (RealtimeToken);
+ rpc Register(Credentials) returns (Session);
+ rpc Login(Credentials) returns (Session);
+ rpc Refresh(RefreshRequest) returns (Session);
+ rpc Logout(RefreshRequest) returns (Empty);
+ rpc Me(Identity) returns (User);
+}
+message Credentials { string email = 1; string password = 2; }
+message RefreshRequest { string token = 1; }
+message Identity { string user_id = 1; }
+message User { string id = 1; string email = 2; string role = 3; }
+message Session { string access_token = 1; string refresh_token = 2; User user = 3; }
+message Empty {}
+
+message RealtimeRequest { string user_id = 1; string channel = 2; }
+message RealtimeToken { string token = 1; int64 expires_at = 2; string channel = 3; }

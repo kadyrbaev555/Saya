@@ -1,0 +1,252 @@
+name: saya-v13
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    ports: ['127.0.0.1:5434:5432']
+    environment:
+      POSTGRES_USER: saya_owner
+      POSTGRES_PASSWORD: ${DB_ADMIN_PASSWORD:?run make dev-init}
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U saya_owner -d postgres]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  db-init:
+    image: postgres:17.6-alpine
+    environment:
+      PGHOST: postgres
+      PGUSER: saya_owner
+      PGDATABASE: postgres
+      PGPASSWORD: ${DB_ADMIN_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SURVEY_DB_PASSWORD: ${SURVEY_DB_PASSWORD}
+      ASSESSMENT_DB_PASSWORD: ${ASSESSMENT_DB_PASSWORD}
+    volumes: ['../../infrastructure/docker/init-databases.sh:/init.sh:ro']
+    command: sh /init.sh
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  migrate:
+    image: golang:1.25.1-alpine
+    working_dir: /src
+    volumes:
+      - ../../..:/src:ro
+    env_file: [../../services/auth-service/.env]
+    environment:
+      RABBIT_URL: amqp://saya:${RABBIT_PASSWORD}@rabbitmq:5672/
+      GOOSE_DRIVER: postgres
+    command: sh -c 'export GOOSE_DBSTRING="$$DATABASE_URL"; go run github.com/pressly/goose/v3/cmd/goose@v3.26.0 -dir backend/services/auth-service/migrations up'
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+  auth:
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /probe, grpc]
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 10s
+    build:
+      context: ../../..
+      dockerfile: backend/infrastructure/docker/Dockerfile
+      args:
+        SERVICE: auth-service
+    env_file: [../../services/auth-service/.env]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  gateway:
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /probe, http]
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 10s
+    build:
+      context: ../../..
+      dockerfile: backend/infrastructure/docker/Dockerfile
+      args:
+        SERVICE: api-gateway
+    env_file: [../../services/api-gateway/.env]
+    ports: ['127.0.0.1:8080:8080']
+    depends_on: [auth]
+  rabbitmq:
+    image: rabbitmq:4.1.4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: saya
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD:?run make dev-init}
+    ports: ['127.0.0.1:15672:15672']
+    volumes:
+      - rabbitdata:/var/lib/rabbitmq
+      - ../../infrastructure/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+    healthcheck:
+      test: [CMD, rabbitmq-diagnostics, -q, ping]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+  redis:
+    image: redis:8.2.1-alpine
+    command: redis-server --appendonly yes
+    volumes: [redisdata:/data]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  migrate-survey:
+    image: golang:1.25.1-alpine
+    working_dir: /src
+    volumes: ['../../..:/src:ro']
+    env_file: [../../services/survey-service/.env]
+    environment:
+      RABBIT_URL: amqp://saya:${RABBIT_PASSWORD}@rabbitmq:5672/
+      GOOSE_DRIVER: postgres
+    command: sh -c 'export GOOSE_DBSTRING="$$DATABASE_URL"; go run github.com/pressly/goose/v3/cmd/goose@v3.26.0 -dir backend/services/survey-service/migrations up'
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+  survey:
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /probe, grpc]
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 10s
+    build:
+      context: ../../..
+      dockerfile: backend/infrastructure/docker/Dockerfile
+      args:
+        SERVICE: survey-service
+    env_file: [../../services/survey-service/.env]
+    depends_on:
+      migrate-survey:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+
+  migrate-assessment:
+    image: golang:1.25.1-alpine
+    working_dir: /src
+    volumes: ['../../..:/src:ro']
+    env_file: [../../services/assessment-service/.env]
+    environment:
+      RABBIT_URL: amqp://saya:${RABBIT_PASSWORD}@rabbitmq:5672/
+      GOOSE_DRIVER: postgres
+    command: sh -c 'export GOOSE_DBSTRING="$$DATABASE_URL"; go run github.com/pressly/goose/v3/cmd/goose@v3.26.0 -dir backend/services/assessment-service/migrations up'
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+  assessment:
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /probe, grpc]
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 10s
+    build:
+      context: ../../..
+      dockerfile: backend/infrastructure/docker/Dockerfile
+      args:
+        SERVICE: assessment-service
+    env_file: [../../services/assessment-service/.env]
+    depends_on:
+      migrate-assessment:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+
+  ai:
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /probe, grpc]
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 10s
+    build:
+      context: ../../..
+      dockerfile: backend/infrastructure/docker/Dockerfile
+      args:
+        SERVICE: ai-service
+    env_file: [../../services/ai-service/.env]
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      assessment:
+        condition: service_started
+
+  demo:
+    profiles: [tools]
+    build:
+      context: ../../..
+      dockerfile: backend/infrastructure/docker/Dockerfile
+      args:
+        SERVICE: auth-service
+        COMMAND: demo
+    environment:
+      DEMO_USER_ID: ${DEMO_USER_ID:-}
+      DATABASE_URL: postgres://saya_auth:${DB_PASSWORD}@postgres:5432/saya_auth?sslmode=disable
+      RABBIT_URL: amqp://saya:${RABBIT_PASSWORD}@rabbitmq:5672/
+      CENTRIFUGO_URL: http://centrifugo:8000
+      CENTRIFUGO_API_KEY: ${CENTRIFUGO_API_KEY}
+
+  centrifugo:
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:8000/health']
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 15s
+    image: centrifugo/centrifugo:v6.4.0
+    command: centrifugo -c /centrifugo/config.json
+    environment:
+      CENTRIFUGO_CLIENT_TOKEN_HMAC_SECRET_KEY: ${CENTRIFUGO_TOKEN_SECRET:?run make dev-init}
+      CENTRIFUGO_HTTP_API_KEY: ${CENTRIFUGO_API_KEY:?run make dev-init}
+    volumes: ['../../infrastructure/centrifugo/config.json:/centrifugo/config.json:ro']
+    ports: ['127.0.0.1:8000:8000']
+    depends_on:
+      redis:
+        condition: service_healthy
+  prometheus:
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:9090/-/healthy']
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 15s
+    image: prom/prometheus:v3.6.0
+    volumes:
+      - ../../infrastructure/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - promdata:/prometheus
+    ports: ['127.0.0.1:9090:9090']
+  grafana:
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:3000/api/health']
+      interval: 10s
+      timeout: 4s
+      retries: 10
+      start_period: 15s
+    image: grafana/grafana:12.2.0
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?run make dev-init}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+    volumes:
+      - ../../infrastructure/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../../infrastructure/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafanadata:/var/lib/grafana
+    ports: ['127.0.0.1:3001:3000']
+
+volumes:
+  pgdata:
+  rabbitdata:
+  redisdata:
+  promdata:
+  grafanadata:
