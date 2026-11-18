@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/network/api.dart';
+import '../assessments/android_reminders.dart';
 
 final apiProvider = Provider<Api>((ref) {
   final api = Api();
@@ -47,7 +48,9 @@ class Session extends Notifier<AsyncValue<Map<String, dynamic>?>> {
   Future<void> logout() async {
     state = const AsyncLoading();
     final next = await AsyncValue.guard(() async {
-      await ref.read(apiProvider).logout();
+      final api = ref.read(apiProvider);
+      await AndroidReminders.instance.signOut(api);
+      await api.logout();
       return null;
     });
     if (ref.mounted) state = next;

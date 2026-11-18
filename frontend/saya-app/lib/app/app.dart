@@ -7,6 +7,9 @@ import '../features/support/support.dart';
 import '../features/surveys/survey.dart';
 import '../features/assessments/assessment.dart';
 import '../core/realtime/realtime.dart';
+import '../features/assessments/weekly.dart';
+import '../features/assessments/android_reminders.dart';
+import 'dart:async';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
@@ -22,14 +25,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       if ((state.uri.path == '/home' ||
               (state.uri.path.startsWith('/support/') &&
                   state.uri.path != '/support/emergency') ||
+              state.uri.path == '/history' ||
               state.uri.path == '/profile' ||
               state.uri.path == '/survey' ||
               state.uri.path.startsWith('/assessment/')) &&
           !signedIn)
-        return '/login';
+        return state.uri.path == '/survey' ? '/login?next=survey' : '/login';
       if (signedIn &&
           (state.uri.path == '/login' || state.uri.path == '/register'))
-        return '/home';
+        return state.uri.queryParameters['next'] == 'survey'
+            ? '/survey'
+            : '/home';
       return null;
     },
     routes: [
@@ -93,6 +99,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder:
             (context, state) => AssessmentPage(id: state.pathParameters['id']!),
       ),
+      GoRoute(
+        path: '/history',
+        builder: (context, state) => const WeeklyDashboard(),
+      ),
       GoRoute(path: '/profile', builder: (context, state) => const Profile()),
     ],
   );
@@ -100,14 +110,77 @@ final routerProvider = Provider<GoRouter>((ref) {
   return router;
 });
 
-class SayaApp extends ConsumerWidget {
+class SayaApp extends ConsumerStatefulWidget {
   const SayaApp({super.key});
   @override
-  Widget build(BuildContext context, WidgetRef ref) => MaterialApp.router(
-    title: 'SAYA',
-    theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal),
-    routerConfig: ref.watch(routerProvider),
-  );
+  ConsumerState<SayaApp> createState() => _SayaAppState();
+}
+
+class _SayaAppState extends ConsumerState<SayaApp> {
+  @override
+  void initState() {
+    super.initState();
+    if (AndroidReminders.supported)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        unawaited(
+          AndroidReminders.instance.initialize(
+            ref.read(apiProvider),
+            () =>
+                mounted
+                    ? (ref.read(sessionProvider).asData?.value?['id']
+                        as String?)
+                    : null,
+            () async {
+              if (!mounted) return;
+              if (ref.read(sessionProvider).asData?.value == null)
+                await ref.read(sessionProvider.notifier).restore();
+              if (!mounted) return;
+              if (ref.read(sessionProvider).asData?.value == null) {
+                ref.read(routerProvider).go('/login?next=survey');
+                return;
+              }
+              try {
+                final h = await ref
+                    .read(apiProvider)
+                    .request('/weekly/history');
+                if (mounted)
+                  ref
+                      .read(routerProvider)
+                      .go(h['reminder_due'] == true ? '/survey' : '/history');
+              } catch (_) {
+                if (mounted) ref.read(routerProvider).go('/history');
+              }
+            },
+          ),
+        );
+      });
+  }
+
+  @override
+  void dispose() {
+    if (AndroidReminders.supported) AndroidReminders.instance.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (AndroidReminders.supported)
+      ref.listen(sessionProvider, (previous, next) {
+        final owner = next.asData?.value?['id'] as String?;
+        if (owner != null)
+          unawaited(
+            AndroidReminders.instance
+                .reconnect(ref.read(apiProvider), owner)
+                .catchError((Object _) {}),
+          );
+      });
+    return MaterialApp.router(
+      title: 'SAYA',
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal),
+      routerConfig: ref.watch(routerProvider),
+    );
+  }
 }
 
 class AuthForm extends ConsumerStatefulWidget {
@@ -215,9 +288,11 @@ class Profile extends ConsumerWidget {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(16),
           children: [
+            const WeeklyInvite(),
             Text(user?['email'] as String? ?? ''),
             const SizedBox(height: 16),
             ref
@@ -242,6 +317,10 @@ class Profile extends ConsumerWidget {
             FilledButton(
               onPressed: () => context.go('/survey'),
               child: const Text('Пройти опрос о неделе'),
+            ),
+            OutlinedButton(
+              onPressed: () => context.push('/history'),
+              child: const Text('Динамика по неделям'),
             ),
             Text(
               realtime.asData?.value['event'] == 'demo.completed'

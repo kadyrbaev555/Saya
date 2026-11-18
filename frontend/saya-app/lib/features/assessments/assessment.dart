@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'weekly.dart';
 import 'package:go_router/go_router.dart';
 import '../surveys/survey.dart';
 import 'package:material_ui/material_ui.dart';
@@ -68,6 +69,7 @@ class AssessmentPage extends ConsumerWidget {
                     Text(data['disclaimer'] as String? ?? ''),
                     if (data['version'] == 2 &&
                         data['status'] == 'completed') ...[
+                      const WeeklyPushButton(),
                       if (data['percentage'] != null)
                         Text(
                           'Моя оценка недели — ${data['percentage']}%',

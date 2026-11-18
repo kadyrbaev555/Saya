@@ -1,3 +1,4 @@
+import '../assessments/weekly.dart';
 import 'housing.dart';
 import 'jobs.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,6 +66,7 @@ class SupportHome extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 16),
+              const WeeklyInvite(),
               for (final item in Direction.values)
                 Card(
                   child: ListTile(
