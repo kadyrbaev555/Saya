@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'weekly.dart';
+import '../support/appeals.dart';
 import 'package:go_router/go_router.dart';
 import '../surveys/survey.dart';
 import 'package:material_ui/material_ui.dart';
@@ -89,8 +90,30 @@ class AssessmentPage extends ConsumerWidget {
                         ),
                       for (final key in (data['directions'] as List? ?? []))
                         if (key == 'financial')
-                          const ListTile(
-                            title: Text('Рекомендована денежная поддержка'),
+                          Builder(
+                            builder: (_) {
+                              final entries =
+                                  ref
+                                          .watch(weeklyProvider(''))
+                                          .asData
+                                          ?.value['entries']
+                                      as List? ??
+                                  [];
+                              if (entries.isEmpty || entries.first['id'] != id)
+                                return const SizedBox.shrink();
+                              return OutlinedButton(
+                                onPressed:
+                                    () => editAppeal(
+                                      context,
+                                      ref,
+                                      id,
+                                      data['summary'] as String? ?? '',
+                                    ),
+                                child: const Text(
+                                  'Денежная поддержка · подготовить анкету',
+                                ),
+                              );
+                            },
                           )
                         else if (needLabels.containsKey(key))
                           OutlinedButton(

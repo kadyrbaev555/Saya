@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/session.dart';
 import '../features/auth/registration.dart';
 import '../features/support/support.dart';
+import '../features/support/appeals.dart';
 import '../features/surveys/survey.dart';
 import '../features/assessments/assessment.dart';
 import '../core/realtime/realtime.dart';
@@ -25,6 +26,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       if ((state.uri.path == '/home' ||
               (state.uri.path.startsWith('/support/') &&
                   state.uri.path != '/support/emergency') ||
+              state.uri.path.startsWith('/appeals/') ||
               state.uri.path == '/history' ||
               state.uri.path == '/profile' ||
               state.uri.path == '/survey' ||
@@ -42,8 +44,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/home', builder: (context, state) => const SupportHome()),
       GoRoute(
         path: '/appeals',
-        builder: (context, state) => const PublicAppeals(),
+        builder: (context, state) => const AppealsPage('public'),
       ),
+      for (final scope in ['mine', 'review'])
+        GoRoute(
+          path: '/appeals/$scope',
+          builder: (_, __) => AppealsPage(scope),
+        ),
       for (final item in Direction.values)
         GoRoute(
           path: '/support/${item.path}',
@@ -293,6 +300,19 @@ class Profile extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           children: [
             const WeeklyInvite(),
+            if (user?['role'] == 'ADMIN')
+              TextButton(
+                onPressed: () => context.push('/appeals/review'),
+                child: const Text('Модерация анкет'),
+              ),
+            if (((ref.watch(appealsProvider('mine')).asData?.value['items']
+                        as List?) ??
+                    [])
+                .isNotEmpty)
+              TextButton(
+                onPressed: () => context.push('/appeals/mine'),
+                child: const Text('Моя анкета'),
+              ),
             Text(user?['email'] as String? ?? ''),
             const SizedBox(height: 16),
             ref

@@ -93,7 +93,12 @@ void main() {
   testWidgets(
     'Guest catalog returns to the originating form and emergency contacts open without login',
     (tester) async {
-      await tester.pumpWidget(const ProviderScope(child: SayaApp()));
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [apiProvider.overrideWithValue(FakeApi())],
+          child: const SayaApp(),
+        ),
+      );
       for (final label in ['Войти', 'Создать аккаунт']) {
         await tester.tap(find.text(label).last);
         await tester.pumpAndSettle();

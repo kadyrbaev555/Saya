@@ -85,20 +85,6 @@ class SupportHome extends StatelessWidget {
   );
 }
 
-class PublicAppeals extends StatelessWidget {
-  const PublicAppeals({super.key});
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Помочь человеку')),
-    body: const Center(
-      child: Padding(
-        padding: EdgeInsets.all(24),
-        child: Text('Пока нет опубликованных анкет для помощи.'),
-      ),
-    ),
-  );
-}
-
 class DirectionPage extends ConsumerStatefulWidget {
   const DirectionPage(this.direction, {super.key});
   final Direction direction;
