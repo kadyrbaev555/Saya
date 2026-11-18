@@ -1,9 +1,15 @@
+import 'housing.dart';
+import 'jobs.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../auth/session.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+final externalLinkProvider = Provider<Future<bool> Function(Uri)>(
+  (ref) => (uri) => launchUrl(uri),
+);
 
 enum Direction {
   housing('housing', 'Жильё', 'Посуточная аренда', Icons.home_outlined),
@@ -140,7 +146,7 @@ class _DirectionPageState extends ConsumerState<DirectionPage> {
 
   Future<void> open(Uri uri) async {
     try {
-      if (await launchUrl(uri)) return;
+      if (await ref.read(externalLinkProvider)(uri)) return;
     } on PlatformException {
       // Some devices have no application registered for telephone links.
     }
@@ -167,33 +173,8 @@ class _DirectionPageState extends ConsumerState<DirectionPage> {
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
-              if (direction == Direction.housing) ...[
-                const Text('Выберите район и даты на карте посуточной аренды.'),
-                const SizedBox(height: 16),
-                link(
-                  'Открыть карту Krisha.kz',
-                  () => Uri.parse(
-                    'https://m.krisha.kz/map/arenda/kvartiry-posutochno/',
-                  ),
-                ),
-              ],
-              if (direction == Direction.jobs) ...[
-                TextField(
-                  controller: draft,
-                  decoration: const InputDecoration(
-                    labelText: 'Навыки или профессия',
-                    hintText: 'Например, ремонт техники',
-                  ),
-                ),
-                const SizedBox(height: 16),
-                link(
-                  'Найти вакансии на hh.kz',
-                  () => Uri.https('hh.kz', '/search/vacancy', {
-                    'area': '40',
-                    'text': draft.text.trim(),
-                  }),
-                ),
-              ],
+              if (direction == Direction.housing) HousingSearch(open: open),
+              if (direction == Direction.jobs) JobSearch(open: open),
               if (direction == Direction.social ||
                   direction == Direction.psychologist) ...[
                 TextField(
@@ -227,12 +208,44 @@ class _DirectionPageState extends ConsumerState<DirectionPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+                if (direction == Direction.social) ...[
+                  const Text(
+                    'Birgemiz · Национальный фронт-офис волонтёров. Можно узнать, в какую организацию Алматы обратиться. Вставьте подготовленный текст в чат перед отправкой.',
+                  ),
+                  link(
+                    'Написать Birgemiz в Telegram',
+                    () => Uri.parse('https://t.me/BIRGEMIZ2020'),
+                  ),
+                  link(
+                    'Региональные контакты Qazvolunteer',
+                    () => Uri.parse('https://qazvolunteer.kz/ru/contacts'),
+                  ),
+                  link(
+                    'Добрые дела Алматы · помощь одиноким пенсионерам',
+                    () => Uri.parse('https://dobrye-dela.kz/'),
+                  ),
+                ],
                 if (direction == Direction.social)
                   link(
                     'Найти организацию на Qazvolunteer',
                     () => Uri.parse('https://qazvolunteer.kz/ru'),
                   ),
                 if (direction == Direction.psychologist) ...[
+                  const Text(
+                    'Алматы · Центр психического здоровья. Бесплатная анонимная психологическая помощь круглосуточно.',
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () => open(Uri.parse('tel:1303')),
+                    icon: const Icon(Icons.phone_outlined),
+                    label: const Text('Набрать 1303'),
+                  ),
+                  link(
+                    'Информация городской службы',
+                    () => Uri.parse(
+                      'https://www.gov.kz/org/almaty-densaulyk/press/news/details/1220242?lang=ru',
+                    ),
+                  ),
+
                   const Text(
                     'Линия 150 оказывает бесплатную психологическую помощь детям, молодёжи и их семьям.',
                   ),
