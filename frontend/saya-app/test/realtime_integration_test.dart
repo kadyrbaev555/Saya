@@ -32,9 +32,9 @@ void main() {
       await container
           .read(sessionProvider.notifier)
           .authenticate(
-            'register',
-            'flutter-${DateTime.now().microsecondsSinceEpoch}@example.test',
-            'demonstration-password',
+            'login',
+            Platform.environment['SAYA_TEST_EMAIL']!,
+            Platform.environment['SAYA_TEST_PASSWORD']!,
           );
       final state = container.read(sessionProvider);
       expect(state.hasError, isFalse);

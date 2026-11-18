@@ -71,6 +71,36 @@ class Api {
     if (!kIsWeb) await vault.write(data['refresh_token'] as String?);
   }
 
+  Future<String> startRegistration(
+    String name,
+    String phone,
+    String email,
+    String password,
+  ) async {
+    final response = await _send(
+      '/auth/register',
+      body: {
+        'full_name': name,
+        'phone': phone,
+        'email': email,
+        'password': password,
+      },
+    );
+    return response['registration_id'] as String;
+  }
+
+  Future<Map<String, dynamic>> confirmRegistration(
+    String id,
+    String code,
+  ) async {
+    final response = await _send(
+      '/auth/register/confirm',
+      body: {'registration_id': id, 'code': code},
+    );
+    await _accept(response);
+    return response['user'] as Map<String, dynamic>;
+  }
+
   Future<void> authenticate(
     String action,
     String email,

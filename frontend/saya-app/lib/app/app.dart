@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../features/auth/session.dart';
+import '../features/auth/registration.dart';
 import '../features/surveys/survey.dart';
 import '../features/assessments/assessment.dart';
 import '../core/realtime/realtime.dart';
@@ -59,13 +60,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             ),
       ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const AuthForm(register: false),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const AuthForm()),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const AuthForm(register: true),
+        builder: (context, state) => const RegistrationPage(),
       ),
       GoRoute(path: '/survey', builder: (context, state) => const SurveyPage()),
       GoRoute(
@@ -91,8 +89,7 @@ class SayaApp extends ConsumerWidget {
 }
 
 class AuthForm extends ConsumerStatefulWidget {
-  final bool register;
-  const AuthForm({super.key, required this.register});
+  const AuthForm({super.key});
   @override
   ConsumerState<AuthForm> createState() => _AuthFormState();
 }
@@ -110,9 +107,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
   Widget build(BuildContext context) {
     final state = ref.watch(sessionProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.register ? 'Создать аккаунт' : 'Войти'),
-      ),
+      appBar: AppBar(title: Text('Войти')),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 440),
@@ -149,7 +144,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                             await ref
                                 .read(sessionProvider.notifier)
                                 .authenticate(
-                                  widget.register ? 'register' : 'login',
+                                  'login',
                                   email.text,
                                   password.text,
                                 );
@@ -160,12 +155,8 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                           : const Text('Продолжить'),
                 ),
                 TextButton(
-                  onPressed:
-                      () =>
-                          context.go(widget.register ? '/login' : '/register'),
-                  child: Text(
-                    widget.register ? 'Уже есть аккаунт' : 'Создать аккаунт',
-                  ),
+                  onPressed: () => context.go('/register'),
+                  child: Text('Создать аккаунт'),
                 ),
               ],
             ),

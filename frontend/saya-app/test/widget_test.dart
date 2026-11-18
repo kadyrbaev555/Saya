@@ -9,6 +9,25 @@ import 'package:saya_app/core/realtime/realtime.dart';
 class FakeApi extends Api {
   bool fail = false;
   @override
+  Future<String> startRegistration(
+    String name,
+    String phone,
+    String email,
+    String password,
+  ) async {
+    return 'test-challenge';
+  }
+
+  @override
+  Future<Map<String, dynamic>> confirmRegistration(
+    String id,
+    String code,
+  ) async {
+    if (id != 'test-challenge' || code != '123456') throw ApiError(401);
+    return {'id': 'demo', 'email': 'demo@example.test', 'role': 'USER'};
+  }
+
+  @override
   Future<void> authenticate(
     String action,
     String email,
@@ -50,6 +69,42 @@ class FakeApi extends Api {
 }
 
 void main() {
+  testWidgets('Registration requests a code before opening the profile', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          apiProvider.overrideWithValue(FakeApi()),
+          realtimeProvider.overrideWith((ref) => const Stream.empty()),
+        ],
+        child: const SayaApp(),
+      ),
+    );
+    await tester.tap(find.text('Создать аккаунт'));
+    await tester.pumpAndSettle();
+    final fields = find.byType(TextFormField);
+    for (final (index, value)
+        in [
+          'Test User',
+          '+77000000001',
+          'demo@example.test',
+          'demo-password-long',
+        ].indexed) {
+      await tester.enterText(fields.at(index), value);
+    }
+    await tester.tap(find.text('Получить код'));
+    await tester.pumpAndSettle();
+    expect(find.text('Подтверждение почты'), findsOneWidget);
+    await tester.enterText(fields, '000001');
+    await tester.tap(find.text('Подтвердить и войти'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Код неверен'), findsOneWidget);
+    await tester.enterText(fields, '123456');
+    await tester.tap(find.text('Подтвердить и войти'));
+    await tester.pumpAndSettle();
+    expect(find.text('demo@example.test'), findsOneWidget);
+  });
   testWidgets('Welcome opens login form', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: SayaApp()));
     expect(find.text('Поддержка в вашем темпе'), findsOneWidget);

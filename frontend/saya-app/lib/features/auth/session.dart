@@ -38,6 +38,12 @@ class Session extends Notifier<AsyncValue<Map<String, dynamic>?>> {
     if (ref.mounted) state = next;
   }
 
+  Future<void> confirmRegistration(String id, String code) async {
+    final api = ref.read(apiProvider);
+    final profile = await api.confirmRegistration(id, code);
+    if (ref.mounted) state = AsyncData(profile);
+  }
+
   Future<void> logout() async {
     state = const AsyncLoading();
     final next = await AsyncValue.guard(() async {
