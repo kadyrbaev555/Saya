@@ -21,3 +21,13 @@ Centrifugo health.enabled включает /health согласно [офици�
 Register the Android app `com.example.saya_app` in Firebase. Place its client configuration at `frontend/saya-app/android/app/google-services.json`. Enable the Firebase Cloud Messaging API and grant the sending service account permission to send messages. Set `FCM_SERVICE_ACCOUNT_B64` in the private assessment-service .env to the base64-encoded service account JSON for the same project. Recreate the assessment service, run its Goose migrations, and rebuild Android. Keep credentials outside version control.
 
 On a device with Google Play services, complete an interview and enable reminders. When the deadline passes with the app closed, verify the neutral notification opens the survey and that completion moves the deadline forward. Database integration tests exercise scheduling and retry independently of Firebase.
+
+## Тестовые пожертвования
+
+Примените миграции assessment-service. Анкеты и очередь модерации работают без платёжного кабинета. На последнем опросе подтвердите потребность в финансовой помощи при низкой оценке расходов. Откройте рекомендации, отредактируйте текст и подтвердите его публикацию. В профиле аккаунта с ролью ADMIN откройте модерацию и одобрите анкету. Гость увидит её через «Помочь человеку». Проверьте жалобу, отзыв и новый опрос.
+
+Для интеграционной демонстрации нужен тестовый мерчант Freedom Pay в Казахстане с включёнными тестовыми платежами, сохранением карты получателя и тестовыми выплатами. В приватном окружении assessment-service задайте FREEDOMPAY_TEST_MERCHANT_ID, FREEDOMPAY_TEST_SECRET, FREEDOMPAY_TEST_PAYOUT_SECRET и FREEDOMPAY_RESULT_URL. Последняя переменная имеет вид https://<публичный-gateway>/api/v1/payments/result. На этом же сервере должны быть доступны /api/v1/payments/card и /api/v1/payments/payout. Пересоздайте assessment-service и Gateway, обновите Flutter.
+
+В «Моя анкета» привяжите тестовую карту на странице Freedom Pay. После уведомления провайдера обновите каталог. Гость выбирает тестовую сумму и платит на стороне провайдера. Заказ хранит токен получателя, подтверждённую сумму и идентификаторы тестовых операций. Каждый подтверждённый заказ запускает одну выплату. После потери ответа сервис запрашивает статус по номеру заказа. Если операция отсутствует у провайдера, требуется ручная сверка перед повторной отправкой. Используйте только тестовые ключи и карты провайдера.
+
+[Тестовые карты](https://docs.freedompay.kz/doc-741636) · [Привязка карты](https://docs.freedompay.kz/12006980e0) · [Выплаты](https://docs.freedompay.kz/11621024e0)
