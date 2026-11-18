@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../auth/session.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -89,15 +91,47 @@ class PublicAppeals extends StatelessWidget {
   );
 }
 
-class DirectionPage extends StatefulWidget {
+class DirectionPage extends ConsumerStatefulWidget {
   const DirectionPage(this.direction, {super.key});
   final Direction direction;
   @override
-  State<DirectionPage> createState() => _DirectionPageState();
+  ConsumerState<DirectionPage> createState() => _DirectionPageState();
 }
 
-class _DirectionPageState extends State<DirectionPage> {
+class _DirectionPageState extends ConsumerState<DirectionPage> {
   final draft = TextEditingController();
+  bool edited = false;
+  bool filled = false;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.direction == Direction.psychologist ||
+        widget.direction == Direction.social)
+      loadSummary();
+  }
+
+  Future<void> loadSummary() async {
+    try {
+      final api = ref.read(apiProvider);
+      final id = (await api.request('/surveys/latest'))['id'] as String?;
+      if (!mounted || id == null || id.isEmpty) return;
+      final result = await api.request('/assessments/$id');
+      final summary = result['summary'] as String?;
+      if (mounted &&
+          !edited &&
+          result['status'] == 'completed' &&
+          summary != null &&
+          summary.isNotEmpty) {
+        setState(() {
+          draft.text = summary;
+          filled = true;
+        });
+      }
+    } catch (_) {
+      /* Manual entry remains available when the result cannot load. */
+    }
+  }
+
   @override
   void dispose() {
     draft.dispose();
@@ -164,6 +198,7 @@ class _DirectionPageState extends State<DirectionPage> {
                   direction == Direction.psychologist) ...[
                 TextField(
                   controller: draft,
+                  onChanged: (_) => edited = true,
                   maxLines: 4,
                   decoration: const InputDecoration(
                     labelText: 'Что вы хотите рассказать?',
@@ -207,8 +242,10 @@ class _DirectionPageState extends State<DirectionPage> {
                     label: const Text('Набрать 150'),
                   ),
                   const Divider(),
-                  const Text(
-                    'В профиле можно пройти первоначальный опрос и получить рекомендации.',
+                  Text(
+                    filled
+                        ? 'Вы можете изменить описание из последнего опроса перед обращением.'
+                        : 'В профиле можно пройти первоначальный опрос и получить рекомендации.',
                   ),
                   TextButton(
                     onPressed: () => context.push('/survey'),

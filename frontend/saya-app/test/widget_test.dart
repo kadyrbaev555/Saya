@@ -8,6 +8,7 @@ import 'package:saya_app/core/realtime/realtime.dart';
 
 class FakeApi extends Api {
   bool fail = false;
+  bool submitted = false;
   @override
   Future<String> startRegistration(
     String name,
@@ -41,23 +42,43 @@ class FakeApi extends Api {
     String path, {
     Map<String, dynamic>? body,
   }) async {
-    if (path == '/surveys/current')
+    if (path == '/surveys/latest')
+      return {'id': submitted ? 'demo-assessment' : ''};
+    if (path == '/surveys/interview/focus') {
+      expect(body?['consent'], isTrue);
+      expect(body!.keys, unorderedEquals(['topic', 'ratings', 'consent']));
+      return {'focus': 'resources'};
+    }
+    if (path == '/surveys/interview')
       return {
-        'id': 'saya-demo',
-        'version': 1,
+        'id': 'saya-week',
+        'version': 2,
         'disclaimer': 'Демонстрационный опрос',
         'questions': [
-          {'id': 'immediate_threat', 'label': 'Демонстрация: угроза'},
-          {'id': 'information_requested', 'label': 'Демонстрация: информация'},
+          {
+            'id': 'housing',
+            'label': 'Где вы жили?',
+            'variants': {'resources': 'Что помогало с жильём?'},
+          },
+          {'id': 'priority', 'label': 'Демонстрация: информация'},
         ],
       };
-    if (path == '/surveys/submissions')
+    if (path == '/surveys/submissions') {
+      submitted = true;
+      expect(body?['ratings'], {'housing': 1});
+      expect(body?['responses'], {'housing': 'Ищу жильё'});
+      expect(body?['external_llm_consent'], false);
       return {'id': 'demo-assessment', 'status': 'pending'};
+    }
     if (path.startsWith('/assessments/'))
       return {
         'id': 'demo-assessment',
         'status': 'completed',
-        'provider': 'demonstration-mock',
+        'provider': 'self-report',
+        'version': 2,
+        'ratings': {'housing': 1},
+        'directions': ['housing'],
+        'summary': 'Подтверждено',
         'disclaimer': 'Не диагноз',
         'recommendations': ['Демонстрационная рекомендация'],
       };
@@ -180,15 +201,38 @@ void main() {
     await tester.tap(find.text('Профиль'));
     await tester.pumpAndSettle();
     expect(find.text('demo@example.test'), findsOneWidget);
-    await tester.tap(find.text('Открыть демонстрационный опрос'));
+    await tester.tap(find.text('Пройти опрос о неделе'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(CheckboxListTile).first);
+    await tester.tap(find.byType(SwitchListTile));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Отправить демонстрационные ответы'));
-    await tester.tap(find.text('Отправить демонстрационные ответы'));
+    expect(find.text('Что помогало с жильём?'), findsOneWidget);
+    await tester.enterText(find.byType(TextFormField), 'Ищу жильё');
+    await tester.tap(find.text('1'));
+    await tester.ensureVisible(find.text('Дальше'));
+    await tester.tap(find.text('Дальше'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Пропустить вопрос'));
+    await tester.pumpAndSettle();
+    final consent = find.text(
+      'Подтверждаю описание и оценки. Сохранить их и ответы в SAYA.',
+    );
+    await tester.scrollUntilVisible(
+      consent,
+      240,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(consent);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Сохранить результат'));
+    await tester.tap(find.text('Сохранить результат'));
     await tester.pumpAndSettle();
     expect(find.text('Результат готов'), findsOneWidget);
-    expect(find.text('Демонстрационная рекомендация'), findsOneWidget);
+    expect(find.text('Подтверждено'), findsOneWidget);
+    await tester.tap(find.text('Вернуться в профиль'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Последний результат'));
+    await tester.pumpAndSettle();
+    expect(find.text('Подтверждено'), findsOneWidget);
   });
   test('Session reports success, failure and logout', () async {
     final fake = FakeApi();

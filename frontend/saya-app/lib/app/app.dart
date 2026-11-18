@@ -204,17 +204,44 @@ class Profile extends ConsumerWidget {
     final user =
         profile.asData?.value ?? ref.watch(sessionProvider).asData?.value;
     return Scaffold(
-      appBar: AppBar(title: const Text('Профиль')),
+      appBar: AppBar(
+        title: const Text('Профиль'),
+        actions: [
+          IconButton(
+            tooltip: 'На главную',
+            onPressed: () => context.go('/home'),
+            icon: const Icon(Icons.home_outlined),
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(user?['email'] as String? ?? ''),
             const SizedBox(height: 16),
-            const Text('Демонстрационная версия'),
+            ref
+                .watch(latestSurveyProvider)
+                .when(
+                  data:
+                      (id) =>
+                          id == null || id.isEmpty
+                              ? const Text('Вы ещё не проходили опрос')
+                              : OutlinedButton(
+                                onPressed:
+                                    () => context.push('/assessment/$id'),
+                                child: const Text('Последний результат'),
+                              ),
+                  error:
+                      (_, __) => TextButton(
+                        onPressed: () => ref.invalidate(latestSurveyProvider),
+                        child: const Text('Повторить загрузку результата'),
+                      ),
+                  loading: () => const LinearProgressIndicator(),
+                ),
             FilledButton(
               onPressed: () => context.go('/survey'),
-              child: const Text('Открыть демонстрационный опрос'),
+              child: const Text('Пройти опрос о неделе'),
             ),
             Text(
               realtime.asData?.value['event'] == 'demo.completed'
