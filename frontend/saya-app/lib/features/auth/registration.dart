@@ -55,7 +55,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
         await ref
             .read(sessionProvider.notifier)
             .confirmRegistration(challenge!, code.text);
-        if (mounted) context.go('/profile');
+        if (mounted) context.go('/home');
       }
     } catch (e) {
       if (mounted)
@@ -181,6 +181,10 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                     TextButton(
                       onPressed: busy ? null : () => context.go('/login'),
                       child: const Text('Уже есть аккаунт'),
+                    ),
+                    TextButton(
+                      onPressed: busy ? null : () => context.push('/appeals'),
+                      child: const Text('Помочь человеку'),
                     ),
                   ],
                 ),

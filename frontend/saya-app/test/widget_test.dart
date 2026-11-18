@@ -69,7 +69,36 @@ class FakeApi extends Api {
 }
 
 void main() {
-  testWidgets('Registration requests a code before opening the profile', (
+  testWidgets(
+    'Guest catalog returns to the originating form and emergency contacts open without login',
+    (tester) async {
+      await tester.pumpWidget(const ProviderScope(child: SayaApp()));
+      for (final label in ['Войти', 'Создать аккаунт']) {
+        await tester.tap(find.text(label).last);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('Помочь человеку'));
+        await tester.tap(find.text('Помочь человеку'));
+        await tester.pumpAndSettle();
+        expect(
+          find.text('Пока нет опубликованных анкет для помощи.'),
+          findsOneWidget,
+        );
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+        expect(find.text(label), findsWidgets);
+      }
+    },
+  );
+
+  testWidgets('Emergency directory is accessible from welcome', (tester) async {
+    await tester.pumpWidget(const ProviderScope(child: SayaApp()));
+    await tester.tap(find.text('Экстренная помощь'));
+    await tester.pumpAndSettle();
+    expect(find.text('112'), findsOneWidget);
+    expect(find.text('103'), findsOneWidget);
+    expect(find.text('104'), findsOneWidget);
+  });
+  testWidgets('Registration requests a code before opening the home screen', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -103,7 +132,22 @@ void main() {
     await tester.enterText(fields, '123456');
     await tester.tap(find.text('Подтвердить и войти'));
     await tester.pumpAndSettle();
-    expect(find.text('demo@example.test'), findsOneWidget);
+    expect(find.text('Какая помощь вам нужна?'), findsOneWidget);
+    expect(find.text('Денежная поддержка'), findsNothing);
+    for (final label in [
+      'Жильё',
+      'Поиск работы',
+      'Психолог',
+      'Социальная поддержка',
+      'Экстренная помощь',
+    ]) {
+      await tester.ensureVisible(find.text(label));
+      await tester.tap(find.text(label));
+      await tester.pumpAndSettle();
+      expect(find.text(label), findsOneWidget);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+    }
   });
   testWidgets('Welcome opens login form', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: SayaApp()));
@@ -132,6 +176,8 @@ void main() {
       'demonstration-password',
     );
     await tester.tap(find.text('Продолжить'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Профиль'));
     await tester.pumpAndSettle();
     expect(find.text('demo@example.test'), findsOneWidget);
     await tester.tap(find.text('Открыть демонстрационный опрос'));

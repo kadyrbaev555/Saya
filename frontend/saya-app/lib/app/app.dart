@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../features/auth/session.dart';
 import '../features/auth/registration.dart';
+import '../features/support/support.dart';
 import '../features/surveys/survey.dart';
 import '../features/assessments/assessment.dart';
 import '../core/realtime/realtime.dart';
@@ -18,17 +19,30 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: refresh,
     redirect: (context, state) {
       final signedIn = ref.read(sessionProvider).asData?.value != null;
-      if ((state.uri.path == '/profile' ||
+      if ((state.uri.path == '/home' ||
+              (state.uri.path.startsWith('/support/') &&
+                  state.uri.path != '/support/emergency') ||
+              state.uri.path == '/profile' ||
               state.uri.path == '/survey' ||
               state.uri.path.startsWith('/assessment/')) &&
           !signedIn)
         return '/login';
       if (signedIn &&
           (state.uri.path == '/login' || state.uri.path == '/register'))
-        return '/profile';
+        return '/home';
       return null;
     },
     routes: [
+      GoRoute(path: '/home', builder: (context, state) => const SupportHome()),
+      GoRoute(
+        path: '/appeals',
+        builder: (context, state) => const PublicAppeals(),
+      ),
+      for (final item in Direction.values)
+        GoRoute(
+          path: '/support/${item.path}',
+          builder: (context, state) => DirectionPage(item),
+        ),
       GoRoute(
         path: '/',
         builder:
@@ -42,7 +56,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     TextButton(
                       onPressed: () async {
                         await ref.read(sessionProvider.notifier).restore();
-                        if (context.mounted) context.go('/profile');
+                        if (context.mounted) context.go('/home');
                       },
                       child: const Text('Продолжить сессию'),
                     ),
@@ -54,6 +68,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                     TextButton(
                       onPressed: () => context.go('/register'),
                       child: const Text('Создать аккаунт'),
+                    ),
+                    TextButton(
+                      onPressed: () => context.push('/appeals'),
+                      child: const Text('Помочь человеку'),
+                    ),
+                    TextButton(
+                      onPressed: () => context.push('/support/emergency'),
+                      child: const Text('Экстренная помощь'),
                     ),
                   ],
                 ),
@@ -109,56 +131,62 @@ class _AuthFormState extends ConsumerState<AuthForm> {
     return Scaffold(
       appBar: AppBar(title: Text('Войти')),
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 440),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: email,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: password,
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Пароль (от 12 символов)',
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 440),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: email,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(labelText: 'Email'),
                   ),
-                ),
-                const SizedBox(height: 24),
-                if (state.hasError)
-                  const Text(
-                    'Не удалось войти. Проверьте данные и соединение.',
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: password,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Пароль (от 12 символов)',
+                    ),
                   ),
-                FilledButton(
-                  onPressed:
-                      state.isLoading
-                          ? null
-                          : () async {
-                            await ref
-                                .read(sessionProvider.notifier)
-                                .authenticate(
-                                  'login',
-                                  email.text,
-                                  password.text,
-                                );
-                          },
-                  child:
-                      state.isLoading
-                          ? const CircularProgressIndicator()
-                          : const Text('Продолжить'),
-                ),
-                TextButton(
-                  onPressed: () => context.go('/register'),
-                  child: Text('Создать аккаунт'),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  if (state.hasError)
+                    const Text(
+                      'Не удалось войти. Проверьте данные и соединение.',
+                    ),
+                  FilledButton(
+                    onPressed:
+                        state.isLoading
+                            ? null
+                            : () async {
+                              await ref
+                                  .read(sessionProvider.notifier)
+                                  .authenticate(
+                                    'login',
+                                    email.text,
+                                    password.text,
+                                  );
+                            },
+                    child:
+                        state.isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text('Продолжить'),
+                  ),
+                  TextButton(
+                    onPressed: () => context.go('/register'),
+                    child: Text('Создать аккаунт'),
+                  ),
+                  TextButton(
+                    onPressed: () => context.push('/appeals'),
+                    child: const Text('Помочь человеку'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
