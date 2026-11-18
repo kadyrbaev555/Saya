@@ -15,3 +15,7 @@ POST /api/v1/auth/register/confirm принимает registration_id и code к
 GET /api/v1/surveys/interview возвращает версию 2 и шесть вопросов с утверждёнными вариантами формулировок. POST /api/v1/surveys/interview/focus принимает topic, ratings и отдельное согласие consent. GET /api/v1/surveys/current по-прежнему обслуживает клиентов версии 1.
 
 POST /api/v1/surveys/submissions принимает saya-week, version=2, свободные responses, подтверждённые ratings (0–4), summary, выбранные needs и question_focus. Пропущенные оценки отсутствуют в карте. GET /api/v1/surveys/latest возвращает id последнего прохождения владельца или пустую строку. По этому id GET /api/v1/assessments/{id} отдаёт summary, ratings, percentage и directions. При неполной шкале percentage равен null, нулевой итог остаётся числом 0.
+
+## Вакансии в Алматы
+
+POST /api/v1/support/vacancies требует авторизованной сессии. Клиент передаёт подтверждённые поисковые слова в text и код города 160 в area. Gateway обращается к https://api.hh.ru/vacancies и возвращает до десяти записей в исходном порядке HeadHunter. Ответ содержит items с полями title, employer и url. Пустой массив означает отсутствие результатов. При ошибке провайдера клиент открывает поиск на hh.kz по тем же параметрам. Для доступа зарегистрированного приложения настройте HH_APP_TOKEN в окружении api-gateway и перезапустите Gateway.

@@ -308,6 +308,95 @@
           }
         }
       }
+    },
+    "/api/v1/support/vacancies": {
+      "post": {
+        "summary": "Search HeadHunter vacancies in the pilot city",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "area",
+                  "text"
+                ],
+                "properties": {
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "160"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HeadHunter results, in provider order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "title",
+                          "employer",
+                          "url"
+                        ],
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "employer": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid search"
+          },
+          "401": {
+            "description": "Session required"
+          },
+          "502": {
+            "description": "Invalid provider response"
+          },
+          "503": {
+            "description": "HeadHunter unavailable or access denied"
+          }
+        }
+      }
     }
   },
   "components": {

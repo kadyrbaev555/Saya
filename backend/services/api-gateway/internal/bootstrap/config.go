@@ -3,6 +3,7 @@ package bootstrap
 import "saya/config"
 
 type Config struct {
+	HHAppToken        string
 	AuthAddress       string
 	SurveyAddress     string
 	AssessmentAddress string
@@ -20,6 +21,7 @@ func LoadConfig() (Config, error) {
 		return Config{}, e
 	}
 	c := Config{
+		HHAppToken:        r.String("HH_APP_TOKEN", ""),
 		AuthAddress:       r.Address("AUTH_ADDRESS", "auth:9000"),
 		SurveyAddress:     r.Address("SURVEY_ADDRESS", "survey:9000"),
 		AssessmentAddress: r.Address("ASSESSMENT_ADDRESS", "assessment:9000"),

@@ -405,6 +405,7 @@ func run() error {
 		}
 		c.JSON(200, gin.H{"id": v.Id, "status": v.Status, "version": v.Version, "summary": v.Summary, "ratings": v.Ratings, "percentage": v.Percentage, "directions": v.Directions, "immediate_threat_reported": v.ImmediateThreatReported, "recommendations": v.Recommendations, "disclaimer": v.Disclaimer, "provider": v.Provider})
 	})
+	r.POST("/api/v1/support/vacancies", authenticate, vacancySearch(&http.Client{Timeout: 6 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}, cfg.HHAppToken))
 	r.GET("/api/v1/users/me", authenticate, func(c *gin.Context) {
 		u, e := client.Me(c.Request.Context(), &pb.Identity{UserId: c.GetString("user_id")})
 		if e != nil {
