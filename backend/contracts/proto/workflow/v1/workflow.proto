@@ -2,7 +2,7 @@ syntax="proto3";
 package saya.workflow.v1;
 option go_package="saya/contracts/workflow/v1;workflowv1";
 service Survey {rpc Interview(Empty)returns(Questionnaire);rpc Latest(Owner)returns(Operation);rpc Current(Empty)returns(Questionnaire);rpc Submit(Submission)returns(Operation);rpc Input(OwnedID)returns(Submission);}
-service Assessment {rpc Get(OwnedID)returns(Result);rpc Input(OwnedID)returns(Submission);rpc Complete(Completion)returns(Empty);}
+service Assessment {rpc History(HistoryRequest)returns(WeeklyHistory);rpc SetDevice(DeviceRequest)returns(Empty);rpc Get(OwnedID)returns(Result);rpc Input(OwnedID)returns(Submission);rpc Complete(Completion)returns(Empty);}
 service InterviewAssistant {rpc Focus(FocusRequest)returns(FocusResult);}
 message FocusRequest{string topic=1;map<string,int32> ratings=2;bool consent=3;}
 message FocusResult{string focus=1;}
@@ -15,3 +15,8 @@ message OwnedID{string id=1;string user_id=2;}
 message Operation{string id=1;string status=2;}
 message Result{string id=1;string status=2;bool immediate_threat_reported=3;repeated string recommendations=4;string disclaimer=5;string provider=6;map<string,int32> ratings=7;optional int32 percentage=8;string summary=9;repeated string directions=10;int32 version=11;}
 message Completion{string id=1;string user_id=2;repeated string recommendations=3;string provider=4;bool failed=5;}
+
+message HistoryRequest{string user_id=1;string before_id=2;}
+message DeviceRequest{string user_id=1;string token=2;bool enabled=3;}
+message WeeklyEntry{string id=1;int64 completed_at=2;int32 version=3;optional int32 percentage=4;map<string,int32> ratings=5;repeated string directions=6;}
+message WeeklyHistory{repeated WeeklyEntry entries=1;int64 next_due=2;bool reminder_due=3;string next_cursor=4;bool push_available=5;}

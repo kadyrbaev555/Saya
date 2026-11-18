@@ -3,6 +3,7 @@ package bootstrap
 import "saya/config"
 
 type Config struct {
+	FCMCredentials   string
 	DatabaseURL      string
 	RabbitURL        string
 	SurveyAddress    string
@@ -16,6 +17,7 @@ func LoadConfig() (Config, error) {
 		return Config{}, e
 	}
 	c := Config{
+		FCMCredentials:   r.String("FCM_SERVICE_ACCOUNT_B64", ""),
 		DatabaseURL:      r.URL("DATABASE_URL", "postgres", "postgresql"),
 		RabbitURL:        r.URL("RABBIT_URL", "amqp", "amqps"),
 		SurveyAddress:    r.Address("SURVEY_ADDRESS", "survey:9000"),

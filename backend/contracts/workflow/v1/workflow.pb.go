@@ -769,6 +769,278 @@ func (x *Completion) GetFailed() bool {
 	return false
 }
 
+type HistoryRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	BeforeId      string                 `protobuf:"bytes,2,opt,name=before_id,json=beforeId,proto3" json:"before_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HistoryRequest) Reset() {
+	*x = HistoryRequest{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HistoryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HistoryRequest) ProtoMessage() {}
+
+func (x *HistoryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HistoryRequest.ProtoReflect.Descriptor instead.
+func (*HistoryRequest) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *HistoryRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *HistoryRequest) GetBeforeId() string {
+	if x != nil {
+		return x.BeforeId
+	}
+	return ""
+}
+
+type DeviceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Token         string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeviceRequest) Reset() {
+	*x = DeviceRequest{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeviceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeviceRequest) ProtoMessage() {}
+
+func (x *DeviceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeviceRequest.ProtoReflect.Descriptor instead.
+func (*DeviceRequest) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *DeviceRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *DeviceRequest) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+func (x *DeviceRequest) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
+	}
+	return false
+}
+
+type WeeklyEntry struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CompletedAt   int64                  `protobuf:"varint,2,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
+	Version       int32                  `protobuf:"varint,3,opt,name=version,proto3" json:"version,omitempty"`
+	Percentage    *int32                 `protobuf:"varint,4,opt,name=percentage,proto3,oneof" json:"percentage,omitempty"`
+	Ratings       map[string]int32       `protobuf:"bytes,5,rep,name=ratings,proto3" json:"ratings,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	Directions    []string               `protobuf:"bytes,6,rep,name=directions,proto3" json:"directions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WeeklyEntry) Reset() {
+	*x = WeeklyEntry{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WeeklyEntry) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WeeklyEntry) ProtoMessage() {}
+
+func (x *WeeklyEntry) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WeeklyEntry.ProtoReflect.Descriptor instead.
+func (*WeeklyEntry) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *WeeklyEntry) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *WeeklyEntry) GetCompletedAt() int64 {
+	if x != nil {
+		return x.CompletedAt
+	}
+	return 0
+}
+
+func (x *WeeklyEntry) GetVersion() int32 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
+func (x *WeeklyEntry) GetPercentage() int32 {
+	if x != nil && x.Percentage != nil {
+		return *x.Percentage
+	}
+	return 0
+}
+
+func (x *WeeklyEntry) GetRatings() map[string]int32 {
+	if x != nil {
+		return x.Ratings
+	}
+	return nil
+}
+
+func (x *WeeklyEntry) GetDirections() []string {
+	if x != nil {
+		return x.Directions
+	}
+	return nil
+}
+
+type WeeklyHistory struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Entries       []*WeeklyEntry         `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty"`
+	NextDue       int64                  `protobuf:"varint,2,opt,name=next_due,json=nextDue,proto3" json:"next_due,omitempty"`
+	ReminderDue   bool                   `protobuf:"varint,3,opt,name=reminder_due,json=reminderDue,proto3" json:"reminder_due,omitempty"`
+	NextCursor    string                 `protobuf:"bytes,4,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
+	PushAvailable bool                   `protobuf:"varint,5,opt,name=push_available,json=pushAvailable,proto3" json:"push_available,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WeeklyHistory) Reset() {
+	*x = WeeklyHistory{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WeeklyHistory) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WeeklyHistory) ProtoMessage() {}
+
+func (x *WeeklyHistory) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WeeklyHistory.ProtoReflect.Descriptor instead.
+func (*WeeklyHistory) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *WeeklyHistory) GetEntries() []*WeeklyEntry {
+	if x != nil {
+		return x.Entries
+	}
+	return nil
+}
+
+func (x *WeeklyHistory) GetNextDue() int64 {
+	if x != nil {
+		return x.NextDue
+	}
+	return 0
+}
+
+func (x *WeeklyHistory) GetReminderDue() bool {
+	if x != nil {
+		return x.ReminderDue
+	}
+	return false
+}
+
+func (x *WeeklyHistory) GetNextCursor() string {
+	if x != nil {
+		return x.NextCursor
+	}
+	return ""
+}
+
+func (x *WeeklyHistory) GetPushAvailable() bool {
+	if x != nil {
+		return x.PushAvailable
+	}
+	return false
+}
+
 var File_workflow_v1_workflow_proto protoreflect.FileDescriptor
 
 const file_workflow_v1_workflow_proto_rawDesc = "" +
@@ -862,15 +1134,46 @@ const file_workflow_v1_workflow_proto_rawDesc = "" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12(\n" +
 	"\x0frecommendations\x18\x03 \x03(\tR\x0frecommendations\x12\x1a\n" +
 	"\bprovider\x18\x04 \x01(\tR\bprovider\x12\x16\n" +
-	"\x06failed\x18\x05 \x01(\bR\x06failed2\xdb\x02\n" +
+	"\x06failed\x18\x05 \x01(\bR\x06failed\"F\n" +
+	"\x0eHistoryRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
+	"\tbefore_id\x18\x02 \x01(\tR\bbeforeId\"X\n" +
+	"\rDeviceRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05token\x18\x02 \x01(\tR\x05token\x12\x18\n" +
+	"\aenabled\x18\x03 \x01(\bR\aenabled\"\xb0\x02\n" +
+	"\vWeeklyEntry\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
+	"\fcompleted_at\x18\x02 \x01(\x03R\vcompletedAt\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\x05R\aversion\x12#\n" +
+	"\n" +
+	"percentage\x18\x04 \x01(\x05H\x00R\n" +
+	"percentage\x88\x01\x01\x12D\n" +
+	"\aratings\x18\x05 \x03(\v2*.saya.workflow.v1.WeeklyEntry.RatingsEntryR\aratings\x12\x1e\n" +
+	"\n" +
+	"directions\x18\x06 \x03(\tR\n" +
+	"directions\x1a:\n" +
+	"\fRatingsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01B\r\n" +
+	"\v_percentage\"\xce\x01\n" +
+	"\rWeeklyHistory\x127\n" +
+	"\aentries\x18\x01 \x03(\v2\x1d.saya.workflow.v1.WeeklyEntryR\aentries\x12\x19\n" +
+	"\bnext_due\x18\x02 \x01(\x03R\anextDue\x12!\n" +
+	"\freminder_due\x18\x03 \x01(\bR\vreminderDue\x12\x1f\n" +
+	"\vnext_cursor\x18\x04 \x01(\tR\n" +
+	"nextCursor\x12%\n" +
+	"\x0epush_available\x18\x05 \x01(\bR\rpushAvailable2\xdb\x02\n" +
 	"\x06Survey\x12E\n" +
 	"\tInterview\x12\x17.saya.workflow.v1.Empty\x1a\x1f.saya.workflow.v1.Questionnaire\x12>\n" +
 	"\x06Latest\x12\x17.saya.workflow.v1.Owner\x1a\x1b.saya.workflow.v1.Operation\x12C\n" +
 	"\aCurrent\x12\x17.saya.workflow.v1.Empty\x1a\x1f.saya.workflow.v1.Questionnaire\x12C\n" +
 	"\x06Submit\x12\x1c.saya.workflow.v1.Submission\x1a\x1b.saya.workflow.v1.Operation\x12@\n" +
-	"\x05Input\x12\x19.saya.workflow.v1.OwnedID\x1a\x1c.saya.workflow.v1.Submission2\xcd\x01\n" +
+	"\x05Input\x12\x19.saya.workflow.v1.OwnedID\x1a\x1c.saya.workflow.v1.Submission2\xe2\x02\n" +
 	"\n" +
-	"Assessment\x12:\n" +
+	"Assessment\x12L\n" +
+	"\aHistory\x12 .saya.workflow.v1.HistoryRequest\x1a\x1f.saya.workflow.v1.WeeklyHistory\x12E\n" +
+	"\tSetDevice\x12\x1f.saya.workflow.v1.DeviceRequest\x1a\x17.saya.workflow.v1.Empty\x12:\n" +
 	"\x03Get\x12\x19.saya.workflow.v1.OwnedID\x1a\x18.saya.workflow.v1.Result\x12@\n" +
 	"\x05Input\x12\x19.saya.workflow.v1.OwnedID\x1a\x1c.saya.workflow.v1.Submission\x12A\n" +
 	"\bComplete\x12\x1c.saya.workflow.v1.Completion\x1a\x17.saya.workflow.v1.Empty2\\\n" +
@@ -889,59 +1192,70 @@ func file_workflow_v1_workflow_proto_rawDescGZIP() []byte {
 	return file_workflow_v1_workflow_proto_rawDescData
 }
 
-var file_workflow_v1_workflow_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_workflow_v1_workflow_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_workflow_v1_workflow_proto_goTypes = []any{
-	(*FocusRequest)(nil),  // 0: saya.workflow.v1.FocusRequest
-	(*FocusResult)(nil),   // 1: saya.workflow.v1.FocusResult
-	(*Empty)(nil),         // 2: saya.workflow.v1.Empty
-	(*Owner)(nil),         // 3: saya.workflow.v1.Owner
-	(*Questionnaire)(nil), // 4: saya.workflow.v1.Questionnaire
-	(*Question)(nil),      // 5: saya.workflow.v1.Question
-	(*Submission)(nil),    // 6: saya.workflow.v1.Submission
-	(*OwnedID)(nil),       // 7: saya.workflow.v1.OwnedID
-	(*Operation)(nil),     // 8: saya.workflow.v1.Operation
-	(*Result)(nil),        // 9: saya.workflow.v1.Result
-	(*Completion)(nil),    // 10: saya.workflow.v1.Completion
-	nil,                   // 11: saya.workflow.v1.FocusRequest.RatingsEntry
-	nil,                   // 12: saya.workflow.v1.Question.VariantsEntry
-	nil,                   // 13: saya.workflow.v1.Submission.AnswersEntry
-	nil,                   // 14: saya.workflow.v1.Submission.ResponsesEntry
-	nil,                   // 15: saya.workflow.v1.Submission.RatingsEntry
-	nil,                   // 16: saya.workflow.v1.Submission.QuestionFocusEntry
-	nil,                   // 17: saya.workflow.v1.Result.RatingsEntry
+	(*FocusRequest)(nil),   // 0: saya.workflow.v1.FocusRequest
+	(*FocusResult)(nil),    // 1: saya.workflow.v1.FocusResult
+	(*Empty)(nil),          // 2: saya.workflow.v1.Empty
+	(*Owner)(nil),          // 3: saya.workflow.v1.Owner
+	(*Questionnaire)(nil),  // 4: saya.workflow.v1.Questionnaire
+	(*Question)(nil),       // 5: saya.workflow.v1.Question
+	(*Submission)(nil),     // 6: saya.workflow.v1.Submission
+	(*OwnedID)(nil),        // 7: saya.workflow.v1.OwnedID
+	(*Operation)(nil),      // 8: saya.workflow.v1.Operation
+	(*Result)(nil),         // 9: saya.workflow.v1.Result
+	(*Completion)(nil),     // 10: saya.workflow.v1.Completion
+	(*HistoryRequest)(nil), // 11: saya.workflow.v1.HistoryRequest
+	(*DeviceRequest)(nil),  // 12: saya.workflow.v1.DeviceRequest
+	(*WeeklyEntry)(nil),    // 13: saya.workflow.v1.WeeklyEntry
+	(*WeeklyHistory)(nil),  // 14: saya.workflow.v1.WeeklyHistory
+	nil,                    // 15: saya.workflow.v1.FocusRequest.RatingsEntry
+	nil,                    // 16: saya.workflow.v1.Question.VariantsEntry
+	nil,                    // 17: saya.workflow.v1.Submission.AnswersEntry
+	nil,                    // 18: saya.workflow.v1.Submission.ResponsesEntry
+	nil,                    // 19: saya.workflow.v1.Submission.RatingsEntry
+	nil,                    // 20: saya.workflow.v1.Submission.QuestionFocusEntry
+	nil,                    // 21: saya.workflow.v1.Result.RatingsEntry
+	nil,                    // 22: saya.workflow.v1.WeeklyEntry.RatingsEntry
 }
 var file_workflow_v1_workflow_proto_depIdxs = []int32{
-	11, // 0: saya.workflow.v1.FocusRequest.ratings:type_name -> saya.workflow.v1.FocusRequest.RatingsEntry
+	15, // 0: saya.workflow.v1.FocusRequest.ratings:type_name -> saya.workflow.v1.FocusRequest.RatingsEntry
 	5,  // 1: saya.workflow.v1.Questionnaire.questions:type_name -> saya.workflow.v1.Question
-	12, // 2: saya.workflow.v1.Question.variants:type_name -> saya.workflow.v1.Question.VariantsEntry
-	13, // 3: saya.workflow.v1.Submission.answers:type_name -> saya.workflow.v1.Submission.AnswersEntry
-	14, // 4: saya.workflow.v1.Submission.responses:type_name -> saya.workflow.v1.Submission.ResponsesEntry
-	15, // 5: saya.workflow.v1.Submission.ratings:type_name -> saya.workflow.v1.Submission.RatingsEntry
-	16, // 6: saya.workflow.v1.Submission.question_focus:type_name -> saya.workflow.v1.Submission.QuestionFocusEntry
-	17, // 7: saya.workflow.v1.Result.ratings:type_name -> saya.workflow.v1.Result.RatingsEntry
-	2,  // 8: saya.workflow.v1.Survey.Interview:input_type -> saya.workflow.v1.Empty
-	3,  // 9: saya.workflow.v1.Survey.Latest:input_type -> saya.workflow.v1.Owner
-	2,  // 10: saya.workflow.v1.Survey.Current:input_type -> saya.workflow.v1.Empty
-	6,  // 11: saya.workflow.v1.Survey.Submit:input_type -> saya.workflow.v1.Submission
-	7,  // 12: saya.workflow.v1.Survey.Input:input_type -> saya.workflow.v1.OwnedID
-	7,  // 13: saya.workflow.v1.Assessment.Get:input_type -> saya.workflow.v1.OwnedID
-	7,  // 14: saya.workflow.v1.Assessment.Input:input_type -> saya.workflow.v1.OwnedID
-	10, // 15: saya.workflow.v1.Assessment.Complete:input_type -> saya.workflow.v1.Completion
-	0,  // 16: saya.workflow.v1.InterviewAssistant.Focus:input_type -> saya.workflow.v1.FocusRequest
-	4,  // 17: saya.workflow.v1.Survey.Interview:output_type -> saya.workflow.v1.Questionnaire
-	8,  // 18: saya.workflow.v1.Survey.Latest:output_type -> saya.workflow.v1.Operation
-	4,  // 19: saya.workflow.v1.Survey.Current:output_type -> saya.workflow.v1.Questionnaire
-	8,  // 20: saya.workflow.v1.Survey.Submit:output_type -> saya.workflow.v1.Operation
-	6,  // 21: saya.workflow.v1.Survey.Input:output_type -> saya.workflow.v1.Submission
-	9,  // 22: saya.workflow.v1.Assessment.Get:output_type -> saya.workflow.v1.Result
-	6,  // 23: saya.workflow.v1.Assessment.Input:output_type -> saya.workflow.v1.Submission
-	2,  // 24: saya.workflow.v1.Assessment.Complete:output_type -> saya.workflow.v1.Empty
-	1,  // 25: saya.workflow.v1.InterviewAssistant.Focus:output_type -> saya.workflow.v1.FocusResult
-	17, // [17:26] is the sub-list for method output_type
-	8,  // [8:17] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	16, // 2: saya.workflow.v1.Question.variants:type_name -> saya.workflow.v1.Question.VariantsEntry
+	17, // 3: saya.workflow.v1.Submission.answers:type_name -> saya.workflow.v1.Submission.AnswersEntry
+	18, // 4: saya.workflow.v1.Submission.responses:type_name -> saya.workflow.v1.Submission.ResponsesEntry
+	19, // 5: saya.workflow.v1.Submission.ratings:type_name -> saya.workflow.v1.Submission.RatingsEntry
+	20, // 6: saya.workflow.v1.Submission.question_focus:type_name -> saya.workflow.v1.Submission.QuestionFocusEntry
+	21, // 7: saya.workflow.v1.Result.ratings:type_name -> saya.workflow.v1.Result.RatingsEntry
+	22, // 8: saya.workflow.v1.WeeklyEntry.ratings:type_name -> saya.workflow.v1.WeeklyEntry.RatingsEntry
+	13, // 9: saya.workflow.v1.WeeklyHistory.entries:type_name -> saya.workflow.v1.WeeklyEntry
+	2,  // 10: saya.workflow.v1.Survey.Interview:input_type -> saya.workflow.v1.Empty
+	3,  // 11: saya.workflow.v1.Survey.Latest:input_type -> saya.workflow.v1.Owner
+	2,  // 12: saya.workflow.v1.Survey.Current:input_type -> saya.workflow.v1.Empty
+	6,  // 13: saya.workflow.v1.Survey.Submit:input_type -> saya.workflow.v1.Submission
+	7,  // 14: saya.workflow.v1.Survey.Input:input_type -> saya.workflow.v1.OwnedID
+	11, // 15: saya.workflow.v1.Assessment.History:input_type -> saya.workflow.v1.HistoryRequest
+	12, // 16: saya.workflow.v1.Assessment.SetDevice:input_type -> saya.workflow.v1.DeviceRequest
+	7,  // 17: saya.workflow.v1.Assessment.Get:input_type -> saya.workflow.v1.OwnedID
+	7,  // 18: saya.workflow.v1.Assessment.Input:input_type -> saya.workflow.v1.OwnedID
+	10, // 19: saya.workflow.v1.Assessment.Complete:input_type -> saya.workflow.v1.Completion
+	0,  // 20: saya.workflow.v1.InterviewAssistant.Focus:input_type -> saya.workflow.v1.FocusRequest
+	4,  // 21: saya.workflow.v1.Survey.Interview:output_type -> saya.workflow.v1.Questionnaire
+	8,  // 22: saya.workflow.v1.Survey.Latest:output_type -> saya.workflow.v1.Operation
+	4,  // 23: saya.workflow.v1.Survey.Current:output_type -> saya.workflow.v1.Questionnaire
+	8,  // 24: saya.workflow.v1.Survey.Submit:output_type -> saya.workflow.v1.Operation
+	6,  // 25: saya.workflow.v1.Survey.Input:output_type -> saya.workflow.v1.Submission
+	14, // 26: saya.workflow.v1.Assessment.History:output_type -> saya.workflow.v1.WeeklyHistory
+	2,  // 27: saya.workflow.v1.Assessment.SetDevice:output_type -> saya.workflow.v1.Empty
+	9,  // 28: saya.workflow.v1.Assessment.Get:output_type -> saya.workflow.v1.Result
+	6,  // 29: saya.workflow.v1.Assessment.Input:output_type -> saya.workflow.v1.Submission
+	2,  // 30: saya.workflow.v1.Assessment.Complete:output_type -> saya.workflow.v1.Empty
+	1,  // 31: saya.workflow.v1.InterviewAssistant.Focus:output_type -> saya.workflow.v1.FocusResult
+	21, // [21:32] is the sub-list for method output_type
+	10, // [10:21] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_workflow_v1_workflow_proto_init() }
@@ -950,13 +1264,14 @@ func file_workflow_v1_workflow_proto_init() {
 		return
 	}
 	file_workflow_v1_workflow_proto_msgTypes[9].OneofWrappers = []any{}
+	file_workflow_v1_workflow_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_workflow_v1_workflow_proto_rawDesc), len(file_workflow_v1_workflow_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

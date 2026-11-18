@@ -89,8 +89,17 @@ func (r Repository) Complete(ctx context.Context, id, user string, codes []strin
 		provider = "unavailable"
 	}
 	result, _ := json.Marshal(domain.Build(id, state, signal, codes, provider))
-	if _, e = tx.ExecContext(ctx, "UPDATE assessments SET result=$1,status=$2 WHERE id=$3", string(result), state, id); e != nil {
+	if _, e = tx.ExecContext(ctx, "UPDATE assessments SET result=$1,status=$2,completed_at=CASE WHEN $2='completed' THEN clock_timestamp() END WHERE id=$3", string(result), state, id); e != nil {
 		return e
+	}
+	if !failed && signal.SourceVersion == 2 {
+		_, e = tx.ExecContext(ctx, `INSERT INTO weekly_reminders(user_id,assessment_id,due_at)
+    SELECT user_id,id,completed_at+interval '168 hours' FROM assessments WHERE id=$1
+    ON CONFLICT(user_id) DO UPDATE SET assessment_id=excluded.assessment_id,due_at=excluded.due_at,announced=false
+    WHERE (excluded.due_at,excluded.assessment_id)>(weekly_reminders.due_at,weekly_reminders.assessment_id)`, id)
+		if e != nil {
+			return e
+		}
 	}
 	if _, e = tx.ExecContext(ctx, "INSERT INTO notifications(id,user_id,status) VALUES($1,$2,$3) ON CONFLICT DO NOTHING", id, user, state); e != nil {
 		return e

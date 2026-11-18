@@ -29,6 +29,7 @@ replace saya/platform => ../../packages/platform
 
 require (
 	github.com/lib/pq v1.10.9
+	golang.org/x/oauth2 v0.30.0
 	saya/config v0.0.0
 )
 

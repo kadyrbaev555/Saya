@@ -6,6 +6,8 @@ import (
 )
 
 type Repository interface {
+ History(context.Context,string,string)(domain.WeeklyHistory,error)
+ SetDevice(context.Context,string,string,bool)error
 	Create(context.Context, string, string, domain.Signal) error
 	Input(context.Context, string, string) (domain.Signal, error)
 	Get(context.Context, string, string) (domain.Result, error)

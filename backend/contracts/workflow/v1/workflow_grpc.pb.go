@@ -273,15 +273,19 @@ var Survey_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Assessment_Get_FullMethodName      = "/saya.workflow.v1.Assessment/Get"
-	Assessment_Input_FullMethodName    = "/saya.workflow.v1.Assessment/Input"
-	Assessment_Complete_FullMethodName = "/saya.workflow.v1.Assessment/Complete"
+	Assessment_History_FullMethodName   = "/saya.workflow.v1.Assessment/History"
+	Assessment_SetDevice_FullMethodName = "/saya.workflow.v1.Assessment/SetDevice"
+	Assessment_Get_FullMethodName       = "/saya.workflow.v1.Assessment/Get"
+	Assessment_Input_FullMethodName     = "/saya.workflow.v1.Assessment/Input"
+	Assessment_Complete_FullMethodName  = "/saya.workflow.v1.Assessment/Complete"
 )
 
 // AssessmentClient is the client API for Assessment service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AssessmentClient interface {
+	History(ctx context.Context, in *HistoryRequest, opts ...grpc.CallOption) (*WeeklyHistory, error)
+	SetDevice(ctx context.Context, in *DeviceRequest, opts ...grpc.CallOption) (*Empty, error)
 	Get(ctx context.Context, in *OwnedID, opts ...grpc.CallOption) (*Result, error)
 	Input(ctx context.Context, in *OwnedID, opts ...grpc.CallOption) (*Submission, error)
 	Complete(ctx context.Context, in *Completion, opts ...grpc.CallOption) (*Empty, error)
@@ -293,6 +297,26 @@ type assessmentClient struct {
 
 func NewAssessmentClient(cc grpc.ClientConnInterface) AssessmentClient {
 	return &assessmentClient{cc}
+}
+
+func (c *assessmentClient) History(ctx context.Context, in *HistoryRequest, opts ...grpc.CallOption) (*WeeklyHistory, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WeeklyHistory)
+	err := c.cc.Invoke(ctx, Assessment_History_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assessmentClient) SetDevice(ctx context.Context, in *DeviceRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Assessment_SetDevice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *assessmentClient) Get(ctx context.Context, in *OwnedID, opts ...grpc.CallOption) (*Result, error) {
@@ -329,6 +353,8 @@ func (c *assessmentClient) Complete(ctx context.Context, in *Completion, opts ..
 // All implementations must embed UnimplementedAssessmentServer
 // for forward compatibility.
 type AssessmentServer interface {
+	History(context.Context, *HistoryRequest) (*WeeklyHistory, error)
+	SetDevice(context.Context, *DeviceRequest) (*Empty, error)
 	Get(context.Context, *OwnedID) (*Result, error)
 	Input(context.Context, *OwnedID) (*Submission, error)
 	Complete(context.Context, *Completion) (*Empty, error)
@@ -342,6 +368,12 @@ type AssessmentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAssessmentServer struct{}
 
+func (UnimplementedAssessmentServer) History(context.Context, *HistoryRequest) (*WeeklyHistory, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method History not implemented")
+}
+func (UnimplementedAssessmentServer) SetDevice(context.Context, *DeviceRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDevice not implemented")
+}
 func (UnimplementedAssessmentServer) Get(context.Context, *OwnedID) (*Result, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
@@ -370,6 +402,42 @@ func RegisterAssessmentServer(s grpc.ServiceRegistrar, srv AssessmentServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Assessment_ServiceDesc, srv)
+}
+
+func _Assessment_History_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HistoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).History(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_History_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).History(ctx, req.(*HistoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assessment_SetDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).SetDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_SetDevice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).SetDevice(ctx, req.(*DeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Assessment_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -433,6 +501,14 @@ var Assessment_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "saya.workflow.v1.Assessment",
 	HandlerType: (*AssessmentServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "History",
+			Handler:    _Assessment_History_Handler,
+		},
+		{
+			MethodName: "SetDevice",
+			Handler:    _Assessment_SetDevice_Handler,
+		},
 		{
 			MethodName: "Get",
 			Handler:    _Assessment_Get_Handler,

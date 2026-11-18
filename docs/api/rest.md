@@ -19,3 +19,7 @@ POST /api/v1/surveys/submissions принимает saya-week, version=2, сво
 ## Вакансии в Алматы
 
 POST /api/v1/support/vacancies требует авторизованной сессии. Клиент передаёт подтверждённые поисковые слова в text и код города 160 в area. Gateway обращается к https://api.hh.ru/vacancies и возвращает до десяти записей в исходном порядке HeadHunter. Ответ содержит items с полями title, employer и url. Пустой массив означает отсутствие результатов. При ошибке провайдера клиент открывает поиск на hh.kz по тем же параметрам. Для доступа зарегистрированного приложения настройте HH_APP_TOKEN в окружении api-gateway и перезапустите Gateway.
+
+## Weekly follow-up
+
+Authenticated clients read `GET /api/v1/weekly/history`. Use the returned `next_cursor` as `before` to fetch older results. Timestamps are Unix seconds. A zero `next_due` means no follow-up is scheduled. To change Android push consent, send `installation_id` and boolean `enabled` to `POST /api/v1/weekly/device`.

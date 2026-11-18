@@ -37,6 +37,13 @@ func TestAssessmentPersistence(t *testing.T) {
 	if _, e = db.Exec(strings.Split(string(migration), "-- +goose Down")[0]); e != nil {
 		t.Fatal(e)
 	}
+	weeklyMigration, e := os.ReadFile("../../migrations/00002_weekly.sql")
+	if e != nil {
+		t.Fatal(e)
+	}
+	if _, e = db.Exec(strings.Split(string(weeklyMigration), "-- +goose Down")[0]); e != nil {
+		t.Fatal(e)
+	}
 	r := Repository{DB: db}
 	ctx := context.Background()
 	id, user := uuid.NewString(), uuid.NewString()
@@ -82,4 +89,5 @@ func TestAssessmentPersistence(t *testing.T) {
 	if e != nil || saved.Status != "completed" || saved.Percentage == nil || *saved.Percentage != 50 || saved.Summary != "Confirmed" {
 		t.Fatal("weekly result persistence", e)
 	}
+	checkWeeklyLifecycle(t, r, weekly, user, signal)
 }

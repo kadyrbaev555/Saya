@@ -2,8 +2,10 @@ package adapters
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"regexp"
 	"saya/assessment-service/internal/application"
 	"saya/assessment-service/internal/domain"
 	pb "saya/contracts/workflow/v1"
@@ -24,7 +26,8 @@ func (s Source) Fetch(c context.Context, id, user string) (domain.Signal, error)
 
 type Server struct {
 	pb.UnimplementedAssessmentServer
-	Service application.Service
+	PushAvailable bool
+	Service       application.Service
 }
 
 func (s Server) Get(c context.Context, v *pb.OwnedID) (*pb.Result, error) {
@@ -51,6 +54,37 @@ func (s Server) Complete(c context.Context, v *pb.Completion) (*pb.Empty, error)
 	}
 	if e != nil {
 		return nil, status.Error(codes.Internal, "completion failed")
+	}
+	return &pb.Empty{}, nil
+}
+
+var installationID = regexp.MustCompile(`^[A-Za-z0-9_-]{22}$`)
+
+func (s Server) History(ctx context.Context, in *pb.HistoryRequest) (*pb.WeeklyHistory, error) {
+	if in.BeforeId != "" {
+		if _, err := uuid.Parse(in.BeforeId); err != nil {
+			return nil, status.Error(codes.InvalidArgument, "invalid cursor")
+		}
+	}
+	h, err := s.Service.Repo.History(ctx, in.UserId, in.BeforeId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "history unavailable")
+	}
+	out := &pb.WeeklyHistory{NextDue: h.NextDue, ReminderDue: h.Due, NextCursor: h.NextCursor, PushAvailable: s.PushAvailable}
+	for _, v := range h.Entries {
+		out.Entries = append(out.Entries, &pb.WeeklyEntry{Id: v.ID, CompletedAt: v.CompletedAt, Version: v.Result.Version, Percentage: v.Result.Percentage, Ratings: v.Result.Ratings, Directions: v.Result.Directions})
+	}
+	return out, nil
+}
+func (s Server) SetDevice(ctx context.Context, in *pb.DeviceRequest) (*pb.Empty, error) {
+	if !installationID.MatchString(in.Token) {
+		return nil, status.Error(codes.InvalidArgument, "invalid installation")
+	}
+	if in.Enabled && !s.PushAvailable {
+		return nil, status.Error(codes.Unavailable, "push unavailable")
+	}
+	if err := s.Service.Repo.SetDevice(ctx, in.UserId, in.Token, in.Enabled); err != nil {
+		return nil, status.Error(codes.Internal, "device update unavailable")
 	}
 	return &pb.Empty{}, nil
 }

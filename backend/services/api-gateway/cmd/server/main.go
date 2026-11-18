@@ -393,6 +393,34 @@ func run() error {
 		}
 		c.JSON(202, gin.H{"id": v.Id, "status": v.Status})
 	})
+	r.GET("/api/v1/weekly/history", authenticate, func(c *gin.Context) {
+		v, err := assessment.History(c.Request.Context(), &wp.HistoryRequest{UserId: c.GetString("user_id"), BeforeId: c.Query("before")})
+		if err != nil {
+			fail(c, err)
+			return
+		}
+		entries := make([]gin.H, 0, len(v.Entries))
+		for _, e := range v.Entries {
+			entries = append(entries, gin.H{"id": e.Id, "completed_at": e.CompletedAt, "version": e.Version, "percentage": e.Percentage, "ratings": e.Ratings, "directions": e.Directions})
+		}
+		c.JSON(200, gin.H{"entries": entries, "next_due": v.NextDue, "reminder_due": v.ReminderDue, "next_cursor": v.NextCursor, "push_available": v.PushAvailable})
+	})
+	r.POST("/api/v1/weekly/device", authenticate, func(c *gin.Context) {
+		var body struct {
+			Token   string `json:"installation_id"`
+			Enabled *bool  `json:"enabled"`
+		}
+		if c.ShouldBindJSON(&body) != nil || body.Enabled == nil {
+			c.Status(400)
+			return
+		}
+		_, err := assessment.SetDevice(c.Request.Context(), &wp.DeviceRequest{UserId: c.GetString("user_id"), Token: body.Token, Enabled: *body.Enabled})
+		if err != nil {
+			fail(c, err)
+			return
+		}
+		c.Status(204)
+	})
 	r.GET("/api/v1/assessments/:id", authenticate, func(c *gin.Context) {
 		if _, e := uuid.Parse(c.Param("id")); e != nil {
 			c.Status(400)

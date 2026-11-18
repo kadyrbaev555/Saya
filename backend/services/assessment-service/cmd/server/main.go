@@ -60,6 +60,15 @@ func run() error {
 	platform.Loop(ctx, func(c context.Context) error {
 		return repo.Notify(c, cfg.CentrifugoURL, cfg.CentrifugoAPIKey)
 	})
+	platform.Loop(ctx, repo.AnnounceDue)
+	var push *adapters.FCM
+	if cfg.FCMCredentials != "" {
+		push, e = adapters.NewFCM(ctx, cfg.FCMCredentials)
+		if e != nil {
+			return e
+		}
+		platform.Loop(ctx, func(c context.Context) error { return repo.SendDue(c, push) })
+	}
 	go func() {
 		if e := consume.Consume(ctx, func(c context.Context, event messaging.Event) error {
 			return service.Start(c, event.OperationID, event.UserID)
@@ -68,5 +77,7 @@ func run() error {
 			cancel()
 		}
 	}()
-	return platform.Serve(ctx, func(s *grpc.Server) { pb.RegisterAssessmentServer(s, &adapters.Server{Service: service}) })
+	return platform.Serve(ctx, func(s *grpc.Server) {
+		pb.RegisterAssessmentServer(s, &adapters.Server{Service: service, PushAvailable: push != nil})
+	})
 }

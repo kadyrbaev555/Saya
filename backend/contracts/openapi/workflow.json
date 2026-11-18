@@ -397,6 +397,77 @@
           }
         }
       }
+    },
+    "/api/v1/weekly/history": {
+      "get": {
+        "summary": "Current owner's weekly results, newest first (up to 20)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "entries with id, completed_at (Unix seconds), version, nullable percentage, ratings and directions; next_cursor, next_due (Unix seconds), reminder_due and push_available."
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/api/v1/weekly/device": {
+      "post": {
+        "summary": "Change this Android installation's weekly reminder preference",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "installation_id",
+                  "enabled"
+                ],
+                "properties": {
+                  "installation_id": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Preference saved"
+          },
+          "400": {
+            "description": "Invalid device request"
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
     }
   },
   "components": {
