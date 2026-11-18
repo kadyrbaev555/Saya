@@ -468,6 +468,368 @@
           }
         }
       }
+    },
+    "/api/v1/appeals": {
+      "get": {
+        "summary": "Public moderated catalog",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/appeals/mine": {
+      "get": {
+        "summary": "Owner submission",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/appeals/review": {
+      "get": {
+        "summary": "Moderator queue (ADMIN)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/appeals/{id}/submit": {
+      "post": {
+        "summary": "Submit reviewed public text for the current assessment",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "consent": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "description",
+                  "consent"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/appeals/{id}/approve": {
+      "post": {
+        "summary": "Approve appeal",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/appeals/{id}/decline": {
+      "post": {
+        "summary": "Decline appeal",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/appeals/{id}/report": {
+      "post": {
+        "summary": "Report appeal",
+        "security": [],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/appeals/{id}/withdraw": {
+      "post": {
+        "summary": "Withdraw appeal",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/appeals/{id}/checkout": {
+      "post": {
+        "summary": "Start test checkout in KZT",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "amount"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/appeals/{id}/payout-card": {
+      "post": {
+        "summary": "Open hosted payout card binding",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/payments/card": {
+      "post": {
+        "summary": "Signed Freedom Pay notification",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pg_xml": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "pg_xml"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/payout": {
+      "post": {
+        "summary": "Signed Freedom Pay notification",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pg_xml": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "pg_xml"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/result": {
+      "post": {
+        "summary": "Signed Freedom Pay notification",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pg_order_id": {
+                    "type": "string"
+                  },
+                  "pg_payment_id": {
+                    "type": "string"
+                  },
+                  "pg_sig": {
+                    "type": "string"
+                  },
+                  "pg_amount": {
+                    "type": "string"
+                  },
+                  "pg_currency": {
+                    "type": "string"
+                  },
+                  "pg_result": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "pg_order_id",
+                  "pg_payment_id",
+                  "pg_sig",
+                  "pg_amount",
+                  "pg_currency",
+                  "pg_result"
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

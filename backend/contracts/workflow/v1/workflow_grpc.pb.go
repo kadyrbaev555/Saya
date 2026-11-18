@@ -273,17 +273,31 @@ var Survey_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Assessment_History_FullMethodName   = "/saya.workflow.v1.Assessment/History"
-	Assessment_SetDevice_FullMethodName = "/saya.workflow.v1.Assessment/SetDevice"
-	Assessment_Get_FullMethodName       = "/saya.workflow.v1.Assessment/Get"
-	Assessment_Input_FullMethodName     = "/saya.workflow.v1.Assessment/Input"
-	Assessment_Complete_FullMethodName  = "/saya.workflow.v1.Assessment/Complete"
+	Assessment_BindPayoutCard_FullMethodName  = "/saya.workflow.v1.Assessment/BindPayoutCard"
+	Assessment_PayoutCallback_FullMethodName  = "/saya.workflow.v1.Assessment/PayoutCallback"
+	Assessment_CardCallback_FullMethodName    = "/saya.workflow.v1.Assessment/CardCallback"
+	Assessment_Checkout_FullMethodName        = "/saya.workflow.v1.Assessment/Checkout"
+	Assessment_PaymentCallback_FullMethodName = "/saya.workflow.v1.Assessment/PaymentCallback"
+	Assessment_Appeals_FullMethodName         = "/saya.workflow.v1.Assessment/Appeals"
+	Assessment_MutateAppeal_FullMethodName    = "/saya.workflow.v1.Assessment/MutateAppeal"
+	Assessment_History_FullMethodName         = "/saya.workflow.v1.Assessment/History"
+	Assessment_SetDevice_FullMethodName       = "/saya.workflow.v1.Assessment/SetDevice"
+	Assessment_Get_FullMethodName             = "/saya.workflow.v1.Assessment/Get"
+	Assessment_Input_FullMethodName           = "/saya.workflow.v1.Assessment/Input"
+	Assessment_Complete_FullMethodName        = "/saya.workflow.v1.Assessment/Complete"
 )
 
 // AssessmentClient is the client API for Assessment service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AssessmentClient interface {
+	BindPayoutCard(ctx context.Context, in *OwnedID, opts ...grpc.CallOption) (*CheckoutReply, error)
+	PayoutCallback(ctx context.Context, in *CardNotification, opts ...grpc.CallOption) (*Empty, error)
+	CardCallback(ctx context.Context, in *CardNotification, opts ...grpc.CallOption) (*Empty, error)
+	Checkout(ctx context.Context, in *CheckoutRequest, opts ...grpc.CallOption) (*CheckoutReply, error)
+	PaymentCallback(ctx context.Context, in *PaymentResult, opts ...grpc.CallOption) (*PaymentAck, error)
+	Appeals(ctx context.Context, in *AppealQuery, opts ...grpc.CallOption) (*AppealList, error)
+	MutateAppeal(ctx context.Context, in *AppealChange, opts ...grpc.CallOption) (*Empty, error)
 	History(ctx context.Context, in *HistoryRequest, opts ...grpc.CallOption) (*WeeklyHistory, error)
 	SetDevice(ctx context.Context, in *DeviceRequest, opts ...grpc.CallOption) (*Empty, error)
 	Get(ctx context.Context, in *OwnedID, opts ...grpc.CallOption) (*Result, error)
@@ -297,6 +311,76 @@ type assessmentClient struct {
 
 func NewAssessmentClient(cc grpc.ClientConnInterface) AssessmentClient {
 	return &assessmentClient{cc}
+}
+
+func (c *assessmentClient) BindPayoutCard(ctx context.Context, in *OwnedID, opts ...grpc.CallOption) (*CheckoutReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckoutReply)
+	err := c.cc.Invoke(ctx, Assessment_BindPayoutCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assessmentClient) PayoutCallback(ctx context.Context, in *CardNotification, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Assessment_PayoutCallback_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assessmentClient) CardCallback(ctx context.Context, in *CardNotification, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Assessment_CardCallback_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assessmentClient) Checkout(ctx context.Context, in *CheckoutRequest, opts ...grpc.CallOption) (*CheckoutReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckoutReply)
+	err := c.cc.Invoke(ctx, Assessment_Checkout_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assessmentClient) PaymentCallback(ctx context.Context, in *PaymentResult, opts ...grpc.CallOption) (*PaymentAck, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PaymentAck)
+	err := c.cc.Invoke(ctx, Assessment_PaymentCallback_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assessmentClient) Appeals(ctx context.Context, in *AppealQuery, opts ...grpc.CallOption) (*AppealList, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AppealList)
+	err := c.cc.Invoke(ctx, Assessment_Appeals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assessmentClient) MutateAppeal(ctx context.Context, in *AppealChange, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Assessment_MutateAppeal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *assessmentClient) History(ctx context.Context, in *HistoryRequest, opts ...grpc.CallOption) (*WeeklyHistory, error) {
@@ -353,6 +437,13 @@ func (c *assessmentClient) Complete(ctx context.Context, in *Completion, opts ..
 // All implementations must embed UnimplementedAssessmentServer
 // for forward compatibility.
 type AssessmentServer interface {
+	BindPayoutCard(context.Context, *OwnedID) (*CheckoutReply, error)
+	PayoutCallback(context.Context, *CardNotification) (*Empty, error)
+	CardCallback(context.Context, *CardNotification) (*Empty, error)
+	Checkout(context.Context, *CheckoutRequest) (*CheckoutReply, error)
+	PaymentCallback(context.Context, *PaymentResult) (*PaymentAck, error)
+	Appeals(context.Context, *AppealQuery) (*AppealList, error)
+	MutateAppeal(context.Context, *AppealChange) (*Empty, error)
 	History(context.Context, *HistoryRequest) (*WeeklyHistory, error)
 	SetDevice(context.Context, *DeviceRequest) (*Empty, error)
 	Get(context.Context, *OwnedID) (*Result, error)
@@ -368,6 +459,27 @@ type AssessmentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAssessmentServer struct{}
 
+func (UnimplementedAssessmentServer) BindPayoutCard(context.Context, *OwnedID) (*CheckoutReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BindPayoutCard not implemented")
+}
+func (UnimplementedAssessmentServer) PayoutCallback(context.Context, *CardNotification) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PayoutCallback not implemented")
+}
+func (UnimplementedAssessmentServer) CardCallback(context.Context, *CardNotification) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CardCallback not implemented")
+}
+func (UnimplementedAssessmentServer) Checkout(context.Context, *CheckoutRequest) (*CheckoutReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Checkout not implemented")
+}
+func (UnimplementedAssessmentServer) PaymentCallback(context.Context, *PaymentResult) (*PaymentAck, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PaymentCallback not implemented")
+}
+func (UnimplementedAssessmentServer) Appeals(context.Context, *AppealQuery) (*AppealList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Appeals not implemented")
+}
+func (UnimplementedAssessmentServer) MutateAppeal(context.Context, *AppealChange) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MutateAppeal not implemented")
+}
 func (UnimplementedAssessmentServer) History(context.Context, *HistoryRequest) (*WeeklyHistory, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method History not implemented")
 }
@@ -402,6 +514,132 @@ func RegisterAssessmentServer(s grpc.ServiceRegistrar, srv AssessmentServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Assessment_ServiceDesc, srv)
+}
+
+func _Assessment_BindPayoutCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OwnedID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).BindPayoutCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_BindPayoutCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).BindPayoutCard(ctx, req.(*OwnedID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assessment_PayoutCallback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CardNotification)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).PayoutCallback(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_PayoutCallback_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).PayoutCallback(ctx, req.(*CardNotification))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assessment_CardCallback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CardNotification)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).CardCallback(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_CardCallback_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).CardCallback(ctx, req.(*CardNotification))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assessment_Checkout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).Checkout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_Checkout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).Checkout(ctx, req.(*CheckoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assessment_PaymentCallback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentResult)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).PaymentCallback(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_PaymentCallback_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).PaymentCallback(ctx, req.(*PaymentResult))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assessment_Appeals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AppealQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).Appeals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_Appeals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).Appeals(ctx, req.(*AppealQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Assessment_MutateAppeal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AppealChange)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssessmentServer).MutateAppeal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Assessment_MutateAppeal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssessmentServer).MutateAppeal(ctx, req.(*AppealChange))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Assessment_History_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -501,6 +739,34 @@ var Assessment_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "saya.workflow.v1.Assessment",
 	HandlerType: (*AssessmentServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "BindPayoutCard",
+			Handler:    _Assessment_BindPayoutCard_Handler,
+		},
+		{
+			MethodName: "PayoutCallback",
+			Handler:    _Assessment_PayoutCallback_Handler,
+		},
+		{
+			MethodName: "CardCallback",
+			Handler:    _Assessment_CardCallback_Handler,
+		},
+		{
+			MethodName: "Checkout",
+			Handler:    _Assessment_Checkout_Handler,
+		},
+		{
+			MethodName: "PaymentCallback",
+			Handler:    _Assessment_PaymentCallback_Handler,
+		},
+		{
+			MethodName: "Appeals",
+			Handler:    _Assessment_Appeals_Handler,
+		},
+		{
+			MethodName: "MutateAppeal",
+			Handler:    _Assessment_MutateAppeal_Handler,
+		},
 		{
 			MethodName: "History",
 			Handler:    _Assessment_History_Handler,

@@ -23,3 +23,5 @@ POST /api/v1/support/vacancies требует авторизованной се�
 ## Weekly follow-up
 
 Authenticated clients read `GET /api/v1/weekly/history`. Use the returned `next_cursor` as `before` to fetch older results. Timestamps are Unix seconds. A zero `next_due` means no follow-up is scheduled. To change Android push consent, send `installation_id` and boolean `enabled` to `POST /api/v1/weekly/device`.
+
+Guest access starts at GET /api/v1/appeals. /mine and /review expose owner and moderator views. Submitting public text requires explicit consent. Private provider tokens and survey summaries are excluded from public responses. Checkout returns a hosted test payment URL. Provider callbacks and all actions are specified in backend/contracts/openapi/workflow.json.

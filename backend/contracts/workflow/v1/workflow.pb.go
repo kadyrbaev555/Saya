@@ -21,6 +21,506 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type AppealQuery struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Scope         string                 `protobuf:"bytes,1,opt,name=scope,proto3" json:"scope,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Moderator     bool                   `protobuf:"varint,3,opt,name=moderator,proto3" json:"moderator,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AppealQuery) Reset() {
+	*x = AppealQuery{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AppealQuery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AppealQuery) ProtoMessage() {}
+
+func (x *AppealQuery) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AppealQuery.ProtoReflect.Descriptor instead.
+func (*AppealQuery) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *AppealQuery) GetScope() string {
+	if x != nil {
+		return x.Scope
+	}
+	return ""
+}
+
+func (x *AppealQuery) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *AppealQuery) GetModerator() bool {
+	if x != nil {
+		return x.Moderator
+	}
+	return false
+}
+
+type AppealItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	State         string                 `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	Reported      bool                   `protobuf:"varint,4,opt,name=reported,proto3" json:"reported,omitempty"`
+	CardReady     bool                   `protobuf:"varint,5,opt,name=card_ready,json=cardReady,proto3" json:"card_ready,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AppealItem) Reset() {
+	*x = AppealItem{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AppealItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AppealItem) ProtoMessage() {}
+
+func (x *AppealItem) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AppealItem.ProtoReflect.Descriptor instead.
+func (*AppealItem) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *AppealItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *AppealItem) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *AppealItem) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *AppealItem) GetReported() bool {
+	if x != nil {
+		return x.Reported
+	}
+	return false
+}
+
+func (x *AppealItem) GetCardReady() bool {
+	if x != nil {
+		return x.CardReady
+	}
+	return false
+}
+
+type AppealList struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Items             []*AppealItem          `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	CheckoutAvailable bool                   `protobuf:"varint,2,opt,name=checkout_available,json=checkoutAvailable,proto3" json:"checkout_available,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *AppealList) Reset() {
+	*x = AppealList{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AppealList) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AppealList) ProtoMessage() {}
+
+func (x *AppealList) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AppealList.ProtoReflect.Descriptor instead.
+func (*AppealList) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *AppealList) GetItems() []*AppealItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *AppealList) GetCheckoutAvailable() bool {
+	if x != nil {
+		return x.CheckoutAvailable
+	}
+	return false
+}
+
+type AppealChange struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Action        string                 `protobuf:"bytes,1,opt,name=action,proto3" json:"action,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Consent       bool                   `protobuf:"varint,5,opt,name=consent,proto3" json:"consent,omitempty"`
+	Moderator     bool                   `protobuf:"varint,6,opt,name=moderator,proto3" json:"moderator,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AppealChange) Reset() {
+	*x = AppealChange{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AppealChange) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AppealChange) ProtoMessage() {}
+
+func (x *AppealChange) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AppealChange.ProtoReflect.Descriptor instead.
+func (*AppealChange) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *AppealChange) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *AppealChange) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *AppealChange) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *AppealChange) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *AppealChange) GetConsent() bool {
+	if x != nil {
+		return x.Consent
+	}
+	return false
+}
+
+func (x *AppealChange) GetModerator() bool {
+	if x != nil {
+		return x.Moderator
+	}
+	return false
+}
+
+type CheckoutRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppealId      string                 `protobuf:"bytes,1,opt,name=appeal_id,json=appealId,proto3" json:"appeal_id,omitempty"`
+	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CheckoutRequest) Reset() {
+	*x = CheckoutRequest{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CheckoutRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckoutRequest) ProtoMessage() {}
+
+func (x *CheckoutRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckoutRequest.ProtoReflect.Descriptor instead.
+func (*CheckoutRequest) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CheckoutRequest) GetAppealId() string {
+	if x != nil {
+		return x.AppealId
+	}
+	return ""
+}
+
+func (x *CheckoutRequest) GetAmount() int32 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+type CheckoutReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CheckoutReply) Reset() {
+	*x = CheckoutReply{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CheckoutReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckoutReply) ProtoMessage() {}
+
+func (x *CheckoutReply) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckoutReply.ProtoReflect.Descriptor instead.
+func (*CheckoutReply) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CheckoutReply) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+type PaymentResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Fields        map[string]string      `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PaymentResult) Reset() {
+	*x = PaymentResult{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaymentResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaymentResult) ProtoMessage() {}
+
+func (x *PaymentResult) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaymentResult.ProtoReflect.Descriptor instead.
+func (*PaymentResult) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *PaymentResult) GetFields() map[string]string {
+	if x != nil {
+		return x.Fields
+	}
+	return nil
+}
+
+type CardNotification struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Xml           string                 `protobuf:"bytes,1,opt,name=xml,proto3" json:"xml,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CardNotification) Reset() {
+	*x = CardNotification{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CardNotification) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CardNotification) ProtoMessage() {}
+
+func (x *CardNotification) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CardNotification.ProtoReflect.Descriptor instead.
+func (*CardNotification) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *CardNotification) GetXml() string {
+	if x != nil {
+		return x.Xml
+	}
+	return ""
+}
+
+type PaymentAck struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Xml           string                 `protobuf:"bytes,1,opt,name=xml,proto3" json:"xml,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PaymentAck) Reset() {
+	*x = PaymentAck{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaymentAck) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaymentAck) ProtoMessage() {}
+
+func (x *PaymentAck) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaymentAck.ProtoReflect.Descriptor instead.
+func (*PaymentAck) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *PaymentAck) GetXml() string {
+	if x != nil {
+		return x.Xml
+	}
+	return ""
+}
+
 type FocusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Topic         string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
@@ -32,7 +532,7 @@ type FocusRequest struct {
 
 func (x *FocusRequest) Reset() {
 	*x = FocusRequest{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +544,7 @@ func (x *FocusRequest) String() string {
 func (*FocusRequest) ProtoMessage() {}
 
 func (x *FocusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +557,7 @@ func (x *FocusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FocusRequest.ProtoReflect.Descriptor instead.
 func (*FocusRequest) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{0}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *FocusRequest) GetTopic() string {
@@ -90,7 +590,7 @@ type FocusResult struct {
 
 func (x *FocusResult) Reset() {
 	*x = FocusResult{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -102,7 +602,7 @@ func (x *FocusResult) String() string {
 func (*FocusResult) ProtoMessage() {}
 
 func (x *FocusResult) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -115,7 +615,7 @@ func (x *FocusResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FocusResult.ProtoReflect.Descriptor instead.
 func (*FocusResult) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{1}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *FocusResult) GetFocus() string {
@@ -133,7 +633,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -145,7 +645,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -158,7 +658,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{2}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{11}
 }
 
 type Owner struct {
@@ -170,7 +670,7 @@ type Owner struct {
 
 func (x *Owner) Reset() {
 	*x = Owner{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -182,7 +682,7 @@ func (x *Owner) String() string {
 func (*Owner) ProtoMessage() {}
 
 func (x *Owner) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -195,7 +695,7 @@ func (x *Owner) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Owner.ProtoReflect.Descriptor instead.
 func (*Owner) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{3}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Owner) GetUserId() string {
@@ -217,7 +717,7 @@ type Questionnaire struct {
 
 func (x *Questionnaire) Reset() {
 	*x = Questionnaire{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -229,7 +729,7 @@ func (x *Questionnaire) String() string {
 func (*Questionnaire) ProtoMessage() {}
 
 func (x *Questionnaire) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -242,7 +742,7 @@ func (x *Questionnaire) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Questionnaire.ProtoReflect.Descriptor instead.
 func (*Questionnaire) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{4}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Questionnaire) GetId() string {
@@ -284,7 +784,7 @@ type Question struct {
 
 func (x *Question) Reset() {
 	*x = Question{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -296,7 +796,7 @@ func (x *Question) String() string {
 func (*Question) ProtoMessage() {}
 
 func (x *Question) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -309,7 +809,7 @@ func (x *Question) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Question.ProtoReflect.Descriptor instead.
 func (*Question) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{5}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Question) GetId() string {
@@ -353,7 +853,7 @@ type Submission struct {
 
 func (x *Submission) Reset() {
 	*x = Submission{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -365,7 +865,7 @@ func (x *Submission) String() string {
 func (*Submission) ProtoMessage() {}
 
 func (x *Submission) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -378,7 +878,7 @@ func (x *Submission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Submission.ProtoReflect.Descriptor instead.
 func (*Submission) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{6}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *Submission) GetUserId() string {
@@ -475,7 +975,7 @@ type OwnedID struct {
 
 func (x *OwnedID) Reset() {
 	*x = OwnedID{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -487,7 +987,7 @@ func (x *OwnedID) String() string {
 func (*OwnedID) ProtoMessage() {}
 
 func (x *OwnedID) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -500,7 +1000,7 @@ func (x *OwnedID) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OwnedID.ProtoReflect.Descriptor instead.
 func (*OwnedID) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{7}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *OwnedID) GetId() string {
@@ -527,7 +1027,7 @@ type Operation struct {
 
 func (x *Operation) Reset() {
 	*x = Operation{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[8]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -539,7 +1039,7 @@ func (x *Operation) String() string {
 func (*Operation) ProtoMessage() {}
 
 func (x *Operation) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[8]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -552,7 +1052,7 @@ func (x *Operation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Operation.ProtoReflect.Descriptor instead.
 func (*Operation) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{8}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *Operation) GetId() string {
@@ -588,7 +1088,7 @@ type Result struct {
 
 func (x *Result) Reset() {
 	*x = Result{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[9]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -600,7 +1100,7 @@ func (x *Result) String() string {
 func (*Result) ProtoMessage() {}
 
 func (x *Result) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[9]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -613,7 +1113,7 @@ func (x *Result) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Result.ProtoReflect.Descriptor instead.
 func (*Result) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{9}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *Result) GetId() string {
@@ -706,7 +1206,7 @@ type Completion struct {
 
 func (x *Completion) Reset() {
 	*x = Completion{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[10]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -718,7 +1218,7 @@ func (x *Completion) String() string {
 func (*Completion) ProtoMessage() {}
 
 func (x *Completion) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[10]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -731,7 +1231,7 @@ func (x *Completion) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Completion.ProtoReflect.Descriptor instead.
 func (*Completion) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{10}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *Completion) GetId() string {
@@ -779,7 +1279,7 @@ type HistoryRequest struct {
 
 func (x *HistoryRequest) Reset() {
 	*x = HistoryRequest{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[11]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -791,7 +1291,7 @@ func (x *HistoryRequest) String() string {
 func (*HistoryRequest) ProtoMessage() {}
 
 func (x *HistoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[11]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -804,7 +1304,7 @@ func (x *HistoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HistoryRequest.ProtoReflect.Descriptor instead.
 func (*HistoryRequest) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{11}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *HistoryRequest) GetUserId() string {
@@ -832,7 +1332,7 @@ type DeviceRequest struct {
 
 func (x *DeviceRequest) Reset() {
 	*x = DeviceRequest{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[12]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -844,7 +1344,7 @@ func (x *DeviceRequest) String() string {
 func (*DeviceRequest) ProtoMessage() {}
 
 func (x *DeviceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[12]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -857,7 +1357,7 @@ func (x *DeviceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeviceRequest.ProtoReflect.Descriptor instead.
 func (*DeviceRequest) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{12}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *DeviceRequest) GetUserId() string {
@@ -895,7 +1395,7 @@ type WeeklyEntry struct {
 
 func (x *WeeklyEntry) Reset() {
 	*x = WeeklyEntry{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[13]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -907,7 +1407,7 @@ func (x *WeeklyEntry) String() string {
 func (*WeeklyEntry) ProtoMessage() {}
 
 func (x *WeeklyEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[13]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -920,7 +1420,7 @@ func (x *WeeklyEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WeeklyEntry.ProtoReflect.Descriptor instead.
 func (*WeeklyEntry) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{13}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *WeeklyEntry) GetId() string {
@@ -978,7 +1478,7 @@ type WeeklyHistory struct {
 
 func (x *WeeklyHistory) Reset() {
 	*x = WeeklyHistory{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[14]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -990,7 +1490,7 @@ func (x *WeeklyHistory) String() string {
 func (*WeeklyHistory) ProtoMessage() {}
 
 func (x *WeeklyHistory) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[14]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1003,7 +1503,7 @@ func (x *WeeklyHistory) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WeeklyHistory.ProtoReflect.Descriptor instead.
 func (*WeeklyHistory) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{14}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *WeeklyHistory) GetEntries() []*WeeklyEntry {
@@ -1045,7 +1545,45 @@ var File_workflow_v1_workflow_proto protoreflect.FileDescriptor
 
 const file_workflow_v1_workflow_proto_rawDesc = "" +
 	"\n" +
-	"\x1aworkflow/v1/workflow.proto\x12\x10saya.workflow.v1\"\xc1\x01\n" +
+	"\x1aworkflow/v1/workflow.proto\x12\x10saya.workflow.v1\"Z\n" +
+	"\vAppealQuery\x12\x14\n" +
+	"\x05scope\x18\x01 \x01(\tR\x05scope\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1c\n" +
+	"\tmoderator\x18\x03 \x01(\bR\tmoderator\"\x8f\x01\n" +
+	"\n" +
+	"AppealItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x14\n" +
+	"\x05state\x18\x03 \x01(\tR\x05state\x12\x1a\n" +
+	"\breported\x18\x04 \x01(\bR\breported\x12\x1d\n" +
+	"\n" +
+	"card_ready\x18\x05 \x01(\bR\tcardReady\"o\n" +
+	"\n" +
+	"AppealList\x122\n" +
+	"\x05items\x18\x01 \x03(\v2\x1c.saya.workflow.v1.AppealItemR\x05items\x12-\n" +
+	"\x12checkout_available\x18\x02 \x01(\bR\x11checkoutAvailable\"\xa9\x01\n" +
+	"\fAppealChange\x12\x16\n" +
+	"\x06action\x18\x01 \x01(\tR\x06action\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x18\n" +
+	"\aconsent\x18\x05 \x01(\bR\aconsent\x12\x1c\n" +
+	"\tmoderator\x18\x06 \x01(\bR\tmoderator\"F\n" +
+	"\x0fCheckoutRequest\x12\x1b\n" +
+	"\tappeal_id\x18\x01 \x01(\tR\bappealId\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\x05R\x06amount\"!\n" +
+	"\rCheckoutReply\x12\x10\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\"\x8f\x01\n" +
+	"\rPaymentResult\x12C\n" +
+	"\x06fields\x18\x01 \x03(\v2+.saya.workflow.v1.PaymentResult.FieldsEntryR\x06fields\x1a9\n" +
+	"\vFieldsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"$\n" +
+	"\x10CardNotification\x12\x10\n" +
+	"\x03xml\x18\x01 \x01(\tR\x03xml\"\x1e\n" +
+	"\n" +
+	"PaymentAck\x12\x10\n" +
+	"\x03xml\x18\x01 \x01(\tR\x03xml\"\xc1\x01\n" +
 	"\fFocusRequest\x12\x14\n" +
 	"\x05topic\x18\x01 \x01(\tR\x05topic\x12E\n" +
 	"\aratings\x18\x02 \x03(\v2+.saya.workflow.v1.FocusRequest.RatingsEntryR\aratings\x12\x18\n" +
@@ -1169,9 +1707,16 @@ const file_workflow_v1_workflow_proto_rawDesc = "" +
 	"\x06Latest\x12\x17.saya.workflow.v1.Owner\x1a\x1b.saya.workflow.v1.Operation\x12C\n" +
 	"\aCurrent\x12\x17.saya.workflow.v1.Empty\x1a\x1f.saya.workflow.v1.Questionnaire\x12C\n" +
 	"\x06Submit\x12\x1c.saya.workflow.v1.Submission\x1a\x1b.saya.workflow.v1.Operation\x12@\n" +
-	"\x05Input\x12\x19.saya.workflow.v1.OwnedID\x1a\x1c.saya.workflow.v1.Submission2\xe2\x02\n" +
+	"\x05Input\x12\x19.saya.workflow.v1.OwnedID\x1a\x1c.saya.workflow.v1.Submission2\xff\x06\n" +
 	"\n" +
 	"Assessment\x12L\n" +
+	"\x0eBindPayoutCard\x12\x19.saya.workflow.v1.OwnedID\x1a\x1f.saya.workflow.v1.CheckoutReply\x12M\n" +
+	"\x0ePayoutCallback\x12\".saya.workflow.v1.CardNotification\x1a\x17.saya.workflow.v1.Empty\x12K\n" +
+	"\fCardCallback\x12\".saya.workflow.v1.CardNotification\x1a\x17.saya.workflow.v1.Empty\x12N\n" +
+	"\bCheckout\x12!.saya.workflow.v1.CheckoutRequest\x1a\x1f.saya.workflow.v1.CheckoutReply\x12P\n" +
+	"\x0fPaymentCallback\x12\x1f.saya.workflow.v1.PaymentResult\x1a\x1c.saya.workflow.v1.PaymentAck\x12F\n" +
+	"\aAppeals\x12\x1d.saya.workflow.v1.AppealQuery\x1a\x1c.saya.workflow.v1.AppealList\x12G\n" +
+	"\fMutateAppeal\x12\x1e.saya.workflow.v1.AppealChange\x1a\x17.saya.workflow.v1.Empty\x12L\n" +
 	"\aHistory\x12 .saya.workflow.v1.HistoryRequest\x1a\x1f.saya.workflow.v1.WeeklyHistory\x12E\n" +
 	"\tSetDevice\x12\x1f.saya.workflow.v1.DeviceRequest\x1a\x17.saya.workflow.v1.Empty\x12:\n" +
 	"\x03Get\x12\x19.saya.workflow.v1.OwnedID\x1a\x18.saya.workflow.v1.Result\x12@\n" +
@@ -1192,70 +1737,96 @@ func file_workflow_v1_workflow_proto_rawDescGZIP() []byte {
 	return file_workflow_v1_workflow_proto_rawDescData
 }
 
-var file_workflow_v1_workflow_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_workflow_v1_workflow_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
 var file_workflow_v1_workflow_proto_goTypes = []any{
-	(*FocusRequest)(nil),   // 0: saya.workflow.v1.FocusRequest
-	(*FocusResult)(nil),    // 1: saya.workflow.v1.FocusResult
-	(*Empty)(nil),          // 2: saya.workflow.v1.Empty
-	(*Owner)(nil),          // 3: saya.workflow.v1.Owner
-	(*Questionnaire)(nil),  // 4: saya.workflow.v1.Questionnaire
-	(*Question)(nil),       // 5: saya.workflow.v1.Question
-	(*Submission)(nil),     // 6: saya.workflow.v1.Submission
-	(*OwnedID)(nil),        // 7: saya.workflow.v1.OwnedID
-	(*Operation)(nil),      // 8: saya.workflow.v1.Operation
-	(*Result)(nil),         // 9: saya.workflow.v1.Result
-	(*Completion)(nil),     // 10: saya.workflow.v1.Completion
-	(*HistoryRequest)(nil), // 11: saya.workflow.v1.HistoryRequest
-	(*DeviceRequest)(nil),  // 12: saya.workflow.v1.DeviceRequest
-	(*WeeklyEntry)(nil),    // 13: saya.workflow.v1.WeeklyEntry
-	(*WeeklyHistory)(nil),  // 14: saya.workflow.v1.WeeklyHistory
-	nil,                    // 15: saya.workflow.v1.FocusRequest.RatingsEntry
-	nil,                    // 16: saya.workflow.v1.Question.VariantsEntry
-	nil,                    // 17: saya.workflow.v1.Submission.AnswersEntry
-	nil,                    // 18: saya.workflow.v1.Submission.ResponsesEntry
-	nil,                    // 19: saya.workflow.v1.Submission.RatingsEntry
-	nil,                    // 20: saya.workflow.v1.Submission.QuestionFocusEntry
-	nil,                    // 21: saya.workflow.v1.Result.RatingsEntry
-	nil,                    // 22: saya.workflow.v1.WeeklyEntry.RatingsEntry
+	(*AppealQuery)(nil),      // 0: saya.workflow.v1.AppealQuery
+	(*AppealItem)(nil),       // 1: saya.workflow.v1.AppealItem
+	(*AppealList)(nil),       // 2: saya.workflow.v1.AppealList
+	(*AppealChange)(nil),     // 3: saya.workflow.v1.AppealChange
+	(*CheckoutRequest)(nil),  // 4: saya.workflow.v1.CheckoutRequest
+	(*CheckoutReply)(nil),    // 5: saya.workflow.v1.CheckoutReply
+	(*PaymentResult)(nil),    // 6: saya.workflow.v1.PaymentResult
+	(*CardNotification)(nil), // 7: saya.workflow.v1.CardNotification
+	(*PaymentAck)(nil),       // 8: saya.workflow.v1.PaymentAck
+	(*FocusRequest)(nil),     // 9: saya.workflow.v1.FocusRequest
+	(*FocusResult)(nil),      // 10: saya.workflow.v1.FocusResult
+	(*Empty)(nil),            // 11: saya.workflow.v1.Empty
+	(*Owner)(nil),            // 12: saya.workflow.v1.Owner
+	(*Questionnaire)(nil),    // 13: saya.workflow.v1.Questionnaire
+	(*Question)(nil),         // 14: saya.workflow.v1.Question
+	(*Submission)(nil),       // 15: saya.workflow.v1.Submission
+	(*OwnedID)(nil),          // 16: saya.workflow.v1.OwnedID
+	(*Operation)(nil),        // 17: saya.workflow.v1.Operation
+	(*Result)(nil),           // 18: saya.workflow.v1.Result
+	(*Completion)(nil),       // 19: saya.workflow.v1.Completion
+	(*HistoryRequest)(nil),   // 20: saya.workflow.v1.HistoryRequest
+	(*DeviceRequest)(nil),    // 21: saya.workflow.v1.DeviceRequest
+	(*WeeklyEntry)(nil),      // 22: saya.workflow.v1.WeeklyEntry
+	(*WeeklyHistory)(nil),    // 23: saya.workflow.v1.WeeklyHistory
+	nil,                      // 24: saya.workflow.v1.PaymentResult.FieldsEntry
+	nil,                      // 25: saya.workflow.v1.FocusRequest.RatingsEntry
+	nil,                      // 26: saya.workflow.v1.Question.VariantsEntry
+	nil,                      // 27: saya.workflow.v1.Submission.AnswersEntry
+	nil,                      // 28: saya.workflow.v1.Submission.ResponsesEntry
+	nil,                      // 29: saya.workflow.v1.Submission.RatingsEntry
+	nil,                      // 30: saya.workflow.v1.Submission.QuestionFocusEntry
+	nil,                      // 31: saya.workflow.v1.Result.RatingsEntry
+	nil,                      // 32: saya.workflow.v1.WeeklyEntry.RatingsEntry
 }
 var file_workflow_v1_workflow_proto_depIdxs = []int32{
-	15, // 0: saya.workflow.v1.FocusRequest.ratings:type_name -> saya.workflow.v1.FocusRequest.RatingsEntry
-	5,  // 1: saya.workflow.v1.Questionnaire.questions:type_name -> saya.workflow.v1.Question
-	16, // 2: saya.workflow.v1.Question.variants:type_name -> saya.workflow.v1.Question.VariantsEntry
-	17, // 3: saya.workflow.v1.Submission.answers:type_name -> saya.workflow.v1.Submission.AnswersEntry
-	18, // 4: saya.workflow.v1.Submission.responses:type_name -> saya.workflow.v1.Submission.ResponsesEntry
-	19, // 5: saya.workflow.v1.Submission.ratings:type_name -> saya.workflow.v1.Submission.RatingsEntry
-	20, // 6: saya.workflow.v1.Submission.question_focus:type_name -> saya.workflow.v1.Submission.QuestionFocusEntry
-	21, // 7: saya.workflow.v1.Result.ratings:type_name -> saya.workflow.v1.Result.RatingsEntry
-	22, // 8: saya.workflow.v1.WeeklyEntry.ratings:type_name -> saya.workflow.v1.WeeklyEntry.RatingsEntry
-	13, // 9: saya.workflow.v1.WeeklyHistory.entries:type_name -> saya.workflow.v1.WeeklyEntry
-	2,  // 10: saya.workflow.v1.Survey.Interview:input_type -> saya.workflow.v1.Empty
-	3,  // 11: saya.workflow.v1.Survey.Latest:input_type -> saya.workflow.v1.Owner
-	2,  // 12: saya.workflow.v1.Survey.Current:input_type -> saya.workflow.v1.Empty
-	6,  // 13: saya.workflow.v1.Survey.Submit:input_type -> saya.workflow.v1.Submission
-	7,  // 14: saya.workflow.v1.Survey.Input:input_type -> saya.workflow.v1.OwnedID
-	11, // 15: saya.workflow.v1.Assessment.History:input_type -> saya.workflow.v1.HistoryRequest
-	12, // 16: saya.workflow.v1.Assessment.SetDevice:input_type -> saya.workflow.v1.DeviceRequest
-	7,  // 17: saya.workflow.v1.Assessment.Get:input_type -> saya.workflow.v1.OwnedID
-	7,  // 18: saya.workflow.v1.Assessment.Input:input_type -> saya.workflow.v1.OwnedID
-	10, // 19: saya.workflow.v1.Assessment.Complete:input_type -> saya.workflow.v1.Completion
-	0,  // 20: saya.workflow.v1.InterviewAssistant.Focus:input_type -> saya.workflow.v1.FocusRequest
-	4,  // 21: saya.workflow.v1.Survey.Interview:output_type -> saya.workflow.v1.Questionnaire
-	8,  // 22: saya.workflow.v1.Survey.Latest:output_type -> saya.workflow.v1.Operation
-	4,  // 23: saya.workflow.v1.Survey.Current:output_type -> saya.workflow.v1.Questionnaire
-	8,  // 24: saya.workflow.v1.Survey.Submit:output_type -> saya.workflow.v1.Operation
-	6,  // 25: saya.workflow.v1.Survey.Input:output_type -> saya.workflow.v1.Submission
-	14, // 26: saya.workflow.v1.Assessment.History:output_type -> saya.workflow.v1.WeeklyHistory
-	2,  // 27: saya.workflow.v1.Assessment.SetDevice:output_type -> saya.workflow.v1.Empty
-	9,  // 28: saya.workflow.v1.Assessment.Get:output_type -> saya.workflow.v1.Result
-	6,  // 29: saya.workflow.v1.Assessment.Input:output_type -> saya.workflow.v1.Submission
-	2,  // 30: saya.workflow.v1.Assessment.Complete:output_type -> saya.workflow.v1.Empty
-	1,  // 31: saya.workflow.v1.InterviewAssistant.Focus:output_type -> saya.workflow.v1.FocusResult
-	21, // [21:32] is the sub-list for method output_type
-	10, // [10:21] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	1,  // 0: saya.workflow.v1.AppealList.items:type_name -> saya.workflow.v1.AppealItem
+	24, // 1: saya.workflow.v1.PaymentResult.fields:type_name -> saya.workflow.v1.PaymentResult.FieldsEntry
+	25, // 2: saya.workflow.v1.FocusRequest.ratings:type_name -> saya.workflow.v1.FocusRequest.RatingsEntry
+	14, // 3: saya.workflow.v1.Questionnaire.questions:type_name -> saya.workflow.v1.Question
+	26, // 4: saya.workflow.v1.Question.variants:type_name -> saya.workflow.v1.Question.VariantsEntry
+	27, // 5: saya.workflow.v1.Submission.answers:type_name -> saya.workflow.v1.Submission.AnswersEntry
+	28, // 6: saya.workflow.v1.Submission.responses:type_name -> saya.workflow.v1.Submission.ResponsesEntry
+	29, // 7: saya.workflow.v1.Submission.ratings:type_name -> saya.workflow.v1.Submission.RatingsEntry
+	30, // 8: saya.workflow.v1.Submission.question_focus:type_name -> saya.workflow.v1.Submission.QuestionFocusEntry
+	31, // 9: saya.workflow.v1.Result.ratings:type_name -> saya.workflow.v1.Result.RatingsEntry
+	32, // 10: saya.workflow.v1.WeeklyEntry.ratings:type_name -> saya.workflow.v1.WeeklyEntry.RatingsEntry
+	22, // 11: saya.workflow.v1.WeeklyHistory.entries:type_name -> saya.workflow.v1.WeeklyEntry
+	11, // 12: saya.workflow.v1.Survey.Interview:input_type -> saya.workflow.v1.Empty
+	12, // 13: saya.workflow.v1.Survey.Latest:input_type -> saya.workflow.v1.Owner
+	11, // 14: saya.workflow.v1.Survey.Current:input_type -> saya.workflow.v1.Empty
+	15, // 15: saya.workflow.v1.Survey.Submit:input_type -> saya.workflow.v1.Submission
+	16, // 16: saya.workflow.v1.Survey.Input:input_type -> saya.workflow.v1.OwnedID
+	16, // 17: saya.workflow.v1.Assessment.BindPayoutCard:input_type -> saya.workflow.v1.OwnedID
+	7,  // 18: saya.workflow.v1.Assessment.PayoutCallback:input_type -> saya.workflow.v1.CardNotification
+	7,  // 19: saya.workflow.v1.Assessment.CardCallback:input_type -> saya.workflow.v1.CardNotification
+	4,  // 20: saya.workflow.v1.Assessment.Checkout:input_type -> saya.workflow.v1.CheckoutRequest
+	6,  // 21: saya.workflow.v1.Assessment.PaymentCallback:input_type -> saya.workflow.v1.PaymentResult
+	0,  // 22: saya.workflow.v1.Assessment.Appeals:input_type -> saya.workflow.v1.AppealQuery
+	3,  // 23: saya.workflow.v1.Assessment.MutateAppeal:input_type -> saya.workflow.v1.AppealChange
+	20, // 24: saya.workflow.v1.Assessment.History:input_type -> saya.workflow.v1.HistoryRequest
+	21, // 25: saya.workflow.v1.Assessment.SetDevice:input_type -> saya.workflow.v1.DeviceRequest
+	16, // 26: saya.workflow.v1.Assessment.Get:input_type -> saya.workflow.v1.OwnedID
+	16, // 27: saya.workflow.v1.Assessment.Input:input_type -> saya.workflow.v1.OwnedID
+	19, // 28: saya.workflow.v1.Assessment.Complete:input_type -> saya.workflow.v1.Completion
+	9,  // 29: saya.workflow.v1.InterviewAssistant.Focus:input_type -> saya.workflow.v1.FocusRequest
+	13, // 30: saya.workflow.v1.Survey.Interview:output_type -> saya.workflow.v1.Questionnaire
+	17, // 31: saya.workflow.v1.Survey.Latest:output_type -> saya.workflow.v1.Operation
+	13, // 32: saya.workflow.v1.Survey.Current:output_type -> saya.workflow.v1.Questionnaire
+	17, // 33: saya.workflow.v1.Survey.Submit:output_type -> saya.workflow.v1.Operation
+	15, // 34: saya.workflow.v1.Survey.Input:output_type -> saya.workflow.v1.Submission
+	5,  // 35: saya.workflow.v1.Assessment.BindPayoutCard:output_type -> saya.workflow.v1.CheckoutReply
+	11, // 36: saya.workflow.v1.Assessment.PayoutCallback:output_type -> saya.workflow.v1.Empty
+	11, // 37: saya.workflow.v1.Assessment.CardCallback:output_type -> saya.workflow.v1.Empty
+	5,  // 38: saya.workflow.v1.Assessment.Checkout:output_type -> saya.workflow.v1.CheckoutReply
+	8,  // 39: saya.workflow.v1.Assessment.PaymentCallback:output_type -> saya.workflow.v1.PaymentAck
+	2,  // 40: saya.workflow.v1.Assessment.Appeals:output_type -> saya.workflow.v1.AppealList
+	11, // 41: saya.workflow.v1.Assessment.MutateAppeal:output_type -> saya.workflow.v1.Empty
+	23, // 42: saya.workflow.v1.Assessment.History:output_type -> saya.workflow.v1.WeeklyHistory
+	11, // 43: saya.workflow.v1.Assessment.SetDevice:output_type -> saya.workflow.v1.Empty
+	18, // 44: saya.workflow.v1.Assessment.Get:output_type -> saya.workflow.v1.Result
+	15, // 45: saya.workflow.v1.Assessment.Input:output_type -> saya.workflow.v1.Submission
+	11, // 46: saya.workflow.v1.Assessment.Complete:output_type -> saya.workflow.v1.Empty
+	10, // 47: saya.workflow.v1.InterviewAssistant.Focus:output_type -> saya.workflow.v1.FocusResult
+	30, // [30:48] is the sub-list for method output_type
+	12, // [12:30] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_workflow_v1_workflow_proto_init() }
@@ -1263,15 +1834,15 @@ func file_workflow_v1_workflow_proto_init() {
 	if File_workflow_v1_workflow_proto != nil {
 		return
 	}
-	file_workflow_v1_workflow_proto_msgTypes[9].OneofWrappers = []any{}
-	file_workflow_v1_workflow_proto_msgTypes[13].OneofWrappers = []any{}
+	file_workflow_v1_workflow_proto_msgTypes[18].OneofWrappers = []any{}
+	file_workflow_v1_workflow_proto_msgTypes[22].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_workflow_v1_workflow_proto_rawDesc), len(file_workflow_v1_workflow_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   33,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

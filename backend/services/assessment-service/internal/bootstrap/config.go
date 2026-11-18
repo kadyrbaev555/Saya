@@ -3,12 +3,13 @@ package bootstrap
 import "saya/config"
 
 type Config struct {
-	FCMCredentials   string
-	DatabaseURL      string
-	RabbitURL        string
-	SurveyAddress    string
-	CentrifugoURL    string
-	CentrifugoAPIKey string
+	TestMerchant, TestPaymentKey, TestPayoutKey, PaymentCallback string
+	FCMCredentials                                               string
+	DatabaseURL                                                  string
+	RabbitURL                                                    string
+	SurveyAddress                                                string
+	CentrifugoURL                                                string
+	CentrifugoAPIKey                                             string
 }
 
 func LoadConfig() (Config, error) {
@@ -17,6 +18,7 @@ func LoadConfig() (Config, error) {
 		return Config{}, e
 	}
 	c := Config{
+		TestMerchant: r.String("FREEDOMPAY_TEST_MERCHANT_ID", ""), TestPaymentKey: r.String("FREEDOMPAY_TEST_SECRET", ""), TestPayoutKey: r.String("FREEDOMPAY_TEST_PAYOUT_SECRET", ""), PaymentCallback: r.String("FREEDOMPAY_RESULT_URL", ""),
 		FCMCredentials:   r.String("FCM_SERVICE_ACCOUNT_B64", ""),
 		DatabaseURL:      r.URL("DATABASE_URL", "postgres", "postgresql"),
 		RabbitURL:        r.URL("RABBIT_URL", "amqp", "amqps"),

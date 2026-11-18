@@ -26,6 +26,8 @@ func (s Source) Fetch(c context.Context, id, user string) (domain.Signal, error)
 
 type Server struct {
 	pb.UnimplementedAssessmentServer
+	AppealService application.AppealService
+	Payments      *TestPayments
 	PushAvailable bool
 	Service       application.Service
 }

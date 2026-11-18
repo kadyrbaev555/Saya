@@ -69,6 +69,13 @@ func run() error {
 		}
 		platform.Loop(ctx, func(c context.Context) error { return repo.SendDue(c, push) })
 	}
+	payments, err := adapters.NewTestPayments(repo, cfg.TestMerchant, cfg.TestPaymentKey, cfg.TestPayoutKey, cfg.PaymentCallback)
+	if err != nil {
+		return err
+	}
+	if payments != nil {
+		platform.Loop(ctx, payments.ProcessPayout)
+	}
 	go func() {
 		if e := consume.Consume(ctx, func(c context.Context, event messaging.Event) error {
 			return service.Start(c, event.OperationID, event.UserID)
@@ -78,6 +85,6 @@ func run() error {
 		}
 	}()
 	return platform.Serve(ctx, func(s *grpc.Server) {
-		pb.RegisterAssessmentServer(s, &adapters.Server{Service: service, PushAvailable: push != nil})
+		pb.RegisterAssessmentServer(s, &adapters.Server{Service: service, AppealService: application.AppealService{Store: repo}, Payments: payments, PushAvailable: push != nil})
 	})
 }

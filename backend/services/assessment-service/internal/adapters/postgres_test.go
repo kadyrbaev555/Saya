@@ -44,6 +44,13 @@ func TestAssessmentPersistence(t *testing.T) {
 	if _, e = db.Exec(strings.Split(string(weeklyMigration), "-- +goose Down")[0]); e != nil {
 		t.Fatal(e)
 	}
+	appealMigration, err := os.ReadFile("../../migrations/00003_appeals.sql")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = db.Exec(strings.Split(string(appealMigration), "-- +goose Down")[0]); err != nil {
+		t.Fatal(err)
+	}
 	r := Repository{DB: db}
 	ctx := context.Background()
 	id, user := uuid.NewString(), uuid.NewString()
@@ -90,4 +97,5 @@ func TestAssessmentPersistence(t *testing.T) {
 		t.Fatal("weekly result persistence", e)
 	}
 	checkWeeklyLifecycle(t, r, weekly, user, signal)
+	checkAppeals(t, r)
 }

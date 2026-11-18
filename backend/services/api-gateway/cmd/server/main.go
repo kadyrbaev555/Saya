@@ -185,6 +185,10 @@ func run() error {
 			code = 400
 		case codes.ResourceExhausted:
 			code = 429
+		case codes.PermissionDenied:
+			code = 403
+		case codes.FailedPrecondition:
+			code = 409
 		case codes.AlreadyExists:
 			code = 409
 		case codes.Unauthenticated:
@@ -393,6 +397,7 @@ func run() error {
 		}
 		c.JSON(202, gin.H{"id": v.Id, "status": v.Status})
 	})
+	registerAppeals(r, assessment, client, authenticate, fail)
 	r.GET("/api/v1/weekly/history", authenticate, func(c *gin.Context) {
 		v, err := assessment.History(c.Request.Context(), &wp.HistoryRequest{UserId: c.GetString("user_id"), BeforeId: c.Query("before")})
 		if err != nil {

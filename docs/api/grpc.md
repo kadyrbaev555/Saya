@@ -5,3 +5,5 @@ backend/contracts/proto/auth/v1/auth.proto — Auth StartRegistration/ConfirmReg
 Генерация protoc 32.1 + protoc-gen-go 1.36.10 + protoc-gen-go-grpc 1.5.1, module=saya/contracts. Внутренние Input/Complete не публикуются Gateway. Локальная сеть доверенная; production требует TLS и service credentials. USER не может задать user_id через внешние body.
 
 Assessment.History returns completed assessments for the authenticated owner and the weekly deadline. Assessment.SetDevice registers or removes an Android installation for that owner. Gateway supplies the owner from the authenticated session.
+
+Assessment exposes Appeals, MutateAppeal, Checkout, BindPayoutCard, CardCallback, PaymentCallback and PayoutCallback. Owner identity and moderator privileges are supplied by Gateway after authentication. The service checks current recommendation, ownership and payment signatures.
