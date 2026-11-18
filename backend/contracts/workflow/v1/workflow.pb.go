@@ -21,6 +21,110 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type FocusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Topic         string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
+	Ratings       map[string]int32       `protobuf:"bytes,2,rep,name=ratings,proto3" json:"ratings,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	Consent       bool                   `protobuf:"varint,3,opt,name=consent,proto3" json:"consent,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FocusRequest) Reset() {
+	*x = FocusRequest{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FocusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FocusRequest) ProtoMessage() {}
+
+func (x *FocusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FocusRequest.ProtoReflect.Descriptor instead.
+func (*FocusRequest) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *FocusRequest) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *FocusRequest) GetRatings() map[string]int32 {
+	if x != nil {
+		return x.Ratings
+	}
+	return nil
+}
+
+func (x *FocusRequest) GetConsent() bool {
+	if x != nil {
+		return x.Consent
+	}
+	return false
+}
+
+type FocusResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Focus         string                 `protobuf:"bytes,1,opt,name=focus,proto3" json:"focus,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FocusResult) Reset() {
+	*x = FocusResult{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FocusResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FocusResult) ProtoMessage() {}
+
+func (x *FocusResult) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FocusResult.ProtoReflect.Descriptor instead.
+func (*FocusResult) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *FocusResult) GetFocus() string {
+	if x != nil {
+		return x.Focus
+	}
+	return ""
+}
+
 type Empty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -29,7 +133,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -41,7 +145,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[0]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -54,7 +158,51 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{0}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{2}
+}
+
+type Owner struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Owner) Reset() {
+	*x = Owner{}
+	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Owner) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Owner) ProtoMessage() {}
+
+func (x *Owner) ProtoReflect() protoreflect.Message {
+	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Owner.ProtoReflect.Descriptor instead.
+func (*Owner) Descriptor() ([]byte, []int) {
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Owner) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
 }
 
 type Questionnaire struct {
@@ -69,7 +217,7 @@ type Questionnaire struct {
 
 func (x *Questionnaire) Reset() {
 	*x = Questionnaire{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -81,7 +229,7 @@ func (x *Questionnaire) String() string {
 func (*Questionnaire) ProtoMessage() {}
 
 func (x *Questionnaire) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[1]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -94,7 +242,7 @@ func (x *Questionnaire) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Questionnaire.ProtoReflect.Descriptor instead.
 func (*Questionnaire) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{1}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Questionnaire) GetId() string {
@@ -129,13 +277,14 @@ type Question struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Label         string                 `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	Variants      map[string]string      `protobuf:"bytes,3,rep,name=variants,proto3" json:"variants,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Question) Reset() {
 	*x = Question{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -147,7 +296,7 @@ func (x *Question) String() string {
 func (*Question) ProtoMessage() {}
 
 func (x *Question) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[2]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -160,7 +309,7 @@ func (x *Question) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Question.ProtoReflect.Descriptor instead.
 func (*Question) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{2}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Question) GetId() string {
@@ -177,6 +326,13 @@ func (x *Question) GetLabel() string {
 	return ""
 }
 
+func (x *Question) GetVariants() map[string]string {
+	if x != nil {
+		return x.Variants
+	}
+	return nil
+}
+
 type Submission struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	UserId             string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -186,13 +342,18 @@ type Submission struct {
 	Consent            bool                   `protobuf:"varint,5,opt,name=consent,proto3" json:"consent,omitempty"`
 	ExternalLlmConsent bool                   `protobuf:"varint,6,opt,name=external_llm_consent,json=externalLlmConsent,proto3" json:"external_llm_consent,omitempty"`
 	IdempotencyKey     string                 `protobuf:"bytes,7,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	Responses          map[string]string      `protobuf:"bytes,8,rep,name=responses,proto3" json:"responses,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Ratings            map[string]int32       `protobuf:"bytes,9,rep,name=ratings,proto3" json:"ratings,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	Summary            string                 `protobuf:"bytes,10,opt,name=summary,proto3" json:"summary,omitempty"`
+	Needs              []string               `protobuf:"bytes,11,rep,name=needs,proto3" json:"needs,omitempty"`
+	QuestionFocus      map[string]string      `protobuf:"bytes,12,rep,name=question_focus,json=questionFocus,proto3" json:"question_focus,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
 func (x *Submission) Reset() {
 	*x = Submission{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -204,7 +365,7 @@ func (x *Submission) String() string {
 func (*Submission) ProtoMessage() {}
 
 func (x *Submission) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[3]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -217,7 +378,7 @@ func (x *Submission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Submission.ProtoReflect.Descriptor instead.
 func (*Submission) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{3}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Submission) GetUserId() string {
@@ -269,6 +430,41 @@ func (x *Submission) GetIdempotencyKey() string {
 	return ""
 }
 
+func (x *Submission) GetResponses() map[string]string {
+	if x != nil {
+		return x.Responses
+	}
+	return nil
+}
+
+func (x *Submission) GetRatings() map[string]int32 {
+	if x != nil {
+		return x.Ratings
+	}
+	return nil
+}
+
+func (x *Submission) GetSummary() string {
+	if x != nil {
+		return x.Summary
+	}
+	return ""
+}
+
+func (x *Submission) GetNeeds() []string {
+	if x != nil {
+		return x.Needs
+	}
+	return nil
+}
+
+func (x *Submission) GetQuestionFocus() map[string]string {
+	if x != nil {
+		return x.QuestionFocus
+	}
+	return nil
+}
+
 type OwnedID struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -279,7 +475,7 @@ type OwnedID struct {
 
 func (x *OwnedID) Reset() {
 	*x = OwnedID{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -291,7 +487,7 @@ func (x *OwnedID) String() string {
 func (*OwnedID) ProtoMessage() {}
 
 func (x *OwnedID) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[4]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -304,7 +500,7 @@ func (x *OwnedID) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OwnedID.ProtoReflect.Descriptor instead.
 func (*OwnedID) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{4}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *OwnedID) GetId() string {
@@ -331,7 +527,7 @@ type Operation struct {
 
 func (x *Operation) Reset() {
 	*x = Operation{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -343,7 +539,7 @@ func (x *Operation) String() string {
 func (*Operation) ProtoMessage() {}
 
 func (x *Operation) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[5]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -356,7 +552,7 @@ func (x *Operation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Operation.ProtoReflect.Descriptor instead.
 func (*Operation) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{5}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Operation) GetId() string {
@@ -381,13 +577,18 @@ type Result struct {
 	Recommendations         []string               `protobuf:"bytes,4,rep,name=recommendations,proto3" json:"recommendations,omitempty"`
 	Disclaimer              string                 `protobuf:"bytes,5,opt,name=disclaimer,proto3" json:"disclaimer,omitempty"`
 	Provider                string                 `protobuf:"bytes,6,opt,name=provider,proto3" json:"provider,omitempty"`
+	Ratings                 map[string]int32       `protobuf:"bytes,7,rep,name=ratings,proto3" json:"ratings,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	Percentage              *int32                 `protobuf:"varint,8,opt,name=percentage,proto3,oneof" json:"percentage,omitempty"`
+	Summary                 string                 `protobuf:"bytes,9,opt,name=summary,proto3" json:"summary,omitempty"`
+	Directions              []string               `protobuf:"bytes,10,rep,name=directions,proto3" json:"directions,omitempty"`
+	Version                 int32                  `protobuf:"varint,11,opt,name=version,proto3" json:"version,omitempty"`
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
 
 func (x *Result) Reset() {
 	*x = Result{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -399,7 +600,7 @@ func (x *Result) String() string {
 func (*Result) ProtoMessage() {}
 
 func (x *Result) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[6]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -412,7 +613,7 @@ func (x *Result) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Result.ProtoReflect.Descriptor instead.
 func (*Result) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{6}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Result) GetId() string {
@@ -457,6 +658,41 @@ func (x *Result) GetProvider() string {
 	return ""
 }
 
+func (x *Result) GetRatings() map[string]int32 {
+	if x != nil {
+		return x.Ratings
+	}
+	return nil
+}
+
+func (x *Result) GetPercentage() int32 {
+	if x != nil && x.Percentage != nil {
+		return *x.Percentage
+	}
+	return 0
+}
+
+func (x *Result) GetSummary() string {
+	if x != nil {
+		return x.Summary
+	}
+	return ""
+}
+
+func (x *Result) GetDirections() []string {
+	if x != nil {
+		return x.Directions
+	}
+	return nil
+}
+
+func (x *Result) GetVersion() int32 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
 type Completion struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -470,7 +706,7 @@ type Completion struct {
 
 func (x *Completion) Reset() {
 	*x = Completion{}
-	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -482,7 +718,7 @@ func (x *Completion) String() string {
 func (*Completion) ProtoMessage() {}
 
 func (x *Completion) ProtoReflect() protoreflect.Message {
-	mi := &file_workflow_v1_workflow_proto_msgTypes[7]
+	mi := &file_workflow_v1_workflow_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -495,7 +731,7 @@ func (x *Completion) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Completion.ProtoReflect.Descriptor instead.
 func (*Completion) Descriptor() ([]byte, []int) {
-	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{7}
+	return file_workflow_v1_workflow_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Completion) GetId() string {
@@ -537,18 +773,33 @@ var File_workflow_v1_workflow_proto protoreflect.FileDescriptor
 
 const file_workflow_v1_workflow_proto_rawDesc = "" +
 	"\n" +
-	"\x1aworkflow/v1/workflow.proto\x12\x10saya.workflow.v1\"\a\n" +
-	"\x05Empty\"\x93\x01\n" +
+	"\x1aworkflow/v1/workflow.proto\x12\x10saya.workflow.v1\"\xc1\x01\n" +
+	"\fFocusRequest\x12\x14\n" +
+	"\x05topic\x18\x01 \x01(\tR\x05topic\x12E\n" +
+	"\aratings\x18\x02 \x03(\v2+.saya.workflow.v1.FocusRequest.RatingsEntryR\aratings\x12\x18\n" +
+	"\aconsent\x18\x03 \x01(\bR\aconsent\x1a:\n" +
+	"\fRatingsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"#\n" +
+	"\vFocusResult\x12\x14\n" +
+	"\x05focus\x18\x01 \x01(\tR\x05focus\"\a\n" +
+	"\x05Empty\" \n" +
+	"\x05Owner\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"\x93\x01\n" +
 	"\rQuestionnaire\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\x05R\aversion\x128\n" +
 	"\tquestions\x18\x03 \x03(\v2\x1a.saya.workflow.v1.QuestionR\tquestions\x12\x1e\n" +
 	"\n" +
 	"disclaimer\x18\x04 \x01(\tR\n" +
-	"disclaimer\"0\n" +
+	"disclaimer\"\xb3\x01\n" +
 	"\bQuestion\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
-	"\x05label\x18\x02 \x01(\tR\x05label\"\xe0\x02\n" +
+	"\x05label\x18\x02 \x01(\tR\x05label\x12D\n" +
+	"\bvariants\x18\x03 \x03(\v2(.saya.workflow.v1.Question.VariantsEntryR\bvariants\x1a;\n" +
+	"\rVariantsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb4\x06\n" +
 	"\n" +
 	"Submission\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12)\n" +
@@ -557,16 +808,31 @@ const file_workflow_v1_workflow_proto_rawDesc = "" +
 	"\aanswers\x18\x04 \x03(\v2).saya.workflow.v1.Submission.AnswersEntryR\aanswers\x12\x18\n" +
 	"\aconsent\x18\x05 \x01(\bR\aconsent\x120\n" +
 	"\x14external_llm_consent\x18\x06 \x01(\bR\x12externalLlmConsent\x12'\n" +
-	"\x0fidempotency_key\x18\a \x01(\tR\x0eidempotencyKey\x1a:\n" +
+	"\x0fidempotency_key\x18\a \x01(\tR\x0eidempotencyKey\x12I\n" +
+	"\tresponses\x18\b \x03(\v2+.saya.workflow.v1.Submission.ResponsesEntryR\tresponses\x12C\n" +
+	"\aratings\x18\t \x03(\v2).saya.workflow.v1.Submission.RatingsEntryR\aratings\x12\x18\n" +
+	"\asummary\x18\n" +
+	" \x01(\tR\asummary\x12\x14\n" +
+	"\x05needs\x18\v \x03(\tR\x05needs\x12V\n" +
+	"\x0equestion_focus\x18\f \x03(\v2/.saya.workflow.v1.Submission.QuestionFocusEntryR\rquestionFocus\x1a:\n" +
 	"\fAnswersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\"2\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1a<\n" +
+	"\x0eResponsesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a:\n" +
+	"\fRatingsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\x1a@\n" +
+	"\x12QuestionFocusEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"2\n" +
 	"\aOwnedID\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\"3\n" +
 	"\tOperation\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\"\xd2\x01\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\"\xd7\x03\n" +
 	"\x06Result\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12:\n" +
@@ -575,15 +841,31 @@ const file_workflow_v1_workflow_proto_rawDesc = "" +
 	"\n" +
 	"disclaimer\x18\x05 \x01(\tR\n" +
 	"disclaimer\x12\x1a\n" +
-	"\bprovider\x18\x06 \x01(\tR\bprovider\"\x93\x01\n" +
+	"\bprovider\x18\x06 \x01(\tR\bprovider\x12?\n" +
+	"\aratings\x18\a \x03(\v2%.saya.workflow.v1.Result.RatingsEntryR\aratings\x12#\n" +
+	"\n" +
+	"percentage\x18\b \x01(\x05H\x00R\n" +
+	"percentage\x88\x01\x01\x12\x18\n" +
+	"\asummary\x18\t \x01(\tR\asummary\x12\x1e\n" +
+	"\n" +
+	"directions\x18\n" +
+	" \x03(\tR\n" +
+	"directions\x12\x18\n" +
+	"\aversion\x18\v \x01(\x05R\aversion\x1a:\n" +
+	"\fRatingsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01B\r\n" +
+	"\v_percentage\"\x93\x01\n" +
 	"\n" +
 	"Completion\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12(\n" +
 	"\x0frecommendations\x18\x03 \x03(\tR\x0frecommendations\x12\x1a\n" +
 	"\bprovider\x18\x04 \x01(\tR\bprovider\x12\x16\n" +
-	"\x06failed\x18\x05 \x01(\bR\x06failed2\xd4\x01\n" +
-	"\x06Survey\x12C\n" +
+	"\x06failed\x18\x05 \x01(\bR\x06failed2\xdb\x02\n" +
+	"\x06Survey\x12E\n" +
+	"\tInterview\x12\x17.saya.workflow.v1.Empty\x1a\x1f.saya.workflow.v1.Questionnaire\x12>\n" +
+	"\x06Latest\x12\x17.saya.workflow.v1.Owner\x1a\x1b.saya.workflow.v1.Operation\x12C\n" +
 	"\aCurrent\x12\x17.saya.workflow.v1.Empty\x1a\x1f.saya.workflow.v1.Questionnaire\x12C\n" +
 	"\x06Submit\x12\x1c.saya.workflow.v1.Submission\x1a\x1b.saya.workflow.v1.Operation\x12@\n" +
 	"\x05Input\x12\x19.saya.workflow.v1.OwnedID\x1a\x1c.saya.workflow.v1.Submission2\xcd\x01\n" +
@@ -591,7 +873,9 @@ const file_workflow_v1_workflow_proto_rawDesc = "" +
 	"Assessment\x12:\n" +
 	"\x03Get\x12\x19.saya.workflow.v1.OwnedID\x1a\x18.saya.workflow.v1.Result\x12@\n" +
 	"\x05Input\x12\x19.saya.workflow.v1.OwnedID\x1a\x1c.saya.workflow.v1.Submission\x12A\n" +
-	"\bComplete\x12\x1c.saya.workflow.v1.Completion\x1a\x17.saya.workflow.v1.EmptyB'Z%saya/contracts/workflow/v1;workflowv1b\x06proto3"
+	"\bComplete\x12\x1c.saya.workflow.v1.Completion\x1a\x17.saya.workflow.v1.Empty2\\\n" +
+	"\x12InterviewAssistant\x12F\n" +
+	"\x05Focus\x12\x1e.saya.workflow.v1.FocusRequest\x1a\x1d.saya.workflow.v1.FocusResultB'Z%saya/contracts/workflow/v1;workflowv1b\x06proto3"
 
 var (
 	file_workflow_v1_workflow_proto_rawDescOnce sync.Once
@@ -605,38 +889,59 @@ func file_workflow_v1_workflow_proto_rawDescGZIP() []byte {
 	return file_workflow_v1_workflow_proto_rawDescData
 }
 
-var file_workflow_v1_workflow_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_workflow_v1_workflow_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_workflow_v1_workflow_proto_goTypes = []any{
-	(*Empty)(nil),         // 0: saya.workflow.v1.Empty
-	(*Questionnaire)(nil), // 1: saya.workflow.v1.Questionnaire
-	(*Question)(nil),      // 2: saya.workflow.v1.Question
-	(*Submission)(nil),    // 3: saya.workflow.v1.Submission
-	(*OwnedID)(nil),       // 4: saya.workflow.v1.OwnedID
-	(*Operation)(nil),     // 5: saya.workflow.v1.Operation
-	(*Result)(nil),        // 6: saya.workflow.v1.Result
-	(*Completion)(nil),    // 7: saya.workflow.v1.Completion
-	nil,                   // 8: saya.workflow.v1.Submission.AnswersEntry
+	(*FocusRequest)(nil),  // 0: saya.workflow.v1.FocusRequest
+	(*FocusResult)(nil),   // 1: saya.workflow.v1.FocusResult
+	(*Empty)(nil),         // 2: saya.workflow.v1.Empty
+	(*Owner)(nil),         // 3: saya.workflow.v1.Owner
+	(*Questionnaire)(nil), // 4: saya.workflow.v1.Questionnaire
+	(*Question)(nil),      // 5: saya.workflow.v1.Question
+	(*Submission)(nil),    // 6: saya.workflow.v1.Submission
+	(*OwnedID)(nil),       // 7: saya.workflow.v1.OwnedID
+	(*Operation)(nil),     // 8: saya.workflow.v1.Operation
+	(*Result)(nil),        // 9: saya.workflow.v1.Result
+	(*Completion)(nil),    // 10: saya.workflow.v1.Completion
+	nil,                   // 11: saya.workflow.v1.FocusRequest.RatingsEntry
+	nil,                   // 12: saya.workflow.v1.Question.VariantsEntry
+	nil,                   // 13: saya.workflow.v1.Submission.AnswersEntry
+	nil,                   // 14: saya.workflow.v1.Submission.ResponsesEntry
+	nil,                   // 15: saya.workflow.v1.Submission.RatingsEntry
+	nil,                   // 16: saya.workflow.v1.Submission.QuestionFocusEntry
+	nil,                   // 17: saya.workflow.v1.Result.RatingsEntry
 }
 var file_workflow_v1_workflow_proto_depIdxs = []int32{
-	2, // 0: saya.workflow.v1.Questionnaire.questions:type_name -> saya.workflow.v1.Question
-	8, // 1: saya.workflow.v1.Submission.answers:type_name -> saya.workflow.v1.Submission.AnswersEntry
-	0, // 2: saya.workflow.v1.Survey.Current:input_type -> saya.workflow.v1.Empty
-	3, // 3: saya.workflow.v1.Survey.Submit:input_type -> saya.workflow.v1.Submission
-	4, // 4: saya.workflow.v1.Survey.Input:input_type -> saya.workflow.v1.OwnedID
-	4, // 5: saya.workflow.v1.Assessment.Get:input_type -> saya.workflow.v1.OwnedID
-	4, // 6: saya.workflow.v1.Assessment.Input:input_type -> saya.workflow.v1.OwnedID
-	7, // 7: saya.workflow.v1.Assessment.Complete:input_type -> saya.workflow.v1.Completion
-	1, // 8: saya.workflow.v1.Survey.Current:output_type -> saya.workflow.v1.Questionnaire
-	5, // 9: saya.workflow.v1.Survey.Submit:output_type -> saya.workflow.v1.Operation
-	3, // 10: saya.workflow.v1.Survey.Input:output_type -> saya.workflow.v1.Submission
-	6, // 11: saya.workflow.v1.Assessment.Get:output_type -> saya.workflow.v1.Result
-	3, // 12: saya.workflow.v1.Assessment.Input:output_type -> saya.workflow.v1.Submission
-	0, // 13: saya.workflow.v1.Assessment.Complete:output_type -> saya.workflow.v1.Empty
-	8, // [8:14] is the sub-list for method output_type
-	2, // [2:8] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	11, // 0: saya.workflow.v1.FocusRequest.ratings:type_name -> saya.workflow.v1.FocusRequest.RatingsEntry
+	5,  // 1: saya.workflow.v1.Questionnaire.questions:type_name -> saya.workflow.v1.Question
+	12, // 2: saya.workflow.v1.Question.variants:type_name -> saya.workflow.v1.Question.VariantsEntry
+	13, // 3: saya.workflow.v1.Submission.answers:type_name -> saya.workflow.v1.Submission.AnswersEntry
+	14, // 4: saya.workflow.v1.Submission.responses:type_name -> saya.workflow.v1.Submission.ResponsesEntry
+	15, // 5: saya.workflow.v1.Submission.ratings:type_name -> saya.workflow.v1.Submission.RatingsEntry
+	16, // 6: saya.workflow.v1.Submission.question_focus:type_name -> saya.workflow.v1.Submission.QuestionFocusEntry
+	17, // 7: saya.workflow.v1.Result.ratings:type_name -> saya.workflow.v1.Result.RatingsEntry
+	2,  // 8: saya.workflow.v1.Survey.Interview:input_type -> saya.workflow.v1.Empty
+	3,  // 9: saya.workflow.v1.Survey.Latest:input_type -> saya.workflow.v1.Owner
+	2,  // 10: saya.workflow.v1.Survey.Current:input_type -> saya.workflow.v1.Empty
+	6,  // 11: saya.workflow.v1.Survey.Submit:input_type -> saya.workflow.v1.Submission
+	7,  // 12: saya.workflow.v1.Survey.Input:input_type -> saya.workflow.v1.OwnedID
+	7,  // 13: saya.workflow.v1.Assessment.Get:input_type -> saya.workflow.v1.OwnedID
+	7,  // 14: saya.workflow.v1.Assessment.Input:input_type -> saya.workflow.v1.OwnedID
+	10, // 15: saya.workflow.v1.Assessment.Complete:input_type -> saya.workflow.v1.Completion
+	0,  // 16: saya.workflow.v1.InterviewAssistant.Focus:input_type -> saya.workflow.v1.FocusRequest
+	4,  // 17: saya.workflow.v1.Survey.Interview:output_type -> saya.workflow.v1.Questionnaire
+	8,  // 18: saya.workflow.v1.Survey.Latest:output_type -> saya.workflow.v1.Operation
+	4,  // 19: saya.workflow.v1.Survey.Current:output_type -> saya.workflow.v1.Questionnaire
+	8,  // 20: saya.workflow.v1.Survey.Submit:output_type -> saya.workflow.v1.Operation
+	6,  // 21: saya.workflow.v1.Survey.Input:output_type -> saya.workflow.v1.Submission
+	9,  // 22: saya.workflow.v1.Assessment.Get:output_type -> saya.workflow.v1.Result
+	6,  // 23: saya.workflow.v1.Assessment.Input:output_type -> saya.workflow.v1.Submission
+	2,  // 24: saya.workflow.v1.Assessment.Complete:output_type -> saya.workflow.v1.Empty
+	1,  // 25: saya.workflow.v1.InterviewAssistant.Focus:output_type -> saya.workflow.v1.FocusResult
+	17, // [17:26] is the sub-list for method output_type
+	8,  // [8:17] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_workflow_v1_workflow_proto_init() }
@@ -644,15 +949,16 @@ func file_workflow_v1_workflow_proto_init() {
 	if File_workflow_v1_workflow_proto != nil {
 		return
 	}
+	file_workflow_v1_workflow_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_workflow_v1_workflow_proto_rawDesc), len(file_workflow_v1_workflow_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   18,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_workflow_v1_workflow_proto_goTypes,
 		DependencyIndexes: file_workflow_v1_workflow_proto_depIdxs,

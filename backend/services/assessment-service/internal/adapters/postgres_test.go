@@ -70,4 +70,16 @@ func TestAssessmentPersistence(t *testing.T) {
 	if e = db.Get(&jobs, "SELECT count(*) FROM notifications"); e != nil || jobs != 1 {
 		t.Fatal("duplicate notification", e)
 	}
+	weekly := uuid.NewString()
+	signal = domain.Signal{SourceVersion: 2, Summary: "Confirmed", Ratings: map[string]int32{"housing": 0, "expenses": 1, "work": 2, "connection": 3, "daily": 4}}
+	if e = r.Create(ctx, weekly, user, signal); e != nil {
+		t.Fatal(e)
+	}
+	if e = r.Complete(ctx, weekly, user, nil, "self-report", false); e != nil {
+		t.Fatal(e)
+	}
+	saved, e := r.Get(ctx, weekly, user)
+	if e != nil || saved.Status != "completed" || saved.Percentage == nil || *saved.Percentage != 50 || saved.Summary != "Confirmed" {
+		t.Fatal("weekly result persistence", e)
+	}
 }

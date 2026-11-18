@@ -11,6 +11,7 @@ import (
 	"saya/ai-service/internal/application"
 	"saya/ai-service/internal/bootstrap"
 	pb "saya/contracts/workflow/v1"
+	wp "saya/contracts/workflow/v1"
 	"saya/messaging"
 	"saya/platform"
 	"time"
@@ -68,5 +69,11 @@ func run() error {
 			cancel()
 		}
 	}()
-	return platform.Serve(ctx, func(*grpc.Server) {})
+	assistant := application.InterviewAssistant{}
+	if gemini, ok := provider.(adapters.Gemini); ok {
+		assistant.Provider = gemini
+	}
+	return platform.Serve(ctx, func(server *grpc.Server) {
+		wp.RegisterInterviewAssistantServer(server, adapters.InterviewServer{Assistant: assistant})
+	})
 }

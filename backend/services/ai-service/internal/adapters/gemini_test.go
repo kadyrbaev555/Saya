@@ -75,3 +75,28 @@ func TestGeminiCancellation(t *testing.T) {
 		t.Fatal("cancellation ignored")
 	}
 }
+
+func TestGeminiQuestionFocus(t *testing.T) {
+	p := Gemini{APIKey: "test", Model: "test-model"}
+	p.Client = &http.Client{Transport: geminiTransport(func(r *http.Request) (*http.Response, error) {
+		var request struct {
+			Contents []struct{ Parts []struct{ Text string } }
+		}
+		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+			t.Fatal(err)
+		}
+		var payload map[string]json.RawMessage
+		if err := json.Unmarshal([]byte(request.Contents[0].Parts[0].Text), &payload); err != nil {
+			t.Fatal(err)
+		}
+		if len(payload) != 2 || string(payload["topic"]) != `"housing"` || string(payload["self_ratings"]) != `{"expenses":1}` {
+			t.Fatal("unexpected data sent to external provider")
+		}
+		body := `{"candidates":[{"finishReason":"STOP","content":{"parts":[{"text":"{\"focus\":\"resources\"}"}]}}]}`
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(body))}, nil
+	})}
+	focus, err := p.Focus(context.Background(), "housing", map[string]int32{"expenses": 1})
+	if err != nil || focus != "resources" {
+		t.Fatal("invalid focus response", err)
+	}
+}

@@ -13,6 +13,14 @@ import (
 
 type Repository struct{ DB *sqlx.DB }
 
+func (r Repository) Latest(ctx context.Context, user string) (string, error) {
+	var id string
+	err := r.DB.GetContext(ctx, &id, "SELECT id FROM submissions WHERE user_id=$1 ORDER BY created_at DESC,id DESC LIMIT 1", user)
+	if errors.Is(err, sql.ErrNoRows) {
+		return "", nil
+	}
+	return id, err
+}
 func (r Repository) Save(ctx context.Context, v domain.Submission) (string, error) {
 	tx, e := r.DB.BeginTxx(ctx, nil)
 	if e != nil {

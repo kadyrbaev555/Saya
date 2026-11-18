@@ -9,3 +9,9 @@
 Первый POST /api/v1/auth/register принимает full_name, phone (с кодом страны), email и password. После приёма письма SMTP-сервером API возвращает 202 и registration_id. Код из шести цифр действует 10 минут. При повторной отправке через минуту используйте новый registration_id. После пяти неверных попыток потребуется новый код.
 
 POST /api/v1/auth/register/confirm принимает registration_id и code как строки. Успешный ответ 201 создаёт обычную сессию Web или native. Неверный, использованный или просроченный код возвращает 401.
+
+## Опрос о неделе
+
+GET /api/v1/surveys/interview возвращает версию 2 и шесть вопросов с утверждёнными вариантами формулировок. POST /api/v1/surveys/interview/focus принимает topic, ratings и отдельное согласие consent. GET /api/v1/surveys/current по-прежнему обслуживает клиентов версии 1.
+
+POST /api/v1/surveys/submissions принимает saya-week, version=2, свободные responses, подтверждённые ratings (0–4), summary, выбранные needs и question_focus. Пропущенные оценки отсутствуют в карте. GET /api/v1/surveys/latest возвращает id последнего прохождения владельца или пустую строку. По этому id GET /api/v1/assessments/{id} отдаёт summary, ratings, percentage и directions. При неполной шкале percentage равен null, нулевой итог остаётся числом 0.

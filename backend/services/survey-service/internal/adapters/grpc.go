@@ -15,11 +15,25 @@ type Server struct {
 	Service application.Service
 }
 
+func (s Server) Interview(context.Context, *pb.Empty) (*pb.Questionnaire, error) {
+	q := &pb.Questionnaire{Id: "saya-week", Version: 2, Disclaimer: "Вспомните последние семь дней. Можно пропустить любой вопрос и вернуться к ответам перед сохранением."}
+	for _, topic := range domain.Topics {
+		q.Questions = append(q.Questions, &pb.Question{Id: topic.ID, Variants: domain.Variants[topic.ID], Label: topic.Question})
+	}
+	return q, nil
+}
+func (s Server) Latest(ctx context.Context, r *pb.Owner) (*pb.Operation, error) {
+	id, err := s.Service.Repo.Latest(ctx, r.UserId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "lookup failed")
+	}
+	return &pb.Operation{Id: id}, nil
+}
 func (s Server) Current(context.Context, *pb.Empty) (*pb.Questionnaire, error) {
 	return &pb.Questionnaire{Id: "saya-demo", Version: 1, Disclaimer: "Демонстрационный добровольный опрос; не валидированная оценка риска. Не вводите реальные кризисные данные.", Questions: []*pb.Question{{Id: "immediate_threat", Label: "Демонстрация: сообщена непосредственная угроза?"}, {Id: "information_requested", Label: "Демонстрация: нужна информация о поддержке?"}}}, nil
 }
 func (s Server) Submit(ctx context.Context, v *pb.Submission) (*pb.Operation, error) {
-	id, e := s.Service.Submit(ctx, domain.Submission{UserID: v.UserId, QuestionnaireID: v.QuestionnaireId, Version: v.Version, Answers: v.Answers, Consent: v.Consent, ExternalConsent: v.ExternalLlmConsent, IdempotencyKey: v.IdempotencyKey})
+	id, e := s.Service.Submit(ctx, domain.Submission{UserID: v.UserId, QuestionnaireID: v.QuestionnaireId, Version: v.Version, QuestionFocus: v.QuestionFocus, Responses: v.Responses, Ratings: v.Ratings, Summary: v.Summary, Needs: v.Needs, Answers: v.Answers, Consent: v.Consent, ExternalConsent: v.ExternalLlmConsent, IdempotencyKey: v.IdempotencyKey})
 	if errors.Is(e, domain.ErrInvalid) {
 		return nil, status.Error(codes.InvalidArgument, "invalid demonstration submission")
 	}
@@ -33,5 +47,5 @@ func (s Server) Input(ctx context.Context, v *pb.OwnedID) (*pb.Submission, error
 	if e != nil {
 		return nil, status.Error(codes.NotFound, "submission unavailable")
 	}
-	return &pb.Submission{UserId: data.UserID, QuestionnaireId: data.QuestionnaireID, Version: data.Version, Answers: data.Answers, Consent: data.Consent, ExternalLlmConsent: data.ExternalConsent, IdempotencyKey: data.IdempotencyKey}, nil
+	return &pb.Submission{UserId: data.UserID, QuestionnaireId: data.QuestionnaireID, Version: data.Version, QuestionFocus: data.QuestionFocus, Responses: data.Responses, Ratings: data.Ratings, Summary: data.Summary, Needs: data.Needs, Answers: data.Answers, Consent: data.Consent, ExternalLlmConsent: data.ExternalConsent, IdempotencyKey: data.IdempotencyKey}, nil
 }

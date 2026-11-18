@@ -136,7 +136,11 @@ func run() error {
 		c.Header("Cache-Control", "no-store")
 		c.Header("X-Content-Type-Options", "nosniff")
 		c.Header("Referrer-Policy", "no-referrer")
-		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 16384)
+		limit := int64(16384)
+		if c.Request.URL.Path == "/api/v1/surveys/submissions" {
+			limit = 96 << 10
+		}
+		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, limit)
 		origin := c.GetHeader("Origin")
 		if origin != "" {
 			if origin != cfg.WebOrigin {
@@ -323,32 +327,66 @@ func run() error {
 		c.Next()
 	}
 
-	r.GET("/api/v1/surveys/current", authenticate, func(c *gin.Context) {
-		v, e := survey.Current(c.Request.Context(), &wp.Empty{})
-		if e != nil {
-			fail(c, e)
+	aiConn, err := grpc.NewClient(cfg.AIAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return err
+	}
+	defer aiConn.Close()
+	interviewer := wp.NewInterviewAssistantClient(aiConn)
+	r.POST("/api/v1/surveys/interview/focus", authenticate, func(c *gin.Context) {
+		var body wp.FocusRequest
+		if c.ShouldBindJSON(&body) != nil {
+			c.Status(400)
 			return
 		}
-		questions := []gin.H{}
-		for _, q := range v.Questions {
-			questions = append(questions, gin.H{"id": q.Id, "label": q.Label})
+		v, err := interviewer.Focus(c.Request.Context(), &body)
+		if err != nil {
+			fail(c, err)
+			return
 		}
-		c.JSON(200, gin.H{"id": v.Id, "version": v.Version, "questions": questions, "disclaimer": v.Disclaimer})
+		c.JSON(200, gin.H{"focus": v.Focus})
 	})
+	r.GET("/api/v1/surveys/latest", authenticate, func(c *gin.Context) {
+		op, err := survey.Latest(c.Request.Context(), &wp.Owner{UserId: c.GetString("user_id")})
+		if err != nil {
+			fail(c, err)
+			return
+		}
+		c.JSON(200, gin.H{"id": op.Id})
+	})
+	for path, method := range map[string]func(context.Context, *wp.Empty, ...grpc.CallOption) (*wp.Questionnaire, error){"/api/v1/surveys/current": survey.Current, "/api/v1/surveys/interview": survey.Interview} {
+		r.GET(path, authenticate, func(c *gin.Context) {
+			v, e := method(c.Request.Context(), &wp.Empty{})
+			if e != nil {
+				fail(c, e)
+				return
+			}
+			questions := []gin.H{}
+			for _, q := range v.Questions {
+				questions = append(questions, gin.H{"id": q.Id, "label": q.Label, "variants": q.Variants})
+			}
+			c.JSON(200, gin.H{"id": v.Id, "version": v.Version, "questions": questions, "disclaimer": v.Disclaimer})
+		})
+	}
 	r.POST("/api/v1/surveys/submissions", authenticate, func(c *gin.Context) {
 		var body struct {
-			QuestionnaireID string          `json:"questionnaire_id"`
-			Version         int32           `json:"version"`
-			Answers         map[string]bool `json:"answers"`
-			Consent         bool            `json:"consent"`
-			ExternalConsent bool            `json:"external_llm_consent"`
-			IdempotencyKey  string          `json:"idempotency_key"`
+			Responses       map[string]string `json:"responses"`
+			Ratings         map[string]int32  `json:"ratings"`
+			Summary         string            `json:"summary"`
+			Needs           []string          `json:"needs"`
+			QuestionFocus   map[string]string `json:"question_focus"`
+			QuestionnaireID string            `json:"questionnaire_id"`
+			Version         int32             `json:"version"`
+			Answers         map[string]bool   `json:"answers"`
+			Consent         bool              `json:"consent"`
+			ExternalConsent bool              `json:"external_llm_consent"`
+			IdempotencyKey  string            `json:"idempotency_key"`
 		}
 		if c.ShouldBindJSON(&body) != nil {
 			c.Status(400)
 			return
 		}
-		v, e := survey.Submit(c.Request.Context(), &wp.Submission{UserId: c.GetString("user_id"), QuestionnaireId: body.QuestionnaireID, Version: body.Version, Answers: body.Answers, Consent: body.Consent, ExternalLlmConsent: body.ExternalConsent, IdempotencyKey: body.IdempotencyKey})
+		v, e := survey.Submit(c.Request.Context(), &wp.Submission{UserId: c.GetString("user_id"), QuestionnaireId: body.QuestionnaireID, Version: body.Version, QuestionFocus: body.QuestionFocus, Responses: body.Responses, Ratings: body.Ratings, Summary: body.Summary, Needs: body.Needs, Answers: body.Answers, Consent: body.Consent, ExternalLlmConsent: body.ExternalConsent, IdempotencyKey: body.IdempotencyKey})
 		if e != nil {
 			fail(c, e)
 			return
@@ -365,7 +403,7 @@ func run() error {
 			fail(c, e)
 			return
 		}
-		c.JSON(200, gin.H{"id": v.Id, "status": v.Status, "immediate_threat_reported": v.ImmediateThreatReported, "recommendations": v.Recommendations, "disclaimer": v.Disclaimer, "provider": v.Provider})
+		c.JSON(200, gin.H{"id": v.Id, "status": v.Status, "version": v.Version, "summary": v.Summary, "ratings": v.Ratings, "percentage": v.Percentage, "directions": v.Directions, "immediate_threat_reported": v.ImmediateThreatReported, "recommendations": v.Recommendations, "disclaimer": v.Disclaimer, "provider": v.Provider})
 	})
 	r.GET("/api/v1/users/me", authenticate, func(c *gin.Context) {
 		u, e := client.Me(c.Request.Context(), &pb.Identity{UserId: c.GetString("user_id")})

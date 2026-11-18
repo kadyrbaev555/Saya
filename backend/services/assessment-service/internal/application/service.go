@@ -38,6 +38,16 @@ func (s Service) Get(ctx context.Context, id, user string) (domain.Result, error
 	return result, e
 }
 func (s Service) Complete(ctx context.Context, id, user string, codes []string, provider string, failed bool) error {
+	if provider == "self-report" && !failed && len(codes) == 0 {
+		signal, err := s.Repo.Input(ctx, id, user)
+		if err != nil {
+			return err
+		}
+		if signal.SourceVersion != 2 {
+			return domain.ErrInvalid
+		}
+		return s.Repo.Complete(ctx, id, user, nil, provider, false)
+	}
 	if !failed {
 		if e := domain.Validate(codes); e != nil {
 			return e

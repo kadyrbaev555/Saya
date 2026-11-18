@@ -19,15 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Survey_Current_FullMethodName = "/saya.workflow.v1.Survey/Current"
-	Survey_Submit_FullMethodName  = "/saya.workflow.v1.Survey/Submit"
-	Survey_Input_FullMethodName   = "/saya.workflow.v1.Survey/Input"
+	Survey_Interview_FullMethodName = "/saya.workflow.v1.Survey/Interview"
+	Survey_Latest_FullMethodName    = "/saya.workflow.v1.Survey/Latest"
+	Survey_Current_FullMethodName   = "/saya.workflow.v1.Survey/Current"
+	Survey_Submit_FullMethodName    = "/saya.workflow.v1.Survey/Submit"
+	Survey_Input_FullMethodName     = "/saya.workflow.v1.Survey/Input"
 )
 
 // SurveyClient is the client API for Survey service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SurveyClient interface {
+	Interview(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Questionnaire, error)
+	Latest(ctx context.Context, in *Owner, opts ...grpc.CallOption) (*Operation, error)
 	Current(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Questionnaire, error)
 	Submit(ctx context.Context, in *Submission, opts ...grpc.CallOption) (*Operation, error)
 	Input(ctx context.Context, in *OwnedID, opts ...grpc.CallOption) (*Submission, error)
@@ -39,6 +43,26 @@ type surveyClient struct {
 
 func NewSurveyClient(cc grpc.ClientConnInterface) SurveyClient {
 	return &surveyClient{cc}
+}
+
+func (c *surveyClient) Interview(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Questionnaire, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Questionnaire)
+	err := c.cc.Invoke(ctx, Survey_Interview_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *surveyClient) Latest(ctx context.Context, in *Owner, opts ...grpc.CallOption) (*Operation, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Operation)
+	err := c.cc.Invoke(ctx, Survey_Latest_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *surveyClient) Current(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Questionnaire, error) {
@@ -75,6 +99,8 @@ func (c *surveyClient) Input(ctx context.Context, in *OwnedID, opts ...grpc.Call
 // All implementations must embed UnimplementedSurveyServer
 // for forward compatibility.
 type SurveyServer interface {
+	Interview(context.Context, *Empty) (*Questionnaire, error)
+	Latest(context.Context, *Owner) (*Operation, error)
 	Current(context.Context, *Empty) (*Questionnaire, error)
 	Submit(context.Context, *Submission) (*Operation, error)
 	Input(context.Context, *OwnedID) (*Submission, error)
@@ -88,6 +114,12 @@ type SurveyServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSurveyServer struct{}
 
+func (UnimplementedSurveyServer) Interview(context.Context, *Empty) (*Questionnaire, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Interview not implemented")
+}
+func (UnimplementedSurveyServer) Latest(context.Context, *Owner) (*Operation, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Latest not implemented")
+}
 func (UnimplementedSurveyServer) Current(context.Context, *Empty) (*Questionnaire, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Current not implemented")
 }
@@ -116,6 +148,42 @@ func RegisterSurveyServer(s grpc.ServiceRegistrar, srv SurveyServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Survey_ServiceDesc, srv)
+}
+
+func _Survey_Interview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SurveyServer).Interview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Survey_Interview_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SurveyServer).Interview(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Survey_Latest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Owner)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SurveyServer).Latest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Survey_Latest_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SurveyServer).Latest(ctx, req.(*Owner))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Survey_Current_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -179,6 +247,14 @@ var Survey_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "saya.workflow.v1.Survey",
 	HandlerType: (*SurveyServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Interview",
+			Handler:    _Survey_Interview_Handler,
+		},
+		{
+			MethodName: "Latest",
+			Handler:    _Survey_Latest_Handler,
+		},
 		{
 			MethodName: "Current",
 			Handler:    _Survey_Current_Handler,
@@ -368,6 +444,108 @@ var Assessment_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Complete",
 			Handler:    _Assessment_Complete_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "workflow/v1/workflow.proto",
+}
+
+const (
+	InterviewAssistant_Focus_FullMethodName = "/saya.workflow.v1.InterviewAssistant/Focus"
+)
+
+// InterviewAssistantClient is the client API for InterviewAssistant service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type InterviewAssistantClient interface {
+	Focus(ctx context.Context, in *FocusRequest, opts ...grpc.CallOption) (*FocusResult, error)
+}
+
+type interviewAssistantClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewInterviewAssistantClient(cc grpc.ClientConnInterface) InterviewAssistantClient {
+	return &interviewAssistantClient{cc}
+}
+
+func (c *interviewAssistantClient) Focus(ctx context.Context, in *FocusRequest, opts ...grpc.CallOption) (*FocusResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FocusResult)
+	err := c.cc.Invoke(ctx, InterviewAssistant_Focus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// InterviewAssistantServer is the server API for InterviewAssistant service.
+// All implementations must embed UnimplementedInterviewAssistantServer
+// for forward compatibility.
+type InterviewAssistantServer interface {
+	Focus(context.Context, *FocusRequest) (*FocusResult, error)
+	mustEmbedUnimplementedInterviewAssistantServer()
+}
+
+// UnimplementedInterviewAssistantServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedInterviewAssistantServer struct{}
+
+func (UnimplementedInterviewAssistantServer) Focus(context.Context, *FocusRequest) (*FocusResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Focus not implemented")
+}
+func (UnimplementedInterviewAssistantServer) mustEmbedUnimplementedInterviewAssistantServer() {}
+func (UnimplementedInterviewAssistantServer) testEmbeddedByValue()                            {}
+
+// UnsafeInterviewAssistantServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to InterviewAssistantServer will
+// result in compilation errors.
+type UnsafeInterviewAssistantServer interface {
+	mustEmbedUnimplementedInterviewAssistantServer()
+}
+
+func RegisterInterviewAssistantServer(s grpc.ServiceRegistrar, srv InterviewAssistantServer) {
+	// If the following call pancis, it indicates UnimplementedInterviewAssistantServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&InterviewAssistant_ServiceDesc, srv)
+}
+
+func _InterviewAssistant_Focus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FocusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InterviewAssistantServer).Focus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InterviewAssistant_Focus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InterviewAssistantServer).Focus(ctx, req.(*FocusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// InterviewAssistant_ServiceDesc is the grpc.ServiceDesc for InterviewAssistant service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var InterviewAssistant_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "saya.workflow.v1.InterviewAssistant",
+	HandlerType: (*InterviewAssistantServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Focus",
+			Handler:    _InterviewAssistant_Focus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

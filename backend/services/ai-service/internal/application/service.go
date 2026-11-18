@@ -26,6 +26,9 @@ func (s Service) Process(ctx context.Context, id, user string) error {
 		return e
 	}
 	var output domain.Output
+	if input.Version == 2 && (!input.ExternalConsent || s.Provider.Name() == "demonstration-mock") {
+		return s.Assessment.Complete(ctx, id, user, output, "self-report", false)
+	}
 	if s.Provider.Name() != "demonstration-mock" && !input.ExternalConsent {
 		return s.Assessment.Complete(ctx, id, user, output, "unavailable", true)
 	}
@@ -55,6 +58,9 @@ func (s Service) Process(ctx context.Context, id, user string) error {
 			case <-timer.C:
 			}
 		}
+	}
+	if input.Version == 2 && e != nil {
+		return s.Assessment.Complete(ctx, id, user, domain.Output{}, "self-report", false)
 	}
 	return s.Assessment.Complete(ctx, id, user, output, s.Provider.Name(), e != nil)
 }

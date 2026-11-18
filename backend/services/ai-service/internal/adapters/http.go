@@ -28,7 +28,11 @@ func (p HTTPProvider) Generate(ctx context.Context, input domain.Input) (domain.
 	if e != nil || endpoint.Scheme != "https" || endpoint.Host == "" || endpoint.User != nil {
 		return output, errors.New("LLM endpoint must be HTTPS")
 	}
-	body, e := json.Marshal(map[string]any{"version": 1, "demonstration": true, "input": input, "allowed_recommendations": []string{"review_support_information", "consider_trusted_contact", "choose_safe_device"}, "instructions": "Return only JSON recommendations using allowed codes. No diagnosis, risk score, or emergency actions."})
+	version := int32(1)
+	if input.Version == 2 {
+		version = 2
+	}
+	body, e := json.Marshal(map[string]any{"version": version, "demonstration": version == 1, "input": input, "allowed_recommendations": []string{"review_support_information", "consider_trusted_contact", "choose_safe_device"}, "instructions": "Return only JSON recommendations using allowed codes. No diagnosis, risk score, or emergency actions."})
 	if e != nil {
 		return output, e
 	}

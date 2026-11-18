@@ -3,9 +3,12 @@ package domain
 import "errors"
 
 type Input struct {
-	ImmediateThreat      bool `json:"immediate_threat"`
-	InformationRequested bool `json:"information_requested"`
-	ExternalConsent      bool `json:"-"`
+	Version              int32            `json:"-"`
+	Ratings              map[string]int32 `json:"ratings,omitempty"`
+	Needs                []string         `json:"needs,omitempty"`
+	ImmediateThreat      bool             `json:"immediate_threat"`
+	InformationRequested bool             `json:"information_requested"`
+	ExternalConsent      bool             `json:"-"`
 }
 type Output struct {
 	Recommendations []string `json:"recommendations"`

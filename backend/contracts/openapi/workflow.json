@@ -62,7 +62,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Submission"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Submission"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeeklySubmission"
+                  }
+                ]
               }
             }
           }
@@ -179,6 +186,128 @@
           }
         }
       }
+    },
+    "/api/v1/surveys/interview": {
+      "get": {
+        "summary": "Weekly interview with approved question variants",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource unavailable"
+          },
+          "503": {
+            "description": "Dependency unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/surveys/latest": {
+      "get": {
+        "summary": "Latest owned submission ID, empty for a new profile",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource unavailable"
+          },
+          "503": {
+            "description": "Dependency unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/surveys/interview/focus": {
+      "post": {
+        "summary": "Select an approved question perspective using Gemini with explicit consent",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource unavailable"
+          },
+          "503": {
+            "description": "Dependency unavailable"
+          },
+          "200": {
+            "description": "Success"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "topic",
+                  "consent"
+                ],
+                "properties": {
+                  "topic": {
+                    "type": "string",
+                    "enum": [
+                      "housing",
+                      "expenses",
+                      "work",
+                      "connection",
+                      "daily",
+                      "priority"
+                    ]
+                  },
+                  "ratings": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 4
+                    }
+                  },
+                  "consent": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -241,6 +370,96 @@
           "idempotency_key": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "WeeklySubmission": {
+        "type": "object",
+        "required": [
+          "questionnaire_id",
+          "version",
+          "consent",
+          "idempotency_key"
+        ],
+        "properties": {
+          "questionnaire_id": {
+            "enum": [
+              "saya-week"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "enum": [
+              2
+            ],
+            "type": "integer"
+          },
+          "answers": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "immediate_threat": {
+                "type": "boolean"
+              }
+            }
+          },
+          "consent": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "external_llm_consent": {
+            "type": "boolean",
+            "default": false
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "responses": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 800
+            }
+          },
+          "ratings": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            }
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 1800
+          },
+          "needs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "housing",
+                "jobs",
+                "psychologist",
+                "social",
+                "financial"
+              ]
+            }
+          },
+          "question_focus": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "routine",
+                "resources",
+                "obstacles"
+              ]
+            }
           }
         }
       }

@@ -1,13 +1,17 @@
 syntax="proto3";
 package saya.workflow.v1;
 option go_package="saya/contracts/workflow/v1;workflowv1";
-service Survey {rpc Current(Empty)returns(Questionnaire);rpc Submit(Submission)returns(Operation);rpc Input(OwnedID)returns(Submission);}
+service Survey {rpc Interview(Empty)returns(Questionnaire);rpc Latest(Owner)returns(Operation);rpc Current(Empty)returns(Questionnaire);rpc Submit(Submission)returns(Operation);rpc Input(OwnedID)returns(Submission);}
 service Assessment {rpc Get(OwnedID)returns(Result);rpc Input(OwnedID)returns(Submission);rpc Complete(Completion)returns(Empty);}
+service InterviewAssistant {rpc Focus(FocusRequest)returns(FocusResult);}
+message FocusRequest{string topic=1;map<string,int32> ratings=2;bool consent=3;}
+message FocusResult{string focus=1;}
 message Empty{}
+message Owner{string user_id=1;}
 message Questionnaire{string id=1;int32 version=2;repeated Question questions=3;string disclaimer=4;}
-message Question{string id=1;string label=2;}
-message Submission{string user_id=1;string questionnaire_id=2;int32 version=3;map<string,bool> answers=4;bool consent=5;bool external_llm_consent=6;string idempotency_key=7;}
+message Question{string id=1;string label=2;map<string,string> variants=3;}
+message Submission{string user_id=1;string questionnaire_id=2;int32 version=3;map<string,bool> answers=4;bool consent=5;bool external_llm_consent=6;string idempotency_key=7;map<string,string> responses=8;map<string,int32> ratings=9;string summary=10;repeated string needs=11;map<string,string> question_focus=12;}
 message OwnedID{string id=1;string user_id=2;}
 message Operation{string id=1;string status=2;}
-message Result{string id=1;string status=2;bool immediate_threat_reported=3;repeated string recommendations=4;string disclaimer=5;string provider=6;}
+message Result{string id=1;string status=2;bool immediate_threat_reported=3;repeated string recommendations=4;string disclaimer=5;string provider=6;map<string,int32> ratings=7;optional int32 percentage=8;string summary=9;repeated string directions=10;int32 version=11;}
 message Completion{string id=1;string user_id=2;repeated string recommendations=3;string provider=4;bool failed=5;}
