@@ -1,4 +1,5 @@
 """Only operates on the disposable saya-verify stack."""
+from registration_mailbox import register as verified_registration
 import json,os,subprocess,time,urllib.request,urllib.error,uuid
 assert os.environ.get('SAYA_DISPOSABLE_TEST')=='1'
 compose=['docker','compose','-p','saya-verify','--env-file','/tmp/saya-verify/deployments/local/.env','-f','backend/deployments/local/compose.yaml','-f','/tmp/saya-verify/override.yaml']
@@ -25,7 +26,7 @@ def wait(token,id,target):
   time.sleep(1)
  raise AssertionError('assessment did not reach '+target)
 command(['up','-d','--build','survey','assessment'])
-code,auth=call('/auth/register',{'email':str(uuid.uuid4())+'@example.test','password':'demo-failure-recovery-password'});assert code==201
+code,auth=verified_registration(call,{'email':str(uuid.uuid4())+'@example.test','password':'demo-failure-recovery-password'});assert code==201
 token=auth['access_token']
 external={**os.environ,'LLM_PROVIDER':'http','LLM_ENDPOINT':'https://example.invalid/demo','LLM_API_KEY':'demo-no-network'}
 try:

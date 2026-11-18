@@ -1,4 +1,5 @@
 """Destructive CONFIG test for disposable saya-verify project only; no production target."""
+from registration_mailbox import register as verified_registration
 import base64,json,os,pathlib,subprocess,time,urllib.request,urllib.error,uuid
 root=pathlib.Path('/tmp/saya-verify')
 envfile=root/'deployments/local/.env'
@@ -19,7 +20,7 @@ def request(path,body=None,token=None):
   with urllib.request.urlopen(req,timeout=10)as response:return response.status,json.load(response)
  except urllib.error.HTTPError as e:return e.code,{}
 def account():
- code,session=request('/api/v1/auth/register',{'email':str(uuid.uuid4())+'@example.test','password':'demonstration-key-rotation'})
+ code,session=verified_registration(lambda path, data: request('/api/v1'+path,data),{'email':str(uuid.uuid4())+'@example.test','password':'demonstration-key-rotation'})
  assert code==201,code
  return session['access_token']
 def apply(services):

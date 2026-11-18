@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"crypto/ed25519"
+	"crypto/hmac"
+	"crypto/sha256"
 	"encoding/base64"
 	"errors"
 	"github.com/jmoiron/sqlx"
@@ -15,6 +17,7 @@ import (
 	"os"
 	"os/signal"
 	in "saya/auth-service/internal/adapters/inbound/grpc"
+	"saya/auth-service/internal/adapters/outbound/email"
 	"saya/auth-service/internal/adapters/outbound/password"
 	"saya/auth-service/internal/adapters/outbound/postgres"
 	"saya/auth-service/internal/adapters/outbound/token"
@@ -58,7 +61,17 @@ func run() error {
 	if len(secret) < 32 {
 		return fmtError("CENTRIFUGO_TOKEN_SECRET must be at least 32 bytes")
 	}
-	pb.RegisterAuthServer(server, &in.Server{Service: service, RealtimeSigner: token.Realtime{Secret: []byte(secret)}})
+	key := hmac.New(sha256.New, seed)
+	key.Write([]byte("saya/auth/registration-code/v1"))
+	registration := application.Registration{
+		Store: postgres.Repository{DB: db},
+		Mailer: email.Sender{
+			Address: cfg.SMTPAddress, From: cfg.SMTPFrom,
+			Username: cfg.SMTPUser, Password: cfg.SMTPPassword,
+		},
+		Password: hasher, Tokens: service.Tokens, CodeKey: key.Sum(nil),
+	}
+	pb.RegisterAuthServer(server, &in.Server{Registration: registration, Service: service, RealtimeSigner: token.Realtime{Secret: []byte(secret)}})
 	hs := health.NewServer()
 	hp.RegisterHealthServer(server, hs)
 	hs.SetServingStatus("", hp.HealthCheckResponse_SERVING)

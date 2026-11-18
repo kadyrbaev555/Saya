@@ -429,6 +429,170 @@ func (x *RealtimeToken) GetChannel() string {
 	return ""
 }
 
+type RegistrationInput struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FullName      string                 `protobuf:"bytes,1,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
+	Phone         string                 `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Password      string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RegistrationInput) Reset() {
+	*x = RegistrationInput{}
+	mi := &file_auth_v1_auth_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegistrationInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegistrationInput) ProtoMessage() {}
+
+func (x *RegistrationInput) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_v1_auth_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegistrationInput.ProtoReflect.Descriptor instead.
+func (*RegistrationInput) Descriptor() ([]byte, []int) {
+	return file_auth_v1_auth_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *RegistrationInput) GetFullName() string {
+	if x != nil {
+		return x.FullName
+	}
+	return ""
+}
+
+func (x *RegistrationInput) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+func (x *RegistrationInput) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *RegistrationInput) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type RegistrationChallenge struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RegistrationChallenge) Reset() {
+	*x = RegistrationChallenge{}
+	mi := &file_auth_v1_auth_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegistrationChallenge) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegistrationChallenge) ProtoMessage() {}
+
+func (x *RegistrationChallenge) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_v1_auth_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegistrationChallenge.ProtoReflect.Descriptor instead.
+func (*RegistrationChallenge) Descriptor() ([]byte, []int) {
+	return file_auth_v1_auth_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *RegistrationChallenge) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type RegistrationCode struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RegistrationCode) Reset() {
+	*x = RegistrationCode{}
+	mi := &file_auth_v1_auth_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegistrationCode) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegistrationCode) ProtoMessage() {}
+
+func (x *RegistrationCode) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_v1_auth_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegistrationCode.ProtoReflect.Descriptor instead.
+func (*RegistrationCode) Descriptor() ([]byte, []int) {
+	return file_auth_v1_auth_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *RegistrationCode) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *RegistrationCode) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
 var File_auth_v1_auth_proto protoreflect.FileDescriptor
 
 const file_auth_v1_auth_proto_rawDesc = "" +
@@ -457,10 +621,21 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x1d\n" +
 	"\n" +
 	"expires_at\x18\x02 \x01(\x03R\texpiresAt\x12\x18\n" +
-	"\achannel\x18\x03 \x01(\tR\achannel2\xf6\x02\n" +
+	"\achannel\x18\x03 \x01(\tR\achannel\"x\n" +
+	"\x11RegistrationInput\x12\x1b\n" +
+	"\tfull_name\x18\x01 \x01(\tR\bfullName\x12\x14\n" +
+	"\x05phone\x18\x02 \x01(\tR\x05phone\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
+	"\bpassword\x18\x04 \x01(\tR\bpassword\"'\n" +
+	"\x15RegistrationChallenge\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"6\n" +
+	"\x10RegistrationCode\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code2\xe1\x03\n" +
 	"\x04Auth\x12F\n" +
-	"\bRealtime\x12\x1d.saya.auth.v1.RealtimeRequest\x1a\x1b.saya.auth.v1.RealtimeToken\x12<\n" +
-	"\bRegister\x12\x19.saya.auth.v1.Credentials\x1a\x15.saya.auth.v1.Session\x129\n" +
+	"\bRealtime\x12\x1d.saya.auth.v1.RealtimeRequest\x1a\x1b.saya.auth.v1.RealtimeToken\x12Y\n" +
+	"\x11StartRegistration\x12\x1f.saya.auth.v1.RegistrationInput\x1a#.saya.auth.v1.RegistrationChallenge\x12L\n" +
+	"\x13ConfirmRegistration\x12\x1e.saya.auth.v1.RegistrationCode\x1a\x15.saya.auth.v1.Session\x129\n" +
 	"\x05Login\x12\x19.saya.auth.v1.Credentials\x1a\x15.saya.auth.v1.Session\x12>\n" +
 	"\aRefresh\x12\x1c.saya.auth.v1.RefreshRequest\x1a\x15.saya.auth.v1.Session\x12;\n" +
 	"\x06Logout\x12\x1c.saya.auth.v1.RefreshRequest\x1a\x13.saya.auth.v1.Empty\x120\n" +
@@ -478,36 +653,41 @@ func file_auth_v1_auth_proto_rawDescGZIP() []byte {
 	return file_auth_v1_auth_proto_rawDescData
 }
 
-var file_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_auth_v1_auth_proto_goTypes = []any{
-	(*Credentials)(nil),     // 0: saya.auth.v1.Credentials
-	(*RefreshRequest)(nil),  // 1: saya.auth.v1.RefreshRequest
-	(*Identity)(nil),        // 2: saya.auth.v1.Identity
-	(*User)(nil),            // 3: saya.auth.v1.User
-	(*Session)(nil),         // 4: saya.auth.v1.Session
-	(*Empty)(nil),           // 5: saya.auth.v1.Empty
-	(*RealtimeRequest)(nil), // 6: saya.auth.v1.RealtimeRequest
-	(*RealtimeToken)(nil),   // 7: saya.auth.v1.RealtimeToken
+	(*Credentials)(nil),           // 0: saya.auth.v1.Credentials
+	(*RefreshRequest)(nil),        // 1: saya.auth.v1.RefreshRequest
+	(*Identity)(nil),              // 2: saya.auth.v1.Identity
+	(*User)(nil),                  // 3: saya.auth.v1.User
+	(*Session)(nil),               // 4: saya.auth.v1.Session
+	(*Empty)(nil),                 // 5: saya.auth.v1.Empty
+	(*RealtimeRequest)(nil),       // 6: saya.auth.v1.RealtimeRequest
+	(*RealtimeToken)(nil),         // 7: saya.auth.v1.RealtimeToken
+	(*RegistrationInput)(nil),     // 8: saya.auth.v1.RegistrationInput
+	(*RegistrationChallenge)(nil), // 9: saya.auth.v1.RegistrationChallenge
+	(*RegistrationCode)(nil),      // 10: saya.auth.v1.RegistrationCode
 }
 var file_auth_v1_auth_proto_depIdxs = []int32{
-	3, // 0: saya.auth.v1.Session.user:type_name -> saya.auth.v1.User
-	6, // 1: saya.auth.v1.Auth.Realtime:input_type -> saya.auth.v1.RealtimeRequest
-	0, // 2: saya.auth.v1.Auth.Register:input_type -> saya.auth.v1.Credentials
-	0, // 3: saya.auth.v1.Auth.Login:input_type -> saya.auth.v1.Credentials
-	1, // 4: saya.auth.v1.Auth.Refresh:input_type -> saya.auth.v1.RefreshRequest
-	1, // 5: saya.auth.v1.Auth.Logout:input_type -> saya.auth.v1.RefreshRequest
-	2, // 6: saya.auth.v1.Auth.Me:input_type -> saya.auth.v1.Identity
-	7, // 7: saya.auth.v1.Auth.Realtime:output_type -> saya.auth.v1.RealtimeToken
-	4, // 8: saya.auth.v1.Auth.Register:output_type -> saya.auth.v1.Session
-	4, // 9: saya.auth.v1.Auth.Login:output_type -> saya.auth.v1.Session
-	4, // 10: saya.auth.v1.Auth.Refresh:output_type -> saya.auth.v1.Session
-	5, // 11: saya.auth.v1.Auth.Logout:output_type -> saya.auth.v1.Empty
-	3, // 12: saya.auth.v1.Auth.Me:output_type -> saya.auth.v1.User
-	7, // [7:13] is the sub-list for method output_type
-	1, // [1:7] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	3,  // 0: saya.auth.v1.Session.user:type_name -> saya.auth.v1.User
+	6,  // 1: saya.auth.v1.Auth.Realtime:input_type -> saya.auth.v1.RealtimeRequest
+	8,  // 2: saya.auth.v1.Auth.StartRegistration:input_type -> saya.auth.v1.RegistrationInput
+	10, // 3: saya.auth.v1.Auth.ConfirmRegistration:input_type -> saya.auth.v1.RegistrationCode
+	0,  // 4: saya.auth.v1.Auth.Login:input_type -> saya.auth.v1.Credentials
+	1,  // 5: saya.auth.v1.Auth.Refresh:input_type -> saya.auth.v1.RefreshRequest
+	1,  // 6: saya.auth.v1.Auth.Logout:input_type -> saya.auth.v1.RefreshRequest
+	2,  // 7: saya.auth.v1.Auth.Me:input_type -> saya.auth.v1.Identity
+	7,  // 8: saya.auth.v1.Auth.Realtime:output_type -> saya.auth.v1.RealtimeToken
+	9,  // 9: saya.auth.v1.Auth.StartRegistration:output_type -> saya.auth.v1.RegistrationChallenge
+	4,  // 10: saya.auth.v1.Auth.ConfirmRegistration:output_type -> saya.auth.v1.Session
+	4,  // 11: saya.auth.v1.Auth.Login:output_type -> saya.auth.v1.Session
+	4,  // 12: saya.auth.v1.Auth.Refresh:output_type -> saya.auth.v1.Session
+	5,  // 13: saya.auth.v1.Auth.Logout:output_type -> saya.auth.v1.Empty
+	3,  // 14: saya.auth.v1.Auth.Me:output_type -> saya.auth.v1.User
+	8,  // [8:15] is the sub-list for method output_type
+	1,  // [1:8] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_auth_v1_auth_proto_init() }
@@ -521,7 +701,7 @@ func file_auth_v1_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_v1_auth_proto_rawDesc), len(file_auth_v1_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

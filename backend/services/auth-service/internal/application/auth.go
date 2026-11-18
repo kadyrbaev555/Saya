@@ -2,7 +2,7 @@ package application
 
 import (
 	"context"
-	"net/mail"
+
 	"saya/auth-service/internal/domain"
 	"strings"
 )
@@ -30,22 +30,6 @@ type Service struct {
 	Tokens   Tokens
 }
 
-func (s *Service) Register(ctx context.Context, email, password string) (domain.Session, error) {
-	email = strings.ToLower(strings.TrimSpace(email))
-	a, e := mail.ParseAddress(email)
-	if e != nil || a.Address != email || len(email) > 254 || len(password) < 12 || len(password) > 128 {
-		return domain.Session{}, domain.ErrValidation
-	}
-	h, e := s.Password.Hash(password)
-	if e != nil {
-		return domain.Session{}, e
-	}
-	u, e := s.Repo.Create(ctx, email, h)
-	if e != nil {
-		return domain.Session{}, e
-	}
-	return s.session(ctx, u)
-}
 func (s *Service) Login(ctx context.Context, email, password string) (domain.Session, error) {
 	if len(password) > 128 {
 		return domain.Session{}, domain.ErrCredentials

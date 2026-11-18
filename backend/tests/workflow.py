@@ -1,4 +1,5 @@
 """P1 local-only demo scenario, ownership and idempotency."""
+from registration_mailbox import register as verified_registration
 import os, json, urllib.request, urllib.error, uuid, time
 
 def call(path,token=None,body=None):
@@ -9,7 +10,7 @@ def call(path,token=None,body=None):
   with urllib.request.urlopen(request,timeout=15)as response:return response.status,json.loads(response.read()or b'{}')
  except urllib.error.HTTPError as error:return error.code,{}
 def register():
- status,data=call('/auth/register',body={'email':str(uuid.uuid4())+'@example.test','password':'demo-password-with-entropy'})
+ status,data=verified_registration(lambda path, data: call(path,body=data),{'email':str(uuid.uuid4())+'@example.test','password':'demo-password-with-entropy'})
  assert status==201,status
  return data['access_token']
 token=register();other=register()

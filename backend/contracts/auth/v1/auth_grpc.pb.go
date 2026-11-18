@@ -19,12 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Auth_Realtime_FullMethodName = "/saya.auth.v1.Auth/Realtime"
-	Auth_Register_FullMethodName = "/saya.auth.v1.Auth/Register"
-	Auth_Login_FullMethodName    = "/saya.auth.v1.Auth/Login"
-	Auth_Refresh_FullMethodName  = "/saya.auth.v1.Auth/Refresh"
-	Auth_Logout_FullMethodName   = "/saya.auth.v1.Auth/Logout"
-	Auth_Me_FullMethodName       = "/saya.auth.v1.Auth/Me"
+	Auth_Realtime_FullMethodName            = "/saya.auth.v1.Auth/Realtime"
+	Auth_StartRegistration_FullMethodName   = "/saya.auth.v1.Auth/StartRegistration"
+	Auth_ConfirmRegistration_FullMethodName = "/saya.auth.v1.Auth/ConfirmRegistration"
+	Auth_Login_FullMethodName               = "/saya.auth.v1.Auth/Login"
+	Auth_Refresh_FullMethodName             = "/saya.auth.v1.Auth/Refresh"
+	Auth_Logout_FullMethodName              = "/saya.auth.v1.Auth/Logout"
+	Auth_Me_FullMethodName                  = "/saya.auth.v1.Auth/Me"
 )
 
 // AuthClient is the client API for Auth service.
@@ -32,7 +33,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
 	Realtime(ctx context.Context, in *RealtimeRequest, opts ...grpc.CallOption) (*RealtimeToken, error)
-	Register(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*Session, error)
+	StartRegistration(ctx context.Context, in *RegistrationInput, opts ...grpc.CallOption) (*RegistrationChallenge, error)
+	ConfirmRegistration(ctx context.Context, in *RegistrationCode, opts ...grpc.CallOption) (*Session, error)
 	Login(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*Session, error)
 	Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*Session, error)
 	Logout(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*Empty, error)
@@ -57,10 +59,20 @@ func (c *authClient) Realtime(ctx context.Context, in *RealtimeRequest, opts ...
 	return out, nil
 }
 
-func (c *authClient) Register(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*Session, error) {
+func (c *authClient) StartRegistration(ctx context.Context, in *RegistrationInput, opts ...grpc.CallOption) (*RegistrationChallenge, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RegistrationChallenge)
+	err := c.cc.Invoke(ctx, Auth_StartRegistration_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ConfirmRegistration(ctx context.Context, in *RegistrationCode, opts ...grpc.CallOption) (*Session, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Session)
-	err := c.cc.Invoke(ctx, Auth_Register_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Auth_ConfirmRegistration_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +124,8 @@ func (c *authClient) Me(ctx context.Context, in *Identity, opts ...grpc.CallOpti
 // for forward compatibility.
 type AuthServer interface {
 	Realtime(context.Context, *RealtimeRequest) (*RealtimeToken, error)
-	Register(context.Context, *Credentials) (*Session, error)
+	StartRegistration(context.Context, *RegistrationInput) (*RegistrationChallenge, error)
+	ConfirmRegistration(context.Context, *RegistrationCode) (*Session, error)
 	Login(context.Context, *Credentials) (*Session, error)
 	Refresh(context.Context, *RefreshRequest) (*Session, error)
 	Logout(context.Context, *RefreshRequest) (*Empty, error)
@@ -130,8 +143,11 @@ type UnimplementedAuthServer struct{}
 func (UnimplementedAuthServer) Realtime(context.Context, *RealtimeRequest) (*RealtimeToken, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Realtime not implemented")
 }
-func (UnimplementedAuthServer) Register(context.Context, *Credentials) (*Session, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+func (UnimplementedAuthServer) StartRegistration(context.Context, *RegistrationInput) (*RegistrationChallenge, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartRegistration not implemented")
+}
+func (UnimplementedAuthServer) ConfirmRegistration(context.Context, *RegistrationCode) (*Session, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmRegistration not implemented")
 }
 func (UnimplementedAuthServer) Login(context.Context, *Credentials) (*Session, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
@@ -184,20 +200,38 @@ func _Auth_Realtime_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Credentials)
+func _Auth_StartRegistration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegistrationInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Register(ctx, in)
+		return srv.(AuthServer).StartRegistration(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_Register_FullMethodName,
+		FullMethod: Auth_StartRegistration_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Register(ctx, req.(*Credentials))
+		return srv.(AuthServer).StartRegistration(ctx, req.(*RegistrationInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_ConfirmRegistration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegistrationCode)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ConfirmRegistration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ConfirmRegistration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ConfirmRegistration(ctx, req.(*RegistrationCode))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -286,8 +320,12 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Auth_Realtime_Handler,
 		},
 		{
-			MethodName: "Register",
-			Handler:    _Auth_Register_Handler,
+			MethodName: "StartRegistration",
+			Handler:    _Auth_StartRegistration_Handler,
+		},
+		{
+			MethodName: "ConfirmRegistration",
+			Handler:    _Auth_ConfirmRegistration_Handler,
 		},
 		{
 			MethodName: "Login",

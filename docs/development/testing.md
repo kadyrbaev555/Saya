@@ -11,3 +11,7 @@ make assessment-integration проверяет PostgreSQL pending/failed/idempot
 
 
 Centrifugo health.enabled включает /health согласно [официальной конфигурации](https://centrifugal.dev/docs/server/configuration#health). Инфраструктурные wget probes проверяют реальные HTTP endpoints; служебные порты loopback.
+
+### Почта для регистрации
+
+В backend/services/auth-service/.env задайте SMTP_ADDRESS (host:port), SMTP_FROM и, если сервер требует авторизацию, SMTP_USERNAME и SMTP_PASSWORD. На порту 465 используется TLS с начала соединения, на других портах требуется STARTTLS. Сертификат должен быть доверен контейнеру Auth. Без настроенной почты регистрация возвращает ошибку доставки. Для просмотра писем тестовых пользователей настройте Auth на отдельный тестовый SMTP-приёмник Mailpit с TLS. Python smoke/workflow используют его HTTP API по адресу из SAYA_TEST_MAILPIT_URL (по умолчанию http://127.0.0.1:8025). Flutter realtime E2E использует заранее подтверждённый тестовый аккаунт из SAYA_TEST_EMAIL и SAYA_TEST_PASSWORD.

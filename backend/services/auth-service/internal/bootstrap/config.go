@@ -3,13 +3,14 @@ package bootstrap
 import "saya/config"
 
 type Config struct {
-	DatabaseURL           string
-	JWTSeed               string
-	JWTKid                string
-	CentrifugoTokenSecret string
-	ArgonMemory           uint32
-	ArgonIterations       uint32
-	ArgonThreads          uint8
+	SMTPAddress, SMTPFrom, SMTPUser, SMTPPassword string
+	DatabaseURL                                   string
+	JWTSeed                                       string
+	JWTKid                                        string
+	CentrifugoTokenSecret                         string
+	ArgonMemory                                   uint32
+	ArgonIterations                               uint32
+	ArgonThreads                                  uint8
 }
 
 func LoadConfig() (Config, error) {
@@ -18,6 +19,10 @@ func LoadConfig() (Config, error) {
 		return Config{}, e
 	}
 	c := Config{
+		SMTPAddress:           r.String("SMTP_ADDRESS", ""),
+		SMTPFrom:              r.String("SMTP_FROM", ""),
+		SMTPUser:              r.String("SMTP_USERNAME", ""),
+		SMTPPassword:          r.String("SMTP_PASSWORD", ""),
 		DatabaseURL:           r.URL("DATABASE_URL", "postgres", "postgresql"),
 		JWTSeed:               r.Key("JWT_SEED"),
 		JWTKid:                r.String("JWT_KID", "local-1"),

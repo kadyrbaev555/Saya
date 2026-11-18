@@ -12,12 +12,17 @@ import (
 
 type Server struct {
 	pb.UnimplementedAuthServer
+	Registration   application.Registration
 	Service        *application.Service
 	RealtimeSigner application.RealtimeSigner
 }
 
 func mapped(e error) error {
 	switch {
+	case errors.Is(e, application.ErrResendTooSoon):
+		return status.Error(codes.ResourceExhausted, "try again later")
+	case errors.Is(e, application.ErrDelivery):
+		return status.Error(codes.Unavailable, "email unavailable")
 	case e == nil:
 		return nil
 	case errors.Is(e, domain.ErrValidation):
@@ -37,8 +42,15 @@ func session(s domain.Session, e error) (*pb.Session, error) {
 	}
 	return &pb.Session{AccessToken: s.Access, RefreshToken: s.Refresh, User: user(s.User)}, nil
 }
-func (s *Server) Register(c context.Context, r *pb.Credentials) (*pb.Session, error) {
-	v, e := s.Service.Register(c, r.Email, r.Password)
+func (s *Server) StartRegistration(c context.Context, r *pb.RegistrationInput) (*pb.RegistrationChallenge, error) {
+	id, err := s.Registration.Start(c, r.FullName, r.Phone, r.Email, r.Password)
+	if err != nil {
+		return nil, mapped(err)
+	}
+	return &pb.RegistrationChallenge{Id: id}, nil
+}
+func (s *Server) ConfirmRegistration(c context.Context, r *pb.RegistrationCode) (*pb.Session, error) {
+	v, e := s.Registration.Confirm(c, r.Id, r.Code)
 	return session(v, e)
 }
 func (s *Server) Login(c context.Context, r *pb.Credentials) (*pb.Session, error) {

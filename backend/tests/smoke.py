@@ -1,4 +1,5 @@
 """Local disposable demo account; never run against production."""
+from registration_mailbox import register as verified_registration
 import os, json, urllib.request, urllib.error, http.cookiejar, uuid
 jar=http.cookiejar.CookieJar()
 client=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
@@ -15,9 +16,9 @@ def call(path, data=None, token=None, csrf=False):
 credentials={'email':str(uuid.uuid4())+'@example.test','password':'demonstration-only-password'}
 assert call('/api/v1/auth/register',dict(credentials,password='short'))[0]==400
 credentials['role']='ADMIN'
-code,body=call('/api/v1/auth/register',credentials);assert code==201,code
+code,body=verified_registration(lambda path, data: call('/api/v1'+path,data),credentials);assert code==201,code
 assert body['user']['role']=='USER'
-assert call('/api/v1/auth/register',credentials)[0]==409
+assert call('/api/v1/auth/register',dict(credentials,full_name='Demo User',phone='+77000000001'))[0]==409
 assert call('/api/v1/auth/login',dict(credentials,password='incorrect'))[0]==401
 code,body=call('/api/v1/auth/login',credentials);assert code==200
 assert call('/api/v1/users/me',token=body['access_token'])[0]==200

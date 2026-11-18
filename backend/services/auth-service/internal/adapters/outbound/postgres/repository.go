@@ -36,6 +36,13 @@ func (r Repository) NewSession(ctx context.Context, id, hash string) error {
 		return e
 	}
 	defer tx.Rollback()
+	if e = insertSession(ctx, tx, id, hash); e != nil {
+		return e
+	}
+	return tx.Commit()
+}
+func insertSession(ctx context.Context, tx *sqlx.Tx, id, hash string) error {
+	var e error
 	sid := uuid.NewString()
 	if _, e = tx.ExecContext(ctx, "INSERT INTO sessions(id,user_id,expires_at) VALUES($1,$2,$3)", sid, id, time.Now().Add(30*24*time.Hour)); e != nil {
 		return e
@@ -43,7 +50,7 @@ func (r Repository) NewSession(ctx context.Context, id, hash string) error {
 	if _, e = tx.ExecContext(ctx, "INSERT INTO refresh_tokens(hash,session_id) VALUES($1,$2)", hash, sid); e != nil {
 		return e
 	}
-	return tx.Commit()
+	return nil
 }
 func (r Repository) Rotate(ctx context.Context, old, next string) (domain.User, error) {
 	var u domain.User

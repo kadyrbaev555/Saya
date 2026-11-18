@@ -1,14 +1,17 @@
 """Real local RabbitMQ -> Centrifugo integration; demo accounts only."""
+from registration_mailbox import register as verified_registration
 import asyncio, json, os, subprocess, urllib.request, urllib.error, uuid
 import websockets
 
-def api(path,data,token=None):
+def request(path,data,token=None):
  headers={'Content-Type':'application/json','X-Saya-Client':'native'}
  if token:headers['Authorization']='Bearer '+token
  request=urllib.request.Request('http://localhost:8080/api/v1'+path,data=json.dumps(data).encode(),headers=headers)
- with urllib.request.urlopen(request,timeout=15) as response:return json.load(response)
+ with urllib.request.urlopen(request,timeout=15) as response:return response.status,json.load(response)
+def api(path,data,token=None):
+ return request(path,data,token)[1]
 async def main():
- auth=api('/auth/register',{'email':str(uuid.uuid4())+'@example.test','password':'demo-password-long-enough'})
+ status,auth=verified_registration(request,{'email':str(uuid.uuid4())+'@example.test','password':'demo-password-long-enough'})
  bearer=auth['access_token'];uid=auth['user']['id'];channel='user:'+uid+':assessments'
  connection=api('/realtime/connection-token',{},bearer)['token']
  subscription=api('/realtime/subscription-token',{'channel':channel},bearer)['token']

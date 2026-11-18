@@ -179,6 +179,8 @@ func run() error {
 		switch status.Code(e) {
 		case codes.InvalidArgument:
 			code = 400
+		case codes.ResourceExhausted:
+			code = 429
 		case codes.AlreadyExists:
 			code = 409
 		case codes.Unauthenticated:
@@ -207,34 +209,48 @@ func run() error {
 		cookie(c, "saya_csrf", base64.RawURLEncoding.EncodeToString(b), 2592000, false)
 		c.JSON(code, gin.H{"access_token": v.AccessToken, "csrf_token": base64.RawURLEncoding.EncodeToString(b), "user": gin.H{"id": v.User.Id, "email": v.User.Email, "role": v.User.Role}})
 	}
-	for _, action := range []string{"register", "login"} {
-		action := action
-		r.POST("/api/v1/auth/"+action, func(c *gin.Context) {
-			var body struct {
-				Email    string `json:"email"`
-				Password string `json:"password"`
-			}
-			if c.ShouldBindJSON(&body) != nil {
-				c.Status(400)
-				return
-			}
-			q := &pb.Credentials{Email: body.Email, Password: body.Password}
-			var v *pb.Session
-			var err error
-			code := 200
-			if action == "register" {
-				v, err = client.Register(c.Request.Context(), q)
-				code = 201
-			} else {
-				v, err = client.Login(c.Request.Context(), q)
-			}
-			if err != nil {
-				fail(c, err)
-				return
-			}
-			send(c, v, code)
-		})
-	}
+	r.POST("/api/v1/auth/register", func(c *gin.Context) {
+		var body pb.RegistrationInput
+		if c.ShouldBindJSON(&body) != nil {
+			c.Status(400)
+			return
+		}
+		v, err := client.StartRegistration(c.Request.Context(), &body)
+		if err != nil {
+			fail(c, err)
+			return
+		}
+		c.JSON(202, gin.H{"registration_id": v.Id})
+	})
+	r.POST("/api/v1/auth/register/confirm", func(c *gin.Context) {
+		var body struct {
+			ID   string `json:"registration_id"`
+			Code string `json:"code"`
+		}
+		if c.ShouldBindJSON(&body) != nil {
+			c.Status(400)
+			return
+		}
+		v, err := client.ConfirmRegistration(c.Request.Context(), &pb.RegistrationCode{Id: body.ID, Code: body.Code})
+		if err != nil {
+			fail(c, err)
+			return
+		}
+		send(c, v, 201)
+	})
+	r.POST("/api/v1/auth/login", func(c *gin.Context) {
+		var q pb.Credentials
+		if c.ShouldBindJSON(&q) != nil {
+			c.Status(400)
+			return
+		}
+		v, err := client.Login(c.Request.Context(), &q)
+		if err != nil {
+			fail(c, err)
+			return
+		}
+		send(c, v, 200)
+	})
 	r.GET("/api/v1/auth/csrf", func(c *gin.Context) {
 		csrf, e := c.Cookie("saya_csrf")
 		if e != nil || csrf == "" {
