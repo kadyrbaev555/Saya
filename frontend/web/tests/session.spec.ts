@@ -7,10 +7,16 @@ test("регистрация, вход и восстановление брау�
 }) => {
   const { email, password } = await register(page, request);
   await page.getByRole("button", { name: "Выйти" }).click();
+  await page.goto("/history");
+  await expect(page).toHaveURL(/\/login$/);
   await page.setViewportSize({ width: 375, height: 800 });
   await page.getByLabel("Электронная почта").fill(email);
   await page.getByLabel("Пароль", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Динамика по неделям" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: /На главную/ }).click();
   await page.getByRole("link", { name: "Профиль", exact: true }).click();
   await expect(page).toHaveURL(/\/profile$/);
   await page.reload();

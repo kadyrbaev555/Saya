@@ -5,7 +5,7 @@ export async function register(page: Page, request: APIRequestContext) {
   const email = "web-" + randomUUID() + "@example.test";
   const password = randomUUID();
   const mailbox = process.env.SAYA_TEST_MAILPIT_URL || "http://127.0.0.1:8025";
-  await page.goto("/profile");
+  await page.goto("/login");
   await expect(page).toHaveURL(/\/login$/);
   await page.getByRole("link", { name: "Зарегистрироваться" }).click();
   await page.getByLabel("Полное имя").fill("Тест Saya");

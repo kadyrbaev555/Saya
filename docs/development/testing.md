@@ -2,7 +2,7 @@
 
 make backend-test, make backend-vet, make backend-build проверяют все workspace modules. make backend-integration выполняет PostgreSQL concurrent rotation/logout и Rabbit retry/DLQ в контейнере с локальными test/demo данными. Без DSN Go integration tests skip — это не PASS интеграции.
 
-make api-smoke проверяет Auth и P1 persistence/ownership/idempotency/async completion. make frontend-test проверяет welcome, auth state и UI flow; make frontend-integration проверяет настоящее RabbitMQ → Centrifugo → Riverpod → REST и P1 assessment.completed. make frontend-build собирает JS Web. Опциональный backend/tests/realtime.py требует websockets==15.0.1 (в этой сессии установлен только /tmp/saya-python).
+make api-smoke проверяет Auth и P1 persistence/ownership/idempotency/async completion. make frontend-test проверяет типы React-клиента, make frontend-build создаёт dist, make frontend-integration запускает Playwright на этой сборке через Vite preview. Flutter-тесты доступны через make flutter-test и make flutter-integration. Опциональный backend/tests/realtime.py требует websockets==15.0.1 (в этой сессии установлен только /tmp/saya-python).
 
 HTTP LLM tests используют локальный TLS httptest server: consent, schema/enum/extra fields, malformed/trailing output, timeout. Реальный внешний LLM по сети не вызывался. Native Android/macOS builds не проверены из-за отсутствия SDK/Xcode.
 
@@ -37,3 +37,5 @@ On a device with Google Play services, complete an interview and enable reminder
 Запустите Playwright из `frontend/web` по инструкции в README. Для сценария трёх ролей укажите `SAYA_TEST_ADMIN_EMAIL` и `SAYA_TEST_ADMIN_PASSWORD` от администратора тестового стенда. Тест создаёт отдельного владельца через регистрацию и Mailpit. Гость работает в отдельной браузерной сессии. Без тестового администратора этот сценарий пропускается. Проверку выполните на стенде с отключённым платёжным кабинетом. Переходы для привязки карты и оплаты покрыты отдельными тестами с подставной страницей провайдера.
 
 Если порт занят, задайте `SAYA_TEST_WEB_PORT` и разрешите соответствующий origin в Gateway и Centrifugo тестового стенда. Для отдельного бэкенда укажите `SAYA_GATEWAY_URL` (адрес прокси Vite) и `VITE_WS_URL`.
+
+Для локального preview прокси WebSocket использует `SAYA_CENTRIFUGO_URL` (по умолчанию ws://127.0.0.1:8000). `SAYA_BROWSER_CHANNEL=msedge` запускает тесты в установленном Microsoft Edge.

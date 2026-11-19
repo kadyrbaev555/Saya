@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Centrifuge } from "centrifuge";
+import { assessmentChannel } from "./realtime";
+import { Weekly } from "./history";
 import { ApiError, authorized } from "./api";
 import { topics, directions } from "./survey";
 import { AppealEditor } from "./appeals";
@@ -44,6 +45,50 @@ export function LatestAssessment() {
     </p>
   ) : null;
 }
+export function ProfileUpdates({ owner }: { owner: string }) {
+  const [status, setStatus] = useState("Подключение…");
+  const [revision, refresh] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    const { client, subscription } = assessmentChannel(
+      owner,
+      controller.signal,
+    );
+    subscription.on("subscribed", () => {
+      setStatus("Подключено");
+      refresh((n) => n + 1);
+    });
+    subscription.on("subscribing", () => setStatus("Подключение…"));
+    subscription.on("publication", ({ data }) => {
+      if (
+        data?.version === 1 &&
+        [
+          "assessment.completed",
+          "assessment.failed",
+          "demo.completed",
+        ].includes(data.event)
+      ) {
+        refresh((n) => n + 1);
+        setStatus("Данные обновлены");
+      }
+    });
+    subscription.subscribe();
+    client.connect();
+    return () => {
+      controller.abort();
+      client.disconnect();
+    };
+  }, [owner]);
+  return (
+    <div>
+      <div key={revision}>
+        <Weekly />
+        <LatestAssessment />
+      </div>
+      <small>Обновления · {status}</small>
+    </div>
+  );
+}
 export function Assessment({ owner }: { owner: string }) {
   const { id = "" } = useParams();
   return <ResultPage key={owner + id} id={id} owner={owner} />;
@@ -59,21 +104,7 @@ function ResultPage({ id, owner }: { id: string; owner: string }) {
     let running = false,
       queued = false,
       done = false;
-    const channel = "user:" + owner + ":assessments";
-    async function token(path: string, body: object) {
-      return (
-        await authorized<{ token: string }>("/realtime/" + path, body, signal)
-      ).token;
-    }
-    const ws = new URL("/connection/websocket", location.origin);
-    ws.protocol = location.protocol === "https:" ? "wss:" : "ws:";
-    if (import.meta.env.DEV) ws.port = "8000";
-    const client = new Centrifuge(import.meta.env.VITE_WS_URL || ws.href, {
-      getToken: () => token("connection-token", {}),
-    });
-    const subscription = client.newSubscription(channel, {
-      getToken: () => token("subscription-token", { channel }),
-    });
+    const { client, subscription } = assessmentChannel(owner, signal);
     async function load() {
       if (done || signal.aborted) return;
       if (running) {

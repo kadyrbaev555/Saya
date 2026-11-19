@@ -4,6 +4,8 @@
   "scripts": {
     "test": "playwright test",
     "dev": "vite",
+    "check": "tsc --noEmit",
+    "preview": "vite preview",
     "build": "tsc --noEmit && vite build"
   },
   "type": "module",

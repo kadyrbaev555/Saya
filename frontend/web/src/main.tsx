@@ -1,5 +1,5 @@
 import { Survey } from "./survey";
-import { Assessment, LatestAssessment } from "./assessment";
+import { Assessment, ProfileUpdates } from "./assessment";
 import { Home, Support } from "./support";
 import { History } from "./history";
 import { Appeals } from "./appeals";
@@ -12,6 +12,7 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { api, ApiError, type Profile } from "./api";
 import "./style.css";
@@ -57,6 +58,7 @@ function AuthForm({
   register: boolean;
   onSession: (user: Profile) => void;
 }) {
+  const location = useLocation();
   const [challenge, setChallenge] = useState("");
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
@@ -247,7 +249,7 @@ function AuthForm({
       </p>
       <p className="foot">
         {register ? "Уже есть аккаунт?" : "Впервые в Saya?"}{" "}
-        <Link to={register ? "/login" : "/register"}>
+        <Link state={location.state} to={register ? "/login" : "/register"}>
           {register ? "Войти" : "Зарегистрироваться"}
         </Link>
       </p>
@@ -257,6 +259,18 @@ function AuthForm({
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const signIn = (
+    <Navigate to="/login" state={{ from: location.pathname }} replace />
+  );
+  const from = location.state?.from;
+  const destination =
+    typeof from === "string" &&
+    /^\/(home|profile|survey|history|assessment\/[a-zA-Z0-9-]+|support\/[a-z]+|appeals\/(mine|review))$/.test(
+      from,
+    )
+      ? from
+      : "/home";
   const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
@@ -282,6 +296,7 @@ function App() {
     try {
       await api.logout();
       setUser(null);
+      navigate("/login", { replace: true });
     } catch (err) {
       setLogoutError(message(err));
     } finally {
@@ -312,6 +327,9 @@ function App() {
         ) : failed ? (
           <section>
             <h1>Нет соединения</h1>
+            <p>
+              <Link to="/support/emergency">Экстренные номера Казахстана</Link>
+            </p>
             <p>Не удалось проверить сессию.</p>
             <button className="primary" onClick={restore}>
               Повторить
@@ -322,11 +340,7 @@ function App() {
             <Route
               path="/appeals/mine"
               element={
-                user ? (
-                  <Appeals key="mine" scope="mine" signedIn />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
+                user ? <Appeals key="mine" scope="mine" signedIn /> : signIn
               }
             />
             <Route
@@ -334,36 +348,23 @@ function App() {
               element={
                 user?.role === "ADMIN" ? (
                   <Appeals key="review" scope="review" signedIn />
+                ) : user ? (
+                  <Navigate to="/profile" replace />
                 ) : (
-                  <Navigate to={user ? "/profile" : "/login"} replace />
+                  signIn
                 )
               }
             />
-            <Route
-              path="/home"
-              element={user ? <Home /> : <Navigate to="/login" replace />}
-            />
-            <Route
-              path="/history"
-              element={user ? <History /> : <Navigate to="/login" replace />}
-            />
+            <Route path="/home" element={user ? <Home /> : signIn} />
+            <Route path="/history" element={user ? <History /> : signIn} />
             <Route
               path="/support/:kind"
-              element={<Support signedIn={!!user} />}
+              element={user ? <Support signedIn /> : signIn}
             />
-            <Route
-              path="/survey"
-              element={user ? <Survey /> : <Navigate to="/login" replace />}
-            />
+            <Route path="/survey" element={user ? <Survey /> : signIn} />
             <Route
               path="/assessment/:id"
-              element={
-                user ? (
-                  <Assessment owner={user.id} />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
-              }
+              element={user ? <Assessment owner={user.id} /> : signIn}
             />
             {["login", "register"].map((path) => (
               <Route
@@ -371,7 +372,7 @@ function App() {
                 path={"/" + path}
                 element={
                   user ? (
-                    <Navigate to="/home" replace />
+                    <Navigate to={destination} replace />
                   ) : (
                     <AuthForm
                       key={path}
@@ -404,7 +405,7 @@ function App() {
                       <Link to="/survey">Пройти опрос «Моя неделя» →</Link>
                     </p>
                     {logoutError && <p role="alert">{logoutError}</p>}
-                    <LatestAssessment />
+                    <ProfileUpdates owner={user.id} />
                     <p>
                       <Link to="/appeals/mine">Моя анкета</Link>
                     </p>
@@ -422,7 +423,7 @@ function App() {
                     </button>
                   </section>
                 ) : (
-                  <Navigate to="/login" replace />
+                  signIn
                 )
               }
             />
