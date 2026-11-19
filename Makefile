@@ -28,6 +28,10 @@ frontend-test:
 frontend-run:
 	cd frontend/saya-app && $(FLUTTER) run -d chrome --web-port=3000
 
+.PHONY: web-run
+web-run:
+	cd frontend/web && npm run dev
+
 .PHONY: demo-event
 demo-event:
 	DEMO_USER_ID=$(USER_ID) $(COMPOSE) run --rm --build demo
