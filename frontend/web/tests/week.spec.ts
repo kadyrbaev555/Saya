@@ -34,6 +34,12 @@ test("опрос без внешнего ИИ, восстановление ре
   await page.reload();
   await expect(page.getByText("Жильё · 0/4")).toBeVisible();
   await expect(page.getByText(/Общий процент появится/)).toBeVisible();
+  await page.getByRole("link", { name: "Жильё", exact: true }).click();
+  await expect(page.getByLabel("Район")).toBeVisible();
+  await page.getByRole("link", { name: /На главную/ }).click();
+  await page.getByRole("link", { name: "История по неделям" }).click();
+  await page.getByRole("link", { name: "Открыть результат" }).click();
+  await expect(page.getByText("Жильё · 0/4")).toBeVisible();
 
   // Hold REST in pending state so a fast local worker cannot finish before subscription.
   const id = page.url().split("/").pop();

@@ -174,7 +174,14 @@ function ResultPage({ id, owner }: { id: string; owner: string }) {
                   <h2>Направления поддержки</h2>
                   <ul>
                     {result.directions.map((key) => (
-                      <li key={key}>{directions[key] ?? key}</li>
+                      <li key={key}>
+                        {key !== "financial" &&
+                        Object.hasOwn(directions, key) ? (
+                          <Link to={"/support/" + key}>{directions[key]}</Link>
+                        ) : (
+                          (directions[key] ?? key)
+                        )}
+                      </li>
                     ))}
                   </ul>
                 </>

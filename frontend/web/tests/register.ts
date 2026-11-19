@@ -30,6 +30,7 @@ export async function register(page: Page, request: APIRequestContext) {
     .toBe(true);
   await page.getByLabel("Код из письма").fill(code);
   await page.getByRole("button", { name: "Подтвердить почту" }).click();
+  await page.getByRole("link", { name: "Профиль", exact: true }).click();
   await expect(page.getByText(email, { exact: true })).toBeVisible();
   return { email, password };
 }

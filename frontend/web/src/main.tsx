@@ -1,8 +1,17 @@
 import { Survey } from "./survey";
 import { Assessment, LatestAssessment } from "./assessment";
+import { Home, Support } from "./support";
+import { History } from "./history";
 import { useEffect, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Link,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { api, ApiError, type Profile } from "./api";
 import "./style.css";
 
@@ -229,6 +238,9 @@ function AuthForm({
           Отправить код ещё раз{remaining > 0 && " · " + remaining + " с"}
         </button>
       )}
+      <p>
+        <Link to="/support/emergency">Экстренные номера Казахстана</Link>
+      </p>
       <p className="foot">
         {register ? "Уже есть аккаунт?" : "Впервые в Saya?"}{" "}
         <Link to={register ? "/login" : "/register"}>
@@ -240,6 +252,7 @@ function AuthForm({
 }
 
 function App() {
+  const location = useLocation();
   const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
@@ -275,7 +288,14 @@ function App() {
     <main>
       <Cover />
       <div className="content">
-        {loading ? (
+        {location.pathname === "/support/emergency" ? (
+          <Routes>
+            <Route
+              path="/support/:kind"
+              element={<Support signedIn={!!user} />}
+            />
+          </Routes>
+        ) : loading ? (
           <p role="status">Открываем кабинет…</p>
         ) : failed ? (
           <section>
@@ -287,6 +307,18 @@ function App() {
           </section>
         ) : (
           <Routes>
+            <Route
+              path="/home"
+              element={user ? <Home /> : <Navigate to="/login" replace />}
+            />
+            <Route
+              path="/history"
+              element={user ? <History /> : <Navigate to="/login" replace />}
+            />
+            <Route
+              path="/support/:kind"
+              element={<Support signedIn={!!user} />}
+            />
             <Route
               path="/survey"
               element={user ? <Survey /> : <Navigate to="/login" replace />}
@@ -307,7 +339,7 @@ function App() {
                 path={"/" + path}
                 element={
                   user ? (
-                    <Navigate to="/profile" replace />
+                    <Navigate to="/home" replace />
                   ) : (
                     <AuthForm
                       key={path}
@@ -324,6 +356,10 @@ function App() {
                 user ? (
                   <section>
                     <h1>Ваш профиль</h1>
+                    <nav className="support-nav">
+                      <Link to="/home">На главную</Link>
+                      <Link to="/history">История по неделям</Link>
+                    </nav>
                     <dl>
                       <dt>Электронная почта</dt>
                       <dd>{user.email}</dd>
@@ -352,7 +388,7 @@ function App() {
             />
             <Route
               path="*"
-              element={<Navigate to={user ? "/profile" : "/login"} replace />}
+              element={<Navigate to={user ? "/home" : "/login"} replace />}
             />
           </Routes>
         )}

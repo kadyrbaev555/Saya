@@ -304,6 +304,11 @@ function Interview({ data }: { data: Questionnaire }) {
             />
             Мне сейчас нужна экстренная помощь
           </label>
+          {urgent && (
+            <a href="/support/emergency" target="_blank" rel="noreferrer">
+              Открыть экстренные номера ↗
+            </a>
+          )}
           <hr />
           <label className="check">
             <input
