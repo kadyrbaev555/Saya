@@ -1,3 +1,5 @@
+import { Survey } from "./survey";
+import { Assessment, LatestAssessment } from "./assessment";
 import { useEffect, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
@@ -285,6 +287,20 @@ function App() {
           </section>
         ) : (
           <Routes>
+            <Route
+              path="/survey"
+              element={user ? <Survey /> : <Navigate to="/login" replace />}
+            />
+            <Route
+              path="/assessment/:id"
+              element={
+                user ? (
+                  <Assessment owner={user.id} />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
             {["login", "register"].map((path) => (
               <Route
                 key={path}
@@ -316,7 +332,11 @@ function App() {
                         {user.role === "USER" ? "Пользователь" : user.role}
                       </dd>
                     </dl>
+                    <p>
+                      <Link to="/survey">Пройти опрос «Моя неделя» →</Link>
+                    </p>
                     {logoutError && <p role="alert">{logoutError}</p>}
+                    <LatestAssessment />
                     <button
                       className="primary"
                       onClick={logout}

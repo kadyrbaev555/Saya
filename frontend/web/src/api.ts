@@ -33,6 +33,42 @@ function post<T>(path: string, data: object) {
 }
 
 let access = "";
+let refreshing: Promise<void> | undefined;
+export async function authorized<T>(
+  path: string,
+  body?: object,
+  signal?: AbortSignal,
+): Promise<T> {
+  const token = access;
+  function send() {
+    return request<T>(path, {
+      signal,
+      method: body ? "POST" : "GET",
+      headers: {
+        Authorization: "Bearer " + access,
+        ...(body && { "Content-Type": "application/json" }),
+      },
+      body: body && JSON.stringify(body),
+    });
+  }
+  try {
+    return await send();
+  } catch (err) {
+    if (!(err instanceof ApiError && err.status === 401) || signal?.aborted)
+      throw err;
+    if (access === token) {
+      refreshing ??= csrfPost<Session>("refresh")
+        .then((s) => {
+          access = s.access_token;
+        })
+        .finally(() => {
+          refreshing = undefined;
+        });
+      await refreshing;
+    }
+    return send();
+  }
+}
 async function profile(session: Session) {
   access = session.access_token;
   return request<Profile>("/users/me", {
