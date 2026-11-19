@@ -1,10 +1,10 @@
 # setup
 
-Требуются Go 1.25.1+, Docker Compose, Flutter 3.50.0/Dart 3.14 (проверенная версия). Здесь Flutter установлен во /tmp/saya-flutter-sdk, системная установка не менялась.
+Для веба установите Go 1.25.1+, Docker Compose, GNU Make, Node.js 22.12+ и зависимости командой `npm ci --prefix frontend/web`. Flutter SDK используется для мобильных и настольного клиентов.
 
 Из корня: make dev-init (только один раз) → make dev-up → make dev-status. Остановка make dev-down не удаляет volumes. make dev-logs показывает логи. Запуск UI: make frontend-run; порт 3000 включён в Origin allowlist. Gateway localhost:8080, Centrifugo localhost:8000, Rabbit management localhost:15672 (saya, RABBIT_PASSWORD). Не выводить .env в общие логи.
 
-Если GOROOT указывает на другую версию, GOROOT=/usr/local/go make backend-test. Временный Flutter: make FLUTTER=/tmp/saya-flutter-sdk/bin/flutter frontend-test. Android emulator: --dart-define=API_BASE_URL=http://10.0.2.2:8080 --dart-define=WS_URL=ws://10.0.2.2:8000/connection/websocket. Native build требует Android SDK или полный Xcode+CocoaPods. MacOS Keychain требует keychain-access-groups entitlement. HTTPS deployment включает COOKIE_SECURE=true и allowlisted HTTPS Origin.
+Если GOROOT указывает на другую версию, GOROOT=/usr/local/go make backend-test. Временный Flutter: make FLUTTER=/tmp/saya-flutter-sdk/bin/flutter flutter-test. Android emulator: --dart-define=API_BASE_URL=http://10.0.2.2:8080 --dart-define=WS_URL=ws://10.0.2.2:8000/connection/websocket. Native build требует Android SDK или полный Xcode+CocoaPods. MacOS Keychain требует keychain-access-groups entitlement. HTTPS deployment включает COOKIE_SECURE=true и allowlisted HTTPS Origin.
 
 Существующий старый volume: не запускать ручное удаление или переименование ролей без проверки ownership и одобрения; см. current-status.
 

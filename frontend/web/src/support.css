@@ -1,0 +1,61 @@
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+  gap: 12px;
+}
+.support-grid a,
+.history-entry {
+  padding: 20px;
+  border: 1px solid #c9d3c5;
+  border-radius: 14px;
+  background: #fffefa;
+}
+.support-grid a {
+  text-decoration: none;
+  display: grid;
+  gap: 8px;
+}
+.support-grid a:hover {
+  background: #e7efdf;
+}
+.support-grid small {
+  font-weight: 400;
+  color: #53695b;
+}
+.support-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.history-entry {
+  margin: 14px 0;
+}
+.history-entry h2 {
+  margin: 0 0 12px;
+}
+.weekly-invite:not(:empty) {
+  margin: 16px 0;
+  padding: 15px;
+  border-left: 3px solid #518368;
+  background: #e5eddf;
+}
+.week select {
+  padding: 12px;
+  border-radius: 8px;
+  font: inherit;
+  color: inherit;
+  background: #fffefa;
+  max-width: 100%;
+}
+.district-map {
+  height: 240px;
+  width: 100%;
+  border-radius: 12px;
+}
+.contacts {
+  line-height: 1.8;
+  padding-left: 18px;
+}
+.contacts li {
+  margin: 12px 0;
+}

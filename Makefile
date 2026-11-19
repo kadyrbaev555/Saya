@@ -23,10 +23,13 @@ backend-build:
 	cd backend && go build $(BACKEND_TARGETS)
 
 frontend-test:
-	cd frontend/saya-app && $(FLUTTER) test
+	cd frontend/web && npm run check
 
-frontend-run:
-	cd frontend/saya-app && $(FLUTTER) run -d chrome --web-port=3000
+frontend-run: web-run
+
+.PHONY: web-run
+web-run:
+	cd frontend/web && npm run dev
 
 .PHONY: demo-event
 demo-event:
@@ -41,8 +44,14 @@ api-smoke:
 	python3 backend/tests/smoke.py
 	python3 backend/tests/workflow.py
 frontend-build:
-	cd frontend/saya-app && $(FLUTTER) build web
+	cd frontend/web && npm run build
 frontend-integration:
+	cd frontend/web && npm test
+
+.PHONY: flutter-test flutter-integration
+flutter-test:
+	cd frontend/saya-app && $(FLUTTER) test
+flutter-integration:
 	cd frontend/saya-app && SAYA_REALTIME_TEST=1 $(FLUTTER) test test/realtime_integration_test.dart
 dev-status:
 	$(COMPOSE) ps
