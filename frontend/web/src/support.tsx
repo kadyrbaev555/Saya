@@ -19,6 +19,7 @@ export function Home() {
       <nav className="support-nav">
         <Link to="/profile">Профиль</Link>
         <Link to="/history">История по неделям</Link>
+        <Link to="/appeals">Помочь человеку</Link>
       </nav>
       <h1>Какая помощь вам нужна?</h1>
       <Weekly />

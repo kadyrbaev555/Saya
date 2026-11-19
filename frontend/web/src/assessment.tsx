@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Centrifuge } from "centrifuge";
 import { ApiError, authorized } from "./api";
 import { topics, directions } from "./survey";
+import { AppealEditor } from "./appeals";
 
 interface Result {
   status: "pending" | "completed" | "failed";
@@ -175,8 +176,12 @@ function ResultPage({ id, owner }: { id: string; owner: string }) {
                   <ul>
                     {result.directions.map((key) => (
                       <li key={key}>
-                        {key !== "financial" &&
-                        Object.hasOwn(directions, key) ? (
+                        {key === "financial" ? (
+                          <AppealEditor
+                            assessment={id}
+                            summary={result.summary ?? ""}
+                          />
+                        ) : Object.hasOwn(directions, key) ? (
                           <Link to={"/support/" + key}>{directions[key]}</Link>
                         ) : (
                           (directions[key] ?? key)

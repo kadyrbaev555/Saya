@@ -2,6 +2,7 @@ import { Survey } from "./survey";
 import { Assessment, LatestAssessment } from "./assessment";
 import { Home, Support } from "./support";
 import { History } from "./history";
+import { Appeals } from "./appeals";
 import { useEffect, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -241,6 +242,9 @@ function AuthForm({
       <p>
         <Link to="/support/emergency">Экстренные номера Казахстана</Link>
       </p>
+      <p>
+        <Link to="/appeals">Помочь человеку</Link>
+      </p>
       <p className="foot">
         {register ? "Уже есть аккаунт?" : "Впервые в Saya?"}{" "}
         <Link to={register ? "/login" : "/register"}>
@@ -288,8 +292,16 @@ function App() {
     <main>
       <Cover />
       <div className="content">
-        {location.pathname === "/support/emergency" ? (
+        {["/support/emergency", "/appeals"].includes(
+          location.pathname.replace(/\/$/, ""),
+        ) ? (
           <Routes>
+            <Route
+              path="/appeals"
+              element={
+                <Appeals key="public" scope="public" signedIn={!!user} />
+              }
+            />
             <Route
               path="/support/:kind"
               element={<Support signedIn={!!user} />}
@@ -307,6 +319,26 @@ function App() {
           </section>
         ) : (
           <Routes>
+            <Route
+              path="/appeals/mine"
+              element={
+                user ? (
+                  <Appeals key="mine" scope="mine" signedIn />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/appeals/review"
+              element={
+                user?.role === "ADMIN" ? (
+                  <Appeals key="review" scope="review" signedIn />
+                ) : (
+                  <Navigate to={user ? "/profile" : "/login"} replace />
+                )
+              }
+            />
             <Route
               path="/home"
               element={user ? <Home /> : <Navigate to="/login" replace />}
@@ -373,6 +405,14 @@ function App() {
                     </p>
                     {logoutError && <p role="alert">{logoutError}</p>}
                     <LatestAssessment />
+                    <p>
+                      <Link to="/appeals/mine">Моя анкета</Link>
+                    </p>
+                    {user.role === "ADMIN" && (
+                      <p>
+                        <Link to="/appeals/review">Модерация анкет</Link>
+                      </p>
+                    )}
                     <button
                       className="primary"
                       onClick={logout}

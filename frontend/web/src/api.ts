@@ -24,12 +24,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return response.status === 204 ? (undefined as T) : response.json();
 }
 
-function post<T>(path: string, data: object) {
+export function post<T>(path: string, data: object) {
   return request<T>(path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+}
+
+export function publicGet<T>(path: string, signal?: AbortSignal) {
+  return request<T>(path, { signal });
 }
 
 let access = "";
