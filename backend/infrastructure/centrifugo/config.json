@@ -20,9 +20,6 @@
       }
     ]
   },
-  "prometheus": {
-    "enabled": true
-  },
   "health": {
     "enabled": true
   }

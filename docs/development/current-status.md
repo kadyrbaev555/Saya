@@ -8,14 +8,14 @@
 
 - Структура backend/frontend, пять сервисных Go-модулей, contracts и workspace; domain/application/adapters, shared technical packages.
 - Auth: registration USER, login, Argon2id configurable PHC, Ed25519 access JWT 15m, hash-only opaque refresh, atomic rotation/replay family revocation, logout, profile, CSRF/cookies/native transport, initial ADMIN command via stdin, multi-key JWKS/config rotation.
-- Gateway: Gin → gRPC, issuer/audience/algorithm/expiry/kid checks, CORS allowlist, per-IP bounded limiter, request IDs, body/time limits, uniform error envelope, health endpoints, Prometheus request/error/latency and dependency availability metrics.
+- Gateway: Gin → gRPC, issuer/audience/algorithm/expiry/kid checks, CORS allowlist, per-IP bounded limiter, request IDs, body/time limits, uniform error envelope, health endpoints.
 - Survey: versioned demonstration, explicit processing/external consent, validation, ownership, idempotent submit 202, PostgreSQL transaction+outbox.
 - Assessment: typed Survey Signal/InputSource port and provenance; explicit threat rule independent of LLM; pending/completed/failed, ownership, idempotent completion, result+notification transaction.
 - AI: Rabbit consumer, LLMProvider, marked deterministic mock, real HTTPS structured endpoint adapter, bounded retry/timeout, response schema/enum/size validation, no external call without consent.
 - Rabbit durable exchanges/queues, manual ack/prefetch, publisher confirms, bounded retry and DLQ; persistent demo inbox; notification outbox and REST source of truth.
 - Centrifugo Redis engine; expiring connection/subscription JWT, exact owned channel, neutral events. Flutter SDK handles reconnect/token renewal and REST polling handles lost events.
 - Flutter Web/Android/macOS project: Riverpod, stable go_router guards, Material 3, welcome/register/login/profile/survey/pending/result; secure storage adapters, refresh singleflight, logout, explicit session restore, timeouts/cancellation, disposal.
-- Compose: PostgreSQL/RabbitMQ/Redis/Centrifugo/Prometheus/Grafana/Gateway/Auth/Survey/Assessment/AI; migrations/db-init/tool profiles, business healthchecks, persistent volumes, random secrets outside Git. Support boundary documented only.
+- Compose: PostgreSQL/RabbitMQ/Redis/Centrifugo/Gateway/Auth/Survey/Assessment/AI; migrations/db-init/tool profiles, business healthchecks, persistent volumes, random secrets outside Git. Support boundary documented only.
 
 ### Фактически проверено
 
@@ -28,12 +28,11 @@
 - P1 HTTP E2E: consent, persistence, idempotency/conflict, чужой owner 404, RabbitMQ/Mock LLM, completed с explicit threat rule. PASS.
 - Flutter analyze без замечаний, widget/provider tests, Web JS build. Chrome headless действительно отобразил welcome screen.
 - Flutter realtime integration: настоящее demo и P1 assessment.completed → Riverpod → REST result. Повторно PASS на centrifuge0.21.0 и secure_storage11.2.0.
-- Prometheus up=1 для gateway/centrifugo/rabbitmq, Grafana /api/health 200; datasource/dashboard provisioned.
 - Чистый изолированный saya-verify stack на новых volumes: Auth и P1 smoke PASS, все 3 service roles rolsuper=false.
 - RabbitMQ outage recovery в одноразовом стеке: поставленное задание завершилось после restart broker; внешний mode без consent дал persisted failed и сохранил правило. PASS.
 - Flutter SDK reconnect после реального restart Centrifugo, затем P1 event/REST result. PASS.
 - Key rotation в одноразовом стеке: новый signer, overlap старого/нового JWT, JWKS двух ключей, отклонение retired key. PASS.
-- Основной saya-v13: service roles без SUPERUSER, Auth role не может подключиться к Survey DB. Prometheus 3 scrape targets и 4 gRPC dependency gauges healthy; Grafana datasource health и provisioned dashboard 200.
+- Основной saya-v13: service roles без SUPERUSER, Auth role не может подключиться к Survey DB.
 - Initial ADMIN bootstrap через stdin и запрет повторного bootstrap проверены в одноразовой БД.
 - 6 Skills прошли quick_validate.py.
 
@@ -50,7 +49,7 @@
 
 Основной backend saya-v13 и статическая Web-сборка на localhost:3000 оставлены запущенными. Одноразовый saya-verify остановлен с сохранением volumes. Старый saya также остановлен; старые данные не удалены.
 
-Итоговый runtime check: все 11 контейнеров saya-v13 healthy; /health/ready, Centrifugo /health, Prometheus /-/healthy, Grafana /api/health и Web :3000 возвращают HTTP200. Прямой Centrifugo security test PASS: подписка без JWT отклонена, JWT чужого channel закрывает соединение с invalid-token, повторное разрешённое подключение доставляет нейтральное событие.
+Итоговый runtime check: /health/ready, Centrifugo /health и Web :3000 возвращают HTTP200. Прямой Centrifugo security test PASS: подписка без JWT отклонена, JWT чужого channel закрывает соединение с invalid-token, повторное разрешённое подключение доставляет нейтральное событие.
 
 ## Продолжение
 

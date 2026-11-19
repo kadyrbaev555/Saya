@@ -2,7 +2,7 @@
 
 ## 1. Файлы и директории
 
-Созданы backend/services/{api-gateway,auth-service,survey-service,assessment-service,ai-service}, contracts/{proto,auth,workflow,openapi,events}, packages/{messaging,platform}, infrastructure/{docker,rabbitmq,centrifugo,prometheus,grafana}, deployments/local. Redis engine настроен через Compose и конфиг Centrifugo; отдельный пустой каталог не добавлялся. Frontend единый frontend/saya-app с lib/{app,core,features}, web/android/macos runners, pubspec.lock и test. В docs добавлены product/architecture/security/development/api, семь ADR. Корень содержит AGENTS.md, Makefile, README, git/docker ignore; шесть .agents/skills проверены validator.
+Созданы backend/services/{api-gateway,auth-service,survey-service,assessment-service,ai-service}, contracts/{proto,auth,workflow,openapi,events}, packages/{messaging,platform}, infrastructure/{docker,rabbitmq,centrifugo}, deployments/local. Redis engine настроен через Compose и конфиг Centrifugo; отдельный пустой каталог не добавлялся. Frontend единый frontend/saya-app с lib/{app,core,features}, web/android/macos runners, pubspec.lock и test. В docs добавлены product/architecture/security/development/api, семь ADR. Корень содержит AGENTS.md, Makefile, README, git/docker ignore; шесть .agents/skills проверены validator.
 
 ## 2. Разделение
 
@@ -10,7 +10,7 @@
 
 ## 3. Реализованные сервисы
 
-Auth — Argon2id/config/JWT/multi-key JWKS/refresh/logout/profile/initial ADMIN/realtime authorization. Gateway — HTTP/gRPC/middleware/metrics. Survey — immutable demo version/consent/ownership/idempotency/outbox. Assessment — typed signals/rules/job statuses/result/notification outbox. AI — stateless Rabbit worker/LLMProvider/mock/HTTPS adapter/validation/bounded retries. Hexagonal boundaries отделяют domain/application и infrastructure adapters.
+Auth — Argon2id/config/JWT/multi-key JWKS/refresh/logout/profile/initial ADMIN/realtime authorization. Gateway — HTTP/gRPC/middleware. Survey — immutable demo version/consent/ownership/idempotency/outbox. Assessment — typed signals/rules/job statuses/result/notification outbox. AI — stateless Rabbit worker/LLMProvider/mock/HTTPS adapter/validation/bounded retries. Hexagonal boundaries отделяют domain/application и infrastructure adapters.
 
 ## 4. Планируемые границы
 
@@ -18,13 +18,13 @@ Support Service только описан как будущий каталог, 
 
 ## 5. Compose
 
-Запущен отдельный основной проект saya-v13: PostgreSQL, RabbitMQ, Redis, Centrifugo Redis engine, Prometheus, Grafana, Gateway, Auth, Survey, Assessment, AI. Db-init и три Goose migration job завершились. Бизнес-сервисы имеют healthchecks и restart policy. HTTP/admin ports loopback, DB/broker service ports не опубликованы.
+Запущен отдельный основной проект saya-v13: PostgreSQL, RabbitMQ, Redis, Centrifugo Redis engine, Gateway, Auth, Survey, Assessment, AI. Db-init и три Goose migration job завершились. Бизнес-сервисы имеют healthchecks и restart policy. HTTP/admin ports loopback, DB/broker service ports не опубликованы.
 
 Старый saya остановлен, volumes сохранены; .local/legacy-saya/local.env — защищённый снимок прежней конфигурации. Одноразовый saya-verify проверял fresh install/key rotation/outage и остановлен. Старые данные/роли не менялись recovery-скриптом.
 
 ## 6. API
 
-POST auth/register, login, refresh, logout; GET auth/csrf, users/me; GET surveys/current, POST surveys/submissions (202); GET assessments/{id}; POST realtime connection-token/subscription-token; JWKS, live/ready/metrics. Контракты OpenAPI auth.json/workflow.json и Proto saya.auth.v1/saya.workflow.v1. Нативный и cookie transport раздельны, owner из JWT.
+POST auth/register, login, refresh, logout; GET auth/csrf, users/me; GET surveys/current, POST surveys/submissions (202); GET assessments/{id}; POST realtime connection-token/subscription-token; JWKS, live/ready. Контракты OpenAPI auth.json/workflow.json и Proto saya.auth.v1/saya.workflow.v1. Нативный и cookie transport раздельны, owner из JWT.
 
 ## 7. Тесты
 
@@ -34,7 +34,7 @@ Flutter analyze без замечаний; auth/provider and widget flow login�
 
 ## 8. Интеграции
 
-HTTP→gRPC→PostgreSQL, Survey→outbox→Rabbit→Assessment→outbox→AI mock→Completion→notification→Centrifugo→Flutter проверены. Отдельно failed без external consent и broker restart recovery. Fresh service roles rolsuper=false; запрет Auth→Survey DB подтверждён. Prometheus scrape up и 4 dependency gauges healthy; Grafana datasource health/dashboard подтверждены HTTP200.
+HTTP→gRPC→PostgreSQL, Survey→outbox→Rabbit→Assessment→outbox→AI mock→Completion→notification→Centrifugo→Flutter проверены. Отдельно failed без external consent и broker restart recovery. Fresh service roles rolsuper=false; запрет Auth→Survey DB подтверждён.
 
 ## 9. Открытые ограничения
 

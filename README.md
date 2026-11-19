@@ -14,7 +14,7 @@ make frontend-run            # отдельный процесс, Chrome localho
 make dev-down                # без удаления volumes
 ```
 
-Gateway http://localhost:8080; WebSocket ws://localhost:8000/connection/websocket; Prometheus http://localhost:9090; Grafana http://localhost:3001 (admin, пароль из локального .env); RabbitMQ management http://localhost:15672. Административные порты привязаны к loopback. Не публикуйте .env и не используйте локальные настройки как production.
+Gateway http://localhost:8080; WebSocket ws://localhost:8000/connection/websocket; RabbitMQ management http://localhost:15672. Административные порты привязаны к loopback. Не публикуйте .env и не используйте локальные настройки как production.
 
 В этой среде Flutter установлен только во `/tmp/saya-flutter-sdk`, поэтому используйте `make FLUTTER=/tmp/saya-flutter-sdk/bin/flutter frontend-run`. Некорректный системный GOROOT обходится `GOROOT=/usr/local/go make backend-test`; системные настройки не изменялись.
 
@@ -39,7 +39,7 @@ make demo-event USER_ID=<uuid> # нейтральное событие для у
 - `backend/services`: независимые модули Gateway, Auth, Survey, Assessment, AI.
 - `backend/contracts`: Protobuf/generated Go, OpenAPI и JSON event schemas; `backend/go.work` связывает модули.
 - `backend/packages`: технические messaging/runtime/outbox adapters.
-- `backend/infrastructure`: Docker/Centrifugo/Prometheus/Grafana/RabbitMQ; Compose в `backend/deployments/local/compose.yaml`.
+- `backend/infrastructure`: Docker/Centrifugo/RabbitMQ; Compose в `backend/deployments/local/compose.yaml`.
 - `frontend/saya-app`: единственный Flutter-проект Web/Android/macOS, Riverpod/go_router/Material 3.
 - `docs`, `AGENTS.md`, `.agents/skills`: архитектура, ADR, безопасность и правила продолжения.
 

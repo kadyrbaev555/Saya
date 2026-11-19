@@ -2,7 +2,7 @@
 
 Требуются Go 1.25.1+, Docker Compose, Flutter 3.50.0/Dart 3.14 (проверенная версия). Здесь Flutter установлен во /tmp/saya-flutter-sdk, системная установка не менялась.
 
-Из корня: make dev-init (только один раз) → make dev-up → make dev-status. Остановка make dev-down не удаляет volumes. make dev-logs показывает логи. Запуск UI: make frontend-run; порт 3000 включён в Origin allowlist. Gateway localhost:8080, Centrifugo localhost:8000, Prometheus localhost:9090, Grafana localhost:3001 (admin, пароль GRAFANA_PASSWORD из локального .env), Rabbit management localhost:15672 (saya, RABBIT_PASSWORD). Не выводить .env в общие логи.
+Из корня: make dev-init (только один раз) → make dev-up → make dev-status. Остановка make dev-down не удаляет volumes. make dev-logs показывает логи. Запуск UI: make frontend-run; порт 3000 включён в Origin allowlist. Gateway localhost:8080, Centrifugo localhost:8000, Rabbit management localhost:15672 (saya, RABBIT_PASSWORD). Не выводить .env в общие логи.
 
 Если GOROOT указывает на другую версию, GOROOT=/usr/local/go make backend-test. Временный Flutter: make FLUTTER=/tmp/saya-flutter-sdk/bin/flutter frontend-test. Android emulator: --dart-define=API_BASE_URL=http://10.0.2.2:8080 --dart-define=WS_URL=ws://10.0.2.2:8000/connection/websocket. Native build требует Android SDK или полный Xcode+CocoaPods. MacOS Keychain требует keychain-access-groups entitlement. HTTPS deployment включает COOKIE_SECURE=true и allowlisted HTTPS Origin.
 
@@ -25,7 +25,7 @@ auth-service, api-gateway, survey-service, assessment-service, ai-service.
 - Изменения применяются через `make dev-up` (пересоздание контейнеров; простой restart не перечитывает env_file).
 - Gemini и другие LLM-настройки меняйте в `backend/services/ai-service/.env`.
 - Compose передаёт каждому серверу только его env_file. Миграции читают DATABASE_URL того же сервиса.
-- Инфраструктурный файл используется для provisioning БД, RabbitMQ, Centrifugo, Grafana и вспомогательного demo-инструмента. Сохранённые в нём старые сервисные настройки — источник первоначального переноса, а не активная конфигурация серверов.
+- Инфраструктурный файл используется для provisioning БД, RabbitMQ, Centrifugo и вспомогательного demo-инструмента. Сохранённые в нём старые сервисные настройки — источник первоначального переноса, а не активная конфигурация серверов.
 
 Загрузка: окружение процесса > выбранный dotenv-файл > значения по умолчанию.
 Даже явно пустая переменная окружения перекрывает файл; обязательная пустая настройка — ошибка.

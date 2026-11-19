@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
@@ -24,7 +22,7 @@ import (
 	"saya/api-gateway/internal/bootstrap"
 	pb "saya/contracts/auth/v1"
 	wp "saya/contracts/workflow/v1"
-	"strconv"
+
 	"strings"
 	"sync"
 	"syscall"
@@ -93,39 +91,6 @@ func run() error {
 			c.JSON(c.Writer.Status(), gin.H{"error": gin.H{"code": http.StatusText(c.Writer.Status()), "request_id": c.Writer.Header().Get("X-Request-ID")}})
 		}
 	})
-	registry := prometheus.NewRegistry()
-	requests := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "saya_http_requests_total", Help: "Requests by route and status"}, []string{"route", "status"})
-	duration := prometheus.NewHistogramVec(prometheus.HistogramOpts{Name: "saya_http_request_duration_seconds", Help: "Request latency", Buckets: prometheus.DefBuckets}, []string{"route"})
-	registry.MustRegister(requests, duration)
-	for name, address := range map[string]string{"auth": cfg.AuthAddress, "survey": cfg.SurveyAddress, "assessment": cfg.AssessmentAddress, "ai": cfg.AIAddress} {
-		name, address := name, address
-		connection, e := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
-		if e != nil {
-			return e
-		}
-		defer connection.Close()
-		registry.MustRegister(prometheus.NewGaugeFunc(prometheus.GaugeOpts{Name: "saya_dependency_up", Help: "Internal service health", ConstLabels: prometheus.Labels{"service": name}}, func() float64 {
-			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-			defer cancel()
-			v, e := hp.NewHealthClient(connection).Check(ctx, &hp.HealthCheckRequest{})
-			if e == nil && v.Status == hp.HealthCheckResponse_SERVING {
-				return 1
-			}
-			return 0
-		}))
-	}
-
-	r.Use(func(c *gin.Context) {
-		start := time.Now()
-		c.Next()
-		route := c.FullPath()
-		if route == "" {
-			route = "unmatched"
-		}
-		requests.WithLabelValues(route, strconv.Itoa(c.Writer.Status())).Inc()
-		duration.WithLabelValues(route).Observe(time.Since(start).Seconds())
-	})
-	r.GET("/metrics", gin.WrapH(promhttp.HandlerFor(registry, promhttp.HandlerOpts{})))
 	r.SetTrustedProxies(nil)
 	var mu sync.Mutex
 	counts := map[string]int{}
@@ -165,7 +130,7 @@ func run() error {
 		key := c.ClientIP()
 		counts[key]++
 		limited := counts[key] > 120 || len(counts) > 10000
-		if c.FullPath() == "/metrics" || strings.HasPrefix(c.FullPath(), "/health/") {
+		if strings.HasPrefix(c.FullPath(), "/health/") {
 			limited = false
 		}
 		mu.Unlock()

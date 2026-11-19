@@ -14,7 +14,7 @@ func run() error {
 		return e
 	}
 	values := map[string]string{"JWT_SEED": base64.RawURLEncoding.EncodeToString(key.Seed()), "JWT_PUBLIC": base64.RawURLEncoding.EncodeToString(pub)}
-	for _, name := range []string{"DB_PASSWORD", "DB_ADMIN_PASSWORD", "SURVEY_DB_PASSWORD", "ASSESSMENT_DB_PASSWORD", "RABBIT_PASSWORD", "CENTRIFUGO_TOKEN_SECRET", "CENTRIFUGO_API_KEY", "GRAFANA_PASSWORD"} {
+	for _, name := range []string{"DB_PASSWORD", "DB_ADMIN_PASSWORD", "SURVEY_DB_PASSWORD", "ASSESSMENT_DB_PASSWORD", "RABBIT_PASSWORD", "CENTRIFUGO_TOKEN_SECRET", "CENTRIFUGO_API_KEY"} {
 		b := make([]byte, 32)
 		if _, e = rand.Read(b); e != nil {
 			return e
